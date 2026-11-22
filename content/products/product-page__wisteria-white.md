@@ -10,8 +10,6 @@ og: {"og:title": "Wisteria | Wedding Lighting Co", "og:description": "These faux
 schema: {"@type": "Product", "name": "Wisteria", "description": "These faux wisteria flowers look incredibly lifelike and can be used to create stunning decorations for weddings, parties, and other special occasions. With their delicate, cascading blooms and realistic foliage, silk wisteria florals offer a durable and low-maintenance alternative to real flowers, while still providing the same visual impact. They can be used to adorn arches, tables, and backdrops, adding a romantic and whimsical touch to any event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![hanging wisteria for wedding rental](wix:a16fb7_a73398d2025e4845a757a18f9ee63c22~mv2.jpg)
 
 # Wisteria

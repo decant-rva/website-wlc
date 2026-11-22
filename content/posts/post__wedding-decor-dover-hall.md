@@ -14,8 +14,6 @@ tags: ["/blog/tags/dover-hall", "/blog/tags/drapes", "/blog/tags/uplighting-1"]
 
 # Wedding Decor - Dover Hall
 
-Feb 6, 2025
-
 Wedding decor at Dover Hall is a must in the spring season. Our team had the pleasure of setting up this beautiful event last year.
 
 ![Dover Hall. White drapery. Tall white curtains. wedding venue. Wedding decor.](wix:f5b740_98b89fe327d5475ea3c31d319c26b68f~mv2.jpg)

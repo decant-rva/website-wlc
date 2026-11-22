@@ -10,8 +10,6 @@ og: {"og:title": "\"Gabrielle\" Black Bamboo Rattan Pendant | Wedding Lighting C
 schema: {"@type": "Product", "name": "\"Gabrielle\" Black Bamboo Rattan Pendant", "description": "This Rattan chandelier is a charming rental option for your event. Crafted from natural rattan fibers, rattan fixtures exude a warm and inviting ambiance, perfect for outdoor or bohemian-themed weddings. Gabrielle is no exception to the charm that you expect from Rattan. This broody rattan pendant is perfect as the main attraction or part of a larger look!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black rattan pendant chandelier fixture rental wedding lighting richmond](wix:a16fb7_2252894d5eb44a3bb5fb3814f45ff284~mv2.png)
 
 # "Gabrielle" Black Bamboo Rattan Pendant

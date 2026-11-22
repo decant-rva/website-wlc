@@ -14,8 +14,6 @@ tags: []
 
 # Wedding Lighting Richmond: 10 Best Venues to Light 2022
 
-May 9, 2022
-
 WEDDING LIGHTING RICHMOND:
 
 Wedding season is in full swing in Richmond, Virginia. Our designers & technicians have created a list of their favorite venues to light up for weddings. This years list features some new venues, and some that we have been working in for years. Follow us on [instagram](https://www.instagram.com/weddinglightingco/) to keep up with the latest wedding lighting trends in Richmond.

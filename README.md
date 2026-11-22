@@ -35,6 +35,21 @@ Behind a proxy, Node's fetch needs `NODE_USE_ENV_PROXY=1` for `npm run media`.
 After `npm run media` adds photos, delete `.astro/` before building. Astro caches
 rendered Markdown and will not notice that the photo manifest changed.
 
+## Design
+
+One stylesheet, `src/styles/site.css`. Poppins is self-hosted from `public/fonts`
+(SIL Open Font License, copy alongside). Colours and widths are custom
+properties at the top of the stylesheet.
+
+`src/lib/rehype-layout.js` gives Markdown its layout: three or more photos in a
+row become a gallery, a single photo runs full width, transparent PNGs are
+treated as graphics, and a row of internal links becomes a row of buttons. The
+home page adds `<section>` wrappers in its Markdown for the hero, banners and
+other blocks.
+
+`node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
+against a running copy.
+
 ## Editing content
 
 Edit the Markdown file for the page and deploy. The path in the front matter is

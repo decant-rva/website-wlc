@@ -10,8 +10,6 @@ og: {"og:title": "\"Elodie\" Traditional Table Lamp | Wedding Lighting Co", "og:
 schema: {"@type": "Product", "name": "\"Elodie\" Traditional Table Lamp", "description": "Black traditional lamp with linen shade rental used for wedding lighting. Best for raised tables such as bars, hightops, and cocktail tables. As with many of our chandeliers, the shade can be exchanged with other lamp shades in our inventory."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Black traditional lamp with linen shade rental used for wedding lighting.](wix:a16fb7_845b77ca863d471389a6fd78287556f5~mv2.png)
 
 # "Elodie" Traditional Table Lamp

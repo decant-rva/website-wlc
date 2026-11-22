@@ -10,8 +10,6 @@ og: {"og:title": "Twinkle Lights - Black | Wedding Lighting Co", "og:description
 schema: {"@type": "Product", "name": "Twinkle Lights - Black", "description": "Twinkle lights, Christmas lights, mini lights—whatever you call them—are classic lighting tools for any event. Black twinkle lights blend in nicely with the night sky, so they are great for outdoor freestanding canopies. Our enormous inventory of string lighting means we have enough for pretty much anything."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black twinkle string lighting christmas lights rental](wix:a16fb7_32162ed994b8405a9b111136d96b4be0~mv2.jpg)
 
 # Twinkle Lights - Black

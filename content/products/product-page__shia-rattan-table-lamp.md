@@ -10,8 +10,6 @@ og: {"og:title": "\"Shianna\" Rattan Table Lamp | Wedding Lighting Co", "og:desc
 schema: {"@type": "Product", "name": "\"Shianna\" Rattan Table Lamp", "description": "Bring a warm and inviting glow to your event with \"Shianna\", our Rattan Table Lamp. Featuring a hand-woven wicker shade paired with a sleek golden base, this lamp balances natural textures with refined elegance. The soft light it casts adds a cozy, intimate feel; perfect for lounge seating areas, welcome tables, or bars. Whether styled individually or as a set, these lamps complement both rustic outdoor celebrations and chic ballroom receptions. Their neutral palette and timeless design make them a versatile accent piece that blends seamlessly with a wide range of décor styles. Best for: lounge seating, cocktail tables, welcome tables, accent lightingStyle Pairings: rattan pendants, bistro lighting, uplighting"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Medium sized wicker rattan lamp shade for event rentals richmond](wix:a16fb7_6be8e748a66a4527aee3413a3fef9409~mv2.png)
 
 # "Shianna" Rattan Table Lamp

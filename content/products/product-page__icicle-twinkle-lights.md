@@ -10,8 +10,6 @@ og: {"og:title": "Icicle Twinkle Lights | Wedding Lighting Co", "og:description"
 schema: {"@type": "Product", "name": "Icicle Twinkle Lights", "description": "Twinkle lights, or mini lights as they're often called, are versatile lighting staples for any event. Their classic charm makes them a popular choice for creating ambiance. Black twinkle lights seamlessly blend into the night sky, making them ideal for adorning outdoor structures like canopies. For a cascading effect, icicle lights are a timeless option. These strings of lights, with varying lengths, create a magical and elegant display when hung from a central point - perfect for canopies and other overhead structures."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![icicle christmas twinkle light rental and setup for events and weddings](wix:a16fb7_b2314cdaf9394552ba8344430413d33e~mv2.jpg)
 
 # Icicle Twinkle Lights

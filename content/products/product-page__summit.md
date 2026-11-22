@@ -10,8 +10,6 @@ og: {"og:title": "\"Summit\" - Wireless White Lamp | Wedding Lighting Co", "og:d
 schema: {"@type": "Product", "name": "\"Summit\" - Wireless White Lamp", "description": "Feel the chill! Summit is a snow white wireless lamp, great for all white themes, and black and white themes. This sleek and modern wireless lamp emits a warm white light that can be dimmed to set the perfect ambiance for your event. Whether it's a corporate affair, wedding, or gala, the Summit's minimalist design fits seamlessly into any decor and adds a touch of elegance to the surroundings"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white wireless table top lamp rental richmond virginia](wix:a16fb7_1898aedab9ea4ca69d8244be2e4451e8~mv2.jpg)
 
 # "Summit" - Wireless White Lamp

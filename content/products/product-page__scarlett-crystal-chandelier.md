@@ -10,8 +10,6 @@ og: {"og:title": "\"Scarlett\" Crystal Chandelier | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "\"Scarlett\" Crystal Chandelier", "description": "Scarlett is designed to impress. Standing 30 inches tall, this chandelier features hundreds of cascading crystals that shimmer along the length of its golden frame. Each detail of the intricately crafted body reflects light with a warm, radiant glow, creating a look that feels both opulent and timeless. Perfect for grand entrances, center installations, and formal receptions, Scarlett transforms any space into a statement setting. Its brilliant crystal layers and rich gold finish make it a favorite for luxury weddings and elegant events. Details• 30\" wide crystal chandelier with gold frame• Cascading crystals from top to base• Ideal for ballrooms, receptions, and statement installs• Works beautifully with warm white or dimmable bulbs• Elegant, high-impact design for luxury event settings"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 !["Scarlett" Crystal Chandelier](wix:a16fb7_721ebd9583d8472eb1482fc4ac3f4e74~mv2.png)
 
 # "Scarlett" Crystal Chandelier

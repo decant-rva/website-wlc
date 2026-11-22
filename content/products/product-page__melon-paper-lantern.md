@@ -10,8 +10,6 @@ og: {"og:title": "Barrel-Style Paper Lantern | Wedding Lighting Co", "og:descrip
 schema: {"@type": "Product", "name": "Barrel-Style Paper Lantern", "description": "Barrel-Style Paper Lanterns are a great way to illuminate your space. Sphere paper lanterns are used everywhere, here is a chance to give your event a more unique look and feel. These lanterns can be fitted with a battery-powered light so they don't need power to run!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Barrel melon style paper lantern rental events richmond](wix:a16fb7_9cf01d1d2ecb455aaeff9be34dfe39e2~mv2.jpg)
 
 # Barrel-Style Paper Lantern

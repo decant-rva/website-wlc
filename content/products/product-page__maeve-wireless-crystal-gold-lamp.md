@@ -10,8 +10,6 @@ og: {"og:title": "\"Maeve\" Wireless Crystal & Gold Lamp | Wedding Lighting Co",
 schema: {"@type": "Product", "name": "\"Maeve\" Wireless Crystal & Gold Lamp", "description": "Add a touch of elegance and glamour to your space with our stunning Crystal & Gold Wireless Lamps. These sophisticated crystal lamps are designed to impress, offering adjustable color temperatures from cool white to warm white, allowing you to create the perfect ambiance for any occasion. Completely wireless and dimmable, these lamps offer ultimate flexibility and convenience, whether you're accenting a wedding reception, decorating an upscale event, or enhancing your home décor. When illuminated, the finely cut crystal design beautifully refracts light, creating a dazzling display of sparkles that adds depth, luxury, and timeless beauty to any room. Perfect as a decorative centerpiece, a luxury bedside lamp, or a glamorous event accent, the Crystal & Gold lamp instantly elevates any setting with its sophisticated shine and modern functionality. If you're looking for wireless crystal lighting that blends classic style with contemporary convenience, this piece is a must-have. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![crystal and gold wireless lamp rental for weddings and non profit events](wix:a16fb7_279f80ad5d554fcaa32c521a1fed8607~mv2.jpg)
 
 # "Maeve" Wireless Crystal & Gold Lamp

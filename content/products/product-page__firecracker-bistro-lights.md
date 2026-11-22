@@ -10,8 +10,6 @@ og: {"og:title": "Firecracker Bistro Lights | Wedding Lighting Co", "og:descript
 schema: {"@type": "Product", "name": "Firecracker Bistro Lights", "description": "Bring a lively sparkle to your event with our “Firecracker” Bulbs, a festive twist on classic bistro lighting. Each bulb is filled with delicate LED filaments that create a radiant, firework-inspired glow. The effect is warm, playful, and full of character, perfect for patios, tents, and open-air celebrations. Designed to fit standard bistro light strands, Firecracker Bulbs are an easy way to elevate your existing setup with extra shimmer and personality. Their inviting glow adds depth and texture to any atmosphere, blending seamlessly with both rustic and modern décor. Style them overhead for a canopy of sparkle or mix them into your bistro string lights to create a subtle, twinkling accent your guests will love."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![firecracker bistro string lighting rental](wix:a16fb7_4efb604c610d44d09b40316759fc8427~mv2.jpg)
 
 # Firecracker Bistro Lights

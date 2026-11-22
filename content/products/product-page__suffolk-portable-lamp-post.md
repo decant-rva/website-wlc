@@ -10,8 +10,6 @@ og: {"og:title": "\"Hampton\" Portable Lamp Post | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Hampton\" Portable Lamp Post", "description": "Suffolk stands at 7 feet 5 Inches Tall, with three lights extending from a modern, white metal pole. Each light features a traditional streetlamp design with glass panels, casting a warm and inviting glow. Hampton stands on a sturdy base, adding a touch of coastal charm to any space."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white lamp post rental  event decor richmond virginia](wix:a16fb7_64ca953bf44a405ea293e49714f2f5cd~mv2.jpg)
 
 # "Hampton" Portable Lamp Post

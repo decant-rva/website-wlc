@@ -10,8 +10,6 @@ og: {"og:title": "\"Katherine\" - Gold | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "\"Katherine\" - Gold", "description": "Katherine is a classic large farmhouse chandelier that can work on tandem with Townsend nicely. It's great for a head table or and long table. The Gold Katherine Chandelier is a transitional piece that works well with a variety of décor schemes. With it's airy design and candelabra sockets in the center, this ceiling fixture directs light from every angle. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![farmhouse airy gold chandelier townsend style for rental in virginia](wix:a16fb7_eff4d2b665534a588bf97122ee5a3a84~mv2.jpg)
 
 # "Katherine" - Gold

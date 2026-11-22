@@ -10,8 +10,6 @@ og: {"og:title": "Flag Pole (8') | Wedding Lighting Co", "og:image": "https://st
 schema: {"@type": "Product", "name": "Flag Pole (8')"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Flag Pole (8')](wix:a16fb7_c6d350a2e835473f90fa38d0bbb96ebc~mv2.png)
 
 # Flag Pole (8')

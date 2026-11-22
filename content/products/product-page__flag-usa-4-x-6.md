@@ -10,8 +10,6 @@ og: {"og:title": "Flag - USA (4 x 6) | Wedding Lighting Co", "og:image": "https:
 schema: {"@type": "Product", "name": "Flag - USA (4 x 6)"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Flag - USA (4 x 6)](wix:a16fb7_b21901f8606a499794bc18581ecd6981~mv2.jpg)
 
 # Flag - USA (4 x 6)

@@ -10,8 +10,6 @@ og: {"og:title": "Pendant - White | Wedding Lighting Co", "og:description": "A b
 schema: {"@type": "Product", "name": "Pendant - White", "description": "A bulb on a white cord. Its incredible what you can create with such a simple lighting tool.  Pick from our selection of specialty bulbs of all types, and even add different types of lighting shades to these. They come in a range of options for 3' to 15' and can be hung from anywhere!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white lighting pendant rental](wix:a16fb7_5f8c1de0f3934577bd00c691c57df05a~mv2.jpg)
 
 # Pendant - White

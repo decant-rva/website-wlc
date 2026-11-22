@@ -1,4 +1,5 @@
 import site from '../data/site.json';
+import { trail } from './entries.js';
 
 const business = () => ({
   '@context': 'https://schema.org',
@@ -20,18 +21,14 @@ const business = () => ({
 });
 
 function breadcrumbs(entry, entries) {
-  const parts = entry.data.path.split('/').filter(Boolean);
-  if (!parts.length) return null;
-  const trail = [{ name: 'Home', item: site.url }];
-  const parents = { post: '/blog', product: '/catalog', 'store-category': '/catalog', catalog: '/catalog',
-    'blog-category': '/blog', 'blog-tag': '/blog' };
-  const parent = entries.get(parents[entry.data.template]);
-  if (parent) trail.push({ name: parent.data.h1[0] || parent.data.title, item: parent.data.canonical });
-  trail.push({ name: entry.data.h1[0] || entry.data.title, item: entry.data.canonical });
+  const crumbs = trail(entry, entries, site.nav);
+  if (!crumbs.length) return null;
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, ...t })),
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem', position: i + 1, name: c.name, item: site.url + (c.path === '/' ? '' : c.path),
+    })),
   };
 }
 

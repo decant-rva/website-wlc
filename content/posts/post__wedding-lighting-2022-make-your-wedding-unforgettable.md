@@ -14,8 +14,6 @@ tags: []
 
 # Wedding Lighting 2022: Make Your Wedding Unforgettable
 
-Mar 21, 2022
-
 What will be better about 2022? For one thing, you’re getting MARRIED. And it’s likely that you will attend several weddings other than your own, obviously, leaving you with questions. “How can I make my wedding the most unforgettable wedding of 2022?” out of the [2.5 million weddings in 2022](https://www.kcrg.com/2022/02/01/record-number-weddings-expected-2022/), what will make your stand out? Wedding lighting 2022: Where to start?
 
 [2022 will see more weddings than any year since 1984](https://www.nytimes.com/2022/02/04/fashion/weddings/wedding-boom-year.html)

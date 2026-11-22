@@ -10,8 +10,6 @@ og: {"og:title": "Globe Bistro - Black | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "Globe Bistro - Black", "description": "Also called cafe lighting or string lighting, we call it bistro lighting as it gives that classic bistro feel. Globe bistro is smaller and lighter weight than its Drop-down Edison counterpart. This gives us a lot of flexibility to hang it without bulky supports! The cords of black bistro lights look best against the night sky. We recommend them for outdoor freestanding bistro and against a dark ceiling or walls."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black globe bistro string lighting rental for weddings](wix:a16fb7_3d11808e589a403e9e1bb77f7973fae1~mv2.jpg)
 
 # Globe Bistro - Black

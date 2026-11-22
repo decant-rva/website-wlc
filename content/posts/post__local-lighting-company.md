@@ -16,8 +16,6 @@ tags: []
 
 # Finding a Local Wedding Lighting Company
 
-Jan 29, 2020
-
 ## How do I Find the Best Local Wedding Lighting Company?
 
 Finding the best wedding local lighting company and vendors in general for your wedding can be stressful work. Many brides claim that planning a wedding is like having a part-time job. We’d argue that because of the stakes, it’s even more stressful than that.

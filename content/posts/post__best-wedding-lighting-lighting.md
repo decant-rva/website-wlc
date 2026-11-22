@@ -14,8 +14,6 @@ tags: ["/blog/tags/best-wedding-lighting", "/blog/tags/lighting-1", "/blog/tags/
 
 # What is the Best Wedding Lighting?
 
-Mar 7, 2022
-
 ### *Finding the Best Wedding Lighting*
 
 *Couples seeking wedding lighting ask a lot of questions.*[*The Wedding Lighting Company*](/)*is here to answer them. Our professional lighting designers are always ready to help! One common question we get is “What wedding lighting works the best?”*

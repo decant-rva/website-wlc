@@ -10,8 +10,6 @@ og: {"og:title": "Spanish Moss Lighting (Twinkle Garland) | Wedding Lighting Co"
 schema: {"@type": "Product", "name": "Spanish Moss Lighting (Twinkle Garland)", "description": "Twinkle lights, Christmas lights, mini lights—whatever you call them—are classic lighting tools for any event. Black twinkle lights blend in nicely with the night sky, so they are great for outdoor freestanding canopies. These garlands are great for creating what we call a \"spanish moss\" effect. They look amazing draped from trees! Our enormous inventory of string lighting means we have enough for pretty much anything."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Christmas light twinkle light string garland rental for events](wix:a16fb7_302e8e2797a64541a00f73fc3397a806~mv2.jpg)
 
 # Spanish Moss Lighting (Twinkle Garland)

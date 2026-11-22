@@ -1,27 +1,29 @@
 ---
+import Picture from './Picture.astro';
 import { allEntries, firstPhoto } from '../lib/entries.js';
-import { picture } from '../lib/photos.js';
 
-const { items } = Astro.props;
+// variant: "post" shows date and summary, "product" a square photo and name,
+// "overlay" a photo with the title on top.
+const { items, variant = 'post' } = Astro.props;
 const entries = await allEntries();
 const cards = items.map((p) => entries.get(p)).filter(Boolean);
+const date = (e) => {
+  const d = e.data.schema?.datePublished;
+  return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' }) : '';
+};
 ---
-<ul class="cards">
+<ul class={`cards cards-${variant}`}>
   {cards.map((e) => {
     const id = firstPhoto(e);
-    const p = id && picture(id, '(min-width: 60rem) 18rem, 50vw');
-    const alt = '';
     return (
       <li>
         <a href={e.data.path}>
-          {p && !p.single && (
-            <picture>
-              <source type="image/avif" srcset={p.avif} sizes={p.sizes}>
-              <source type="image/webp" srcset={p.webp} sizes={p.sizes}>
-              <img src={p.fallback} alt={alt} width={p.width} height={p.height} loading="lazy" decoding="async">
-            </picture>
-          )}
-          <span>{e.data.h1[0] || e.data.title}</span>
+          {id && <Picture id={id} alt="" sizes="(min-width: 60rem) 20rem, 50vw" />}
+          <span class="card-text">
+            {variant === 'post' && date(e) && <span class="card-date">{date(e)}</span>}
+            <span class="card-title">{e.data.h1[0] || e.data.title}</span>
+            {variant === 'post' && e.data.description && <span class="card-summary">{e.data.description}</span>}
+          </span>
         </a>
       </li>
     );

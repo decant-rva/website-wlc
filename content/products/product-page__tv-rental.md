@@ -10,8 +10,6 @@ og: {"og:title": "TV Rental | Wedding Lighting Co", "og:description": "Great for
 schema: {"@type": "Product", "name": "TV Rental", "description": "Great for use in digital signage, monitors for expos, digital photo albums and more. Our TVs travel in protective boxes and can be set up at any indoor location. TVs can be set on stands, tables, or hung from truss at any height."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![TV rental for event Richmond virginia](wix:a16fb7_e6f858e147ce483eb2ec2bacc176e32f~mv2.png)
 
 # TV Rental

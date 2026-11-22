@@ -10,8 +10,6 @@ og: {"og:title": "\"Kira\"  5 Arm Candelabra Chandelier - Gold | Wedding Lightin
 schema: {"@type": "Product", "name": "\"Kira\"  5 Arm Candelabra Chandelier - Gold", "description": "Kira is a simple chandelier, making it versatile. It's lack of too many frill helps it to fit into many different event types and themes. Hang florals from them for your wedding, or use them to augment a bar setup for a corporate event. Lightweight and affordable, Kira gold chandelier is a great rental item for any event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Kira 5 arm gold candelabra chandelier rental richmond virginia](wix:a16fb7_a7e43130e79d4f2099ca2de9c3e9f614~mv2.jpg)
 
 # "Kira" 5 Arm Candelabra Chandelier - Gold

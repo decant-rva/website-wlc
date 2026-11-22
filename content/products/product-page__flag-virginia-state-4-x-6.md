@@ -10,8 +10,6 @@ og: {"og:title": "Flag - Virginia State (4 x 6) | Wedding Lighting Co", "og:imag
 schema: {"@type": "Product", "name": "Flag - Virginia State (4 x 6)"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Flag - Virginia State (4 x 6)](wix:a16fb7_0baf59abf20d4a8daa7e71e69f1d32cd~mv2.jpg)
 
 # Flag - Virginia State (4 x 6)

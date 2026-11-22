@@ -10,8 +10,6 @@ og: {"og:title": "Drop Down Edison Bistro - RGB | Wedding Lighting Co", "og:desc
 schema: {"@type": "Product", "name": "Drop Down Edison Bistro - RGB", "description": "Also called cafe lighting or string lighting, we call it bistro lighting as it gives a classic bistro feel. These RGB varieties of classic drop-down bistro can change to whatever color you'd like. The cords of black bistro lights look best against the night sky. We recommend them for outdoor freestanding bistro. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![RGB LED Drop down edison bistro lighting rental](wix:a16fb7_0291d30d7a56417ea04a098ed847c2a2~mv2.jpg)
 
 # Drop Down Edison Bistro - RGB

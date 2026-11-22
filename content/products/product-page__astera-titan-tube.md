@@ -10,8 +10,6 @@ og: {"og:title": "Astera Titan Tube | Wedding Lighting Co", "og:description": "T
 schema: {"@type": "Product", "name": "Astera Titan Tube", "description": "The Astera Titan Tube is a high-performance, battery-powered LED tube light designed for film, television, and creative applications. This versatile tool offers exceptional color rendering, brightness, and controllability. Key features include:\tPowerful and customizable light: Emits both powerful, tunable white light and vibrant colors.\tPixel control: Individual pixels can be controlled for precise light effects and patterns.\tPortability: Battery-powered with long runtime, allowing for flexible on-location use.\tDurability: Built to withstand the rigors of professional use.\tControl options: Can be controlled wirelessly via the Astera app or wired via DMX. Whether used as a key light, fill light, or accent, the Astera Titan Tube provides filmmakers and creatives with unparalleled flexibility and control over their lighting. Its compact size and lightweight design make it easy to transport and set up in various environments."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![LED Tube rental Richmond Virginia](wix:a16fb7_2509dabf0e364c03b3a7c7da1058b57b~mv2.jpg)
 
 # Astera Titan Tube

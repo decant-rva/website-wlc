@@ -10,8 +10,6 @@ og: {"og:title": "Drape Wall - Sheer | Wedding Lighting Co", "og:description": "
 schema: {"@type": "Product", "name": "Drape Wall - Sheer", "description": "Sheer Drape is perfect to add an element of elegance to walls for weddings and high-end events. More transparent than Poly Premiere, this lightweight material is perfect for creating captivating canopies in virtually any setting. As part of Wedding Lighting Co's commitment to delivering breathtaking lighting, drape, and decor, the sheer drape ensures your venue exudes sophistication and charm. Trust our expertise to transform your special day into an unforgettable visual experience. Choose our Sheer Drape for style and versatility that complements any luxury event ambiance."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![sheer drape for drape walls and backdrops rental](wix:a16fb7_ce74848860f84038a575610e8ea96a2f~mv2.jpg)
 
 # Drape Wall - Sheer

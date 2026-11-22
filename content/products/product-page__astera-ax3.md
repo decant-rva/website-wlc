@@ -10,8 +10,6 @@ og: {"og:title": "Astera AX3 | Wedding Lighting Co", "og:description": "The Aste
 schema: {"@type": "Product", "name": "Astera AX3", "description": "The Astera AX3 is a compact, fully wireless RGBW LED puck that works as an uplight, a spotlight, or an accent light placed inside translucent objects and decor. Its 15W CREE LED produces full, accurate color across the entire spectrum, and swappable diffusion filters shift the beam from a tight 13° spot to a wide 120° wash depending on what the space calls for. A magnetic base and multiple mounting options mean our team can place it on the floor, hang it overhead, or attach it directly to truss and metal surfaces without additional hardware. The battery runs up to 20 hours, so it covers even the longest events without cables running across your venue. All fixtures are controlled wirelessly, giving us precise color and brightness adjustments from anywhere in the room throughout your event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Astera AX3 LightDrop compact wireless RGBW LED puck light with magnetic base](wix:a16fb7_b3af7dca7f5a4e63a99d75c2294e532d~mv2.jpg)
 
 # Astera AX3

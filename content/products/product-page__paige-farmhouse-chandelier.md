@@ -10,8 +10,6 @@ og: {"og:title": "\"Paige\" Farmhouse Chandelier | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Paige\" Farmhouse Chandelier", "description": "Introducing the \"Paige\" Farmhouse Chandelier, a harmonious blend of rustic elegance and modern sophistication, perfect for high-end weddings and events. Crafted with intricate attention to detail, this stunning fixture radiates a warm, inviting glow, enhancing the romantic ambiance of any venue. At Wedding Lighting Co, we specialize in breathtaking lighting and decor, ensuring every moment is illuminated with beauty and grace. Elevate your event's aesthetic with the timeless charm of the \"Paige\" Farmhouse Chandelier. Let us help you create unforgettable memories with our exquisitely designed lighting solutions."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![stylish farmhouse chandelier rental](wix:a16fb7_b501cdce232345d48c8273a16a28afd4~mv2.jpg)
 
 # "Paige" Farmhouse Chandelier

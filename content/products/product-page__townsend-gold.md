@@ -10,8 +10,6 @@ og: {"og:title": "\"Townsend\" - Gold | Wedding Lighting Co", "og:description": 
 schema: {"@type": "Product", "name": "\"Townsend\" - Gold", "description": "Townsend is a large farmhouse chandelier that looks great combined with some florals. The Gold Townsend Chandelier is a transitional piece that works well with a variety of décor schemes. Shaped like a lantern with an airy design hosting candelabra sockets in the center, this ceiling fixture directs light from every angle.24 x 36.530lbs"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![gold townsend candelabra farmhouse chandelier rental for events](wix:a16fb7_4e965eb24fd74b0bac136932de07bd06~mv2.jpg)
 
 # "Townsend" - Gold

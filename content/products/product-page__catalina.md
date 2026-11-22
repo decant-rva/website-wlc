@@ -10,8 +10,6 @@ og: {"og:title": "\"Catalina\" Wireless Gold Lamp | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "\"Catalina\" Wireless Gold Lamp", "description": "It's the MF Catalina wireless gold lamp, great for high-end events and cocktail parties. This sleek and sophisticated lamp is dimmable, allowing you to set the perfect ambiance for any occasion. With the ability to change colors between warm white and cool white, the Catalina offers versatility and style. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Gold wireless lamp rental richmond](wix:a16fb7_25af4563040243579f42042a4dac68a1~mv2.jpg)
 
 # "Catalina" Wireless Gold Lamp

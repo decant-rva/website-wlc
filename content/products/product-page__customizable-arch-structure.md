@@ -10,8 +10,6 @@ og: {"og:title": "Arch Structure | Wedding Lighting Co", "og:description": "Arch
 schema: {"@type": "Product", "name": "Arch Structure", "description": "Arch structures are built per your specifications. With our expertise, we can build the decor structure that perfectly fits your vision."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Arch Structure](wix:a16fb7_b5509dbcda4042d6b1604b146bf93070~mv2.jpg)
 
 # Arch Structure

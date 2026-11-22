@@ -10,8 +10,6 @@ og: {"og:title": "EZPin Zoom | Wedding Lighting Co", "og:description": "Pin spot
 schema: {"@type": "Product", "name": "EZPin Zoom", "description": "Pin spot lighting is one of the most effective tools for making specific elements of your event stand out, and the EZPin Zoom delivers that with precision. The manual zoom adjusts the beam from a tight 5° spot to a wider 25°, so whether your centerpieces are tall or your cake table is across the room, the light lands exactly where it needs to. Each fixture runs on a rechargeable battery for up to 11 hours, meaning no power cables running across your venue floor and clean placement anywhere in the room. The magnetic base and adjustable head allow our team to position these quickly and accurately without rigging hardware cluttering your tables or walls. Four fixtures come in each pack with a wireless remote, giving us the flexibility to light multiple focal points across your space and make adjustments throughout your event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![for a picture of the light3:27 PMClaude responded: Chauvet DJ EZPin Zoom wireless pin spot light fixture with adjustable head](wix:a16fb7_47715e04a3764c42b6673fb09e6cc412~mv2.png)
 
 # EZPin Zoom

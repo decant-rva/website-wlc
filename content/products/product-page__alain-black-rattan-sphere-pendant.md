@@ -10,8 +10,6 @@ og: {"og:title": "\"Alain\" Black Rattan Sphere Pendant | Wedding Lighting Co", 
 schema: {"@type": "Product", "name": "\"Alain\" Black Rattan Sphere Pendant", "description": "Alain is a spherical black pendant light in rattan style.  Black rattan has recently become popular for lighting centerpcenterpieceseices, and general lighting over entire event areas. If you want to make a chandelier display, pair Alain up with our other black rattan fixtures for stunning wedding designs."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black rattan wicker bamboo chandelier pendant wedding rental](wix:a16fb7_65b431ecbbab43e98feba4f7f7993e8e~mv2.png)
 
 # "Alain" Black Rattan Sphere Pendant

@@ -10,8 +10,6 @@ og: {"og:title": "Digital Signage | Wedding Lighting Co", "og:description": "Dig
 schema: {"@type": "Product", "name": "Digital Signage", "description": "Digital signage that can be remotely operated from a central control center. Images and text can be scheduled to appear at the times you choose ahead of time! Reach out to learn about all of our different digital signage options."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![digital signage for events wireless easy solution](wix:a16fb7_f4255dfe31974d19962f4cc879dab2ed~mv2.jpg)
 
 # Digital Signage

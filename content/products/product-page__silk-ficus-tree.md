@@ -10,8 +10,6 @@ og: {"og:title": "Silk Ficus Tree | Wedding Lighting Co", "og:description": "Art
 schema: {"@type": "Product", "name": "Silk Ficus Tree", "description": "Artificial silk ficus trees are an excellent alternative to hiring real trees. No bugs, and no mess, while still achieving a realistic look!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![silk fake artificial ficus tree rental for events wedding](wix:a16fb7_fe40a41e51ca463ba86dbb588a2c74b1~mv2.png)
 
 # Silk Ficus Tree

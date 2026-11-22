@@ -10,8 +10,6 @@ og: {"og:title": "\"Colette\" Empire Chandelier | Wedding Lighting Co", "og:desc
 schema: {"@type": "Product", "name": "\"Colette\" Empire Chandelier", "description": "The empire chandelier is an exquisite and grand lighting fixture that adds a touch of opulence and elegance to any wedding venue. With its cascading tiers of sparkling crystals and ornate metalwork, the empire chandelier creates a dazzling focal point, casting a warm and romantic glow over the entire space. This luxurious and timeless piece is perfect for creating a captivating ambiance and leaving a lasting impression on guests."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Crystal mini empire chandelier smaller lighting fixture rental for event](wix:a16fb7_dc4d94cd3fbe4a85af4569a55f227d33~mv2.jpg)
 
 # "Colette" Empire Chandelier

@@ -10,8 +10,6 @@ og: {"og:title": "\"Amber\" 15 Arm Crystal Chandelier | Wedding Lighting Co", "o
 schema: {"@type": "Product", "name": "\"Amber\" 15 Arm Crystal Chandelier", "description": "A crystal chandelier fixture that features 15 arms adorned with sparkling crystals. With its intricate design and opulent appearance, a crystal chandelier serves as a stunning centerpiece, enhancing the ambiance of the space and exuding timeless beauty."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![15 arm large crystal chandelier sparkling glass for wedding rental](wix:a16fb7_34abce127ea74e72816e3b3dcdf43162~mv2.jpg)
 
 # "Amber" 15 Arm Crystal Chandelier

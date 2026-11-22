@@ -10,8 +10,6 @@ og: {"og:title": "\"Mia\" Slim Traditional Table Lamp | Wedding Lighting Co", "o
 schema: {"@type": "Product", "name": "\"Mia\" Slim Traditional Table Lamp", "description": "Slim wireless table lamp perfect for lonis perfect for long table events, and at the center of a round or cocktail table.  Its narrow form factor means it doesn't get in the way when trying to look across the table. Because of this, a lot more can be used without blocking view than other lamps in the inventory."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![mia slim linen table traditional lamp rental richmond virginia](wix:a16fb7_c7ee862bb29540a29734495a4c6db074~mv2.png)
 
 # "Mia" Slim Traditional Table Lamp

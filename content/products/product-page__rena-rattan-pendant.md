@@ -10,8 +10,6 @@ og: {"og:title": "\"Rena\" Rattan Chandelier | Wedding Lighting Co", "og:descrip
 schema: {"@type": "Product", "name": "\"Rena\" Rattan Chandelier", "description": "Jasmine is a super light-weight, Rattan-style chandelier. It looks great in a mixture of other similarly styled lights.Rattan chandeliers are a charming and rustic addition to weddings and events. Crafted from natural rattan fibers, these chandeliers create a warm and inviting ambiance, perfect for outdoor or bohemian-themed weddings. Their intricate woven design adds earthy elegance, making them a visually captivating focal point for the venue."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![rattan style bamboo wicker hanging chandelier and pendant rental for event](wix:a16fb7_b05c9a2858114e289537e8539ddad16f~mv2.jpg)
 
 # "Rena" Rattan Chandelier

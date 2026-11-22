@@ -14,8 +14,6 @@ tags: []
 
 # Wedding Lighting In Charlottesville, Virginia
 
-Mar 21, 2024
-
 Planning to hire lighting or decor for your Charlotteville or Keswick wedding? Here's some things you need to know. Let's get into it!
 
 ## **Designing your Charlottesville Wedding Lighting**

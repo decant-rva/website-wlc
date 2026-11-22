@@ -10,8 +10,6 @@ og: {"og:title": "Marigold Garland  | Wedding Lighting Co", "og:description": "H
 schema: {"@type": "Product", "name": "Marigold Garland ", "description": "Hanging marigold garland in several different colors. Great for use on archways, baraat gates,  and more. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Marigold garland rental in multiple colors richmond](wix:a16fb7_3f209147b351499ab724825e6ae1710c~mv2.jpg)
 
 # Marigold Garland

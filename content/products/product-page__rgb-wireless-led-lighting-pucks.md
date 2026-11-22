@@ -10,8 +10,6 @@ og: {"og:title": "RGB Wireless LED Lighting Pucks | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "RGB Wireless LED Lighting Pucks", "description": "These handy lighting pucks are great for detail work and getting light into hard-to-reach places. Their small footprint makes them almost invisible in photos, and their light weight means we can hang them with adhesive if needed. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![wireless LED RGB puck rental for wedding](wix:a16fb7_8745cda1c0164f228bb9cc66805f89eb~mv2.jpg)
 
 # RGB Wireless LED Lighting Pucks

@@ -10,8 +10,6 @@ og: {"og:title": "Video Wall | Wedding Lighting Co", "og:description": "Video wa
 schema: {"@type": "Product", "name": "Video Wall", "description": "Video walls are great for concerts and outdoor video needs. They are exceptionally bright, and can work in direct sunlight.Video walls are modular, and can be set up in many configurations. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![kabana rooftop Video wall screen for concerts, events, weddings](wix:a16fb7_f4daa318f4c5475ca79d9c27973143f2~mv2.jpg)
 
 # Video Wall

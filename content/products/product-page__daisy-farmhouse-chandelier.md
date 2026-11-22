@@ -10,8 +10,6 @@ og: {"og:title": "\"Daisy\" Farmhouse Chandelier | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Daisy\" Farmhouse Chandelier", "description": "\"Daisy\" Farmhouse Chandelier has a large rail road tie with pendants hanging from it. It is a trendy lighting fixture that is fantastic for hanging in areas with a lot of vertical support that can hold its weight. It can be set up in tents with the proper rigging."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![farmhouse chandelier rental](wix:a16fb7_fd7c57d18d654ae58c09d6aeac140690~mv2.jpg)
 
 # "Daisy" Farmhouse Chandelier

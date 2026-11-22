@@ -14,8 +14,6 @@ tags: []
 
 # Get Inspired: Wedding Lighting & Decor
 
-Jan 18, 2023
-
 ## Looking for some wedding lighting inspiration?
 
 The creative couple can find plenty of ideas online for wedding lighting inspiration. When planning your perfect wedding, browse our [Services Section](/services) to learn more about what’s available. Our [Wedding Lighting Catalog](/ultimate-guide-to-wedding-lighting-decor) will give you a rundown of what’s popular. You can highlight any aspect of your wedding with your color palettes. Creating a luxurious setting for your wedding is simple and exciting!

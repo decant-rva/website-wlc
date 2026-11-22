@@ -10,8 +10,6 @@ og: {"og:title": "RGB Festoons | Wedding Lighting Co", "og:description": "These 
 schema: {"@type": "Product", "name": "RGB Festoons", "description": "These cool bistro-style lights are a step above our RGB Bistro lights. With Festoons, each bulb can change color, giving fantastic control for special lighting effects, and pixel work."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![led dmx controlled bistro festoon lighting RGB LED Wedding lighting](wix:a16fb7_7f0fb52ea3a64a5aaf5495451aa6ec06~mv2.jpg)
 
 # RGB Festoons

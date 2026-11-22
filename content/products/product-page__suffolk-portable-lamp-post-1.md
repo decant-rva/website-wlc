@@ -10,8 +10,6 @@ og: {"og:title": "\"Suffolk\" Portable Lamp Post | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Suffolk\" Portable Lamp Post", "description": "Suffolk stands at 7' 5\", with three lights hanging from a black metal pole. This light features a traditional streetlamp design with frosted glass panels, casting a warm and inviting glow. Suffolk stands on a sturdy base, adding a touch of vintage charm to any space."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![traditional lamp post rental for wedding](wix:a16fb7_8703a28c77294a9eb45701416f20606b~mv2.jpg)
 
 # "Suffolk" Portable Lamp Post

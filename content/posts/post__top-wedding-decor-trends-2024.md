@@ -14,8 +14,6 @@ tags: ["/blog/tags/decor", "/blog/tags/drape", "/blog/tags/lighting", "/blog/tag
 
 # Top Wedding Lighting and Decor Trends 2024
 
-Jan 11, 2024
-
 ![](wix:a16fb7_d93905bbf0b948228193c33471ad05f2~mv2.jpg)
 
 ***Here are just a few of our favorite wedding lighting and decor trends for 2024.***

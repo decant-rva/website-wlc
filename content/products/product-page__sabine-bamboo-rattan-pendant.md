@@ -10,8 +10,6 @@ og: {"og:title": "\"Sabine\" Bamboo Rattan Pendant | Wedding Lighting Co", "og:d
 schema: {"@type": "Product", "name": "\"Sabine\" Bamboo Rattan Pendant", "description": "This three-layer bamboo chandelier features classic tropical-style elements made up of bent bamboo shades and a wood canopy, creating an eye-catching look that lends a tropical flair to any area and reminds you of the sun, beach, and sea. Sabine is a pendant light in rattan style. It is a lightweight fixture that is an instant classic at your event. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![rattan wedding chandelier multi-layer](wix:a16fb7_39d19e8d199243518e3ad9ebea0cca61~mv2.jpg)
 
 # "Sabine" Bamboo Rattan Pendant

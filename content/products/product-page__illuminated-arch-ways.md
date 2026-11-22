@@ -10,8 +10,6 @@ og: {"og:title": "Illuminated Arch Ways | Wedding Lighting Co", "og:description"
 schema: {"@type": "Product", "name": "Illuminated Arch Ways", "description": "Archways can be illuminated with LED tubing. This creates a unique look that will impress your guests, and add intesting picture options. Any color can be achieved, and effects can make the archways come alive!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![led light up archway rental for events](wix:a16fb7_4aad0547df13450a93fd897facf345cd~mv2.png)
 
 # Illuminated Arch Ways

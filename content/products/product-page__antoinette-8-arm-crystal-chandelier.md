@@ -10,8 +10,6 @@ og: {"og:title": "\"Antoinette\" 8 Arm Crystal Chandelier | Wedding Lighting Co"
 schema: {"@type": "Product", "name": "\"Antoinette\" 8 Arm Crystal Chandelier", "description": "A crystal chandelier fixture that features 8 arms adorned with sparkling crystals. With its intricate design and opulent appearance, a crystal chandelier serves as a stunning centerpiece, enhancing the ambiance of the space and exuding timeless beauty."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![8 arm crystal chandelier rental weddings](wix:a16fb7_b88208569c4f42219070da6db63ed93e~mv2.jpg)
 
 # "Antoinette" 8 Arm Crystal Chandelier

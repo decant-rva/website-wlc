@@ -10,8 +10,6 @@ og: {"og:title": "Eucalyptus | Wedding Lighting Co", "og:description": "Silk euc
 schema: {"@type": "Product", "name": "Eucalyptus", "description": "Silk eucalyptus vines are a versatile and elegant choice for event decorations. These lifelike artificial vines mimic the appearance of real eucalyptus, adding a touch of natural beauty to any setting. Whether used to adorn tables, archways, or ceilings, silk eucalyptus vines bring a sense of organic charm to events such as weddings, parties, and corporate gatherings. Their realistic appearance and low maintenance make them a practical and visually appealing option for event planners and hosts looking to incorporate botanical elements into their decor."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![artificial eucalyptus vine rental richmond](wix:a16fb7_e95c095a76cd4a1b85abfa684286225f~mv2.jpg)
 
 # Eucalyptus

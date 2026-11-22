@@ -10,8 +10,6 @@ og: {"og:title": "Silk Floral Garland | Wedding Lighting Co", "og:description": 
 schema: {"@type": "Product", "name": "Silk Floral Garland", "description": "This versatile garland can be tailored to complement your unique vision, adding a touch of elegance and natural beauty to any setting. Perfectly designed to harmonize with our sophisticated lighting and decor options, it ensures a seamless, luxurious experience for your special occasion. Make a stunning impression with decor that embodies the essence of refined celebration."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![customizable articial silk floral garland](wix:a16fb7_a1f2fcc6e5fc41f98c283527535d804b~mv2.jpg)
 
 # Silk Floral Garland

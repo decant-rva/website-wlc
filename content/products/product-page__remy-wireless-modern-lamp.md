@@ -10,8 +10,6 @@ og: {"og:title": "\"Remy\" Wireless Modern Lamp | Wedding Lighting Co", "og:desc
 schema: {"@type": "Product", "name": "\"Remy\" Wireless Modern Lamp", "description": "Add a touch of glamour to your event with “Remy”, our ruby-colored scalloped wireless lamp. With its sculpted design and rich crimson glow, Remy makes a bold yet refined statement. The soft, diffused light creates instant warmth and depth, perfect for intimate dining tables, cocktail lounges, or bar displays. Completely cordless and designed for effortless versatility, this rechargeable lamp provides up to 8 hours of illumination on a single charge. Its vibrant tone and elegant form bring a modern twist to classic sophistication, making it a standout piece for both contemporary and vintage-inspired settings."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![rent pink lamp ruby wireless](wix:a16fb7_2e8fc9541bb04180a136dafae279c3f1~mv2.jpg)
 
 # "Remy" Wireless Modern Lamp

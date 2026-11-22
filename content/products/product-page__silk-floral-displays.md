@@ -10,8 +10,6 @@ og: {"og:title": "Silk Floral Displays | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "Silk Floral Displays", "description": "Custom silk florals bring elegance and versatility to any event space. Designed to look lush and natural, these arrangements can be used as table centerpieces, drape accents, or layered throughout a room to add color and texture. Each piece is crafted for visual impact, offering the beauty of fresh flowers without the limitations of delicate blooms. Perfect for both indoor and outdoor installations, silk florals hold their shape and color in challenging conditions. They perform beautifully under heat, wind, and long event schedules, making them ideal for large-scale productions or multi-day setups where reliability matters. Silk arrangements also photograph beautifully, maintaining their vibrancy and form from setup to last call. Whether used to complement lighting, enhance backdrops, or tie a theme together, custom silk florals bring polish and sophistication to every scene."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Silk Floral Displays](wix:a16fb7_9faa7b41198d4a7db9595a8511b309fe~mv2.jpg)
 
 # Silk Floral Displays

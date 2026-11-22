@@ -7,6 +7,7 @@ canonical: "https://www.weddinglightingco.com/led-dance-floor"
 robots: ""
 h1: ["LED DANCE FLOOR", "​"]
 og: {"og:title": "LED Dance Floor | Wedding Lighting Co", "og:description": "LED Dance Floor, a light up dance floor that will totally change the dynamic of your event.  The best way to bring people to the floor.", "og:image": "https://static.wixstatic.com/media/a16fb7_501310fde14c4e2d9ed432c4993c6bda~mv2.png/v1/fill/w_468,h_495,al_c/a16fb7_501310fde14c4e2d9ed432c4993c6bda~mv2.png", "og:image:width": "468", "og:image:height": "495", "og:url": "https://www.weddinglightingco.com/led-dance-floor", "og:site_name": "Wedding Lighting Co", "og:type": "website"}
+related: ["/post/using-decor-rentals-for-weddings", "/post/fairy-lights-weddings", "/post/best-richmond-wedding-decor-ideas"]
 ---
 
 ![LED Wall classy with warm white colors will look good in pictures](wix:a16fb7_6da514fe4277499196a59a3595767afc~mv2.jpg)

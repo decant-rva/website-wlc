@@ -14,8 +14,6 @@ tags: []
 
 # Dover Hall Lighting & Drape
 
-Oct 4, 2022
-
 ### Lighting Up Your Wedding at Dover Hall
 
 Dover Hall is one of Virginia’s premier wedding venues. Many high-end events take place there. And for good reason! Dover Hall has many event areas, perfect for an upscale party. Dover Hall typically books up fully throughout the year, meaning their staff has much experience dealing with events week after week. The beautiful spaces around the property are perfect for wedding decor. At Dover Hall, lighting and drapes will elevate your wedding to the stratosphere.

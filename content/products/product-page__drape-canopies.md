@@ -10,8 +10,6 @@ og: {"og:title": "Drape Canopy - Sheer | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "Drape Canopy - Sheer", "description": "Create spectacular drape canopy displays with  sheer drape canopy rental. The romantic sheer fabric creates an ethereal ambiance and is customizable to complement any theme. Our professional team handles setup and takedown, ensuring a stress-free experience for you and your guests. Let us help you turn your vision into a reality with our exquisite sheer drape canopy rental service."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Sheer drape canopy for wedding](wix:a16fb7_4f03570f904b4702989ffc173ee4acb2~mv2.jpg)
 
 # Drape Canopy - Sheer

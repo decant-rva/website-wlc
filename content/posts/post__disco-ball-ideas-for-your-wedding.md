@@ -14,8 +14,6 @@ tags: ["/blog/tags/disco-ball", "/blog/tags/mirror-ball", "/blog/tags/tent-weddi
 
 # Disco Ball Ideas for Your Wedding
 
-Aug 1, 2024
-
 Disco balls have made a significant comeback in the wedding scene, adding a touch of glamour and nostalgia to modern celebrations. Initially popularized in the 1970s and 1980s, these shimmering spheres have returned to weddings due to their ability to transform any venue into a glittering wonderland. Couples are drawn to the retro-chic vibe that disco balls bring to their special day, infusing a sense of fun and whimsy into the festivities.
 
 ![A disco ball display with mirror balls sizes 6" to 30" hung from the tent above over a dance floor for a wedding in charlottesville](wix:a16fb7_c32b05c40bb04197b254072b3ef6ae61~mv2.jpg)

@@ -10,8 +10,6 @@ og: {"og:title": "\"Elle\" Crystal Globe Pendant | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Elle\" Crystal Globe Pendant", "description": " Perfectly suited for high-end weddings and events, this stunning piece adds a touch of breathtaking sophistication to any venue. Wedding Lighting Co's expertise in creating captivating lighting and decor ensures that every detail, from the crystal facets to the soft, enchanting glow, delivers an unparalleled ambiance. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![crystal globe pendant rental for events and weddings](wix:a16fb7_154bb46d3d434346b01025cd9c859b54~mv2.png)
 
 # "Elle" Crystal Globe Pendant

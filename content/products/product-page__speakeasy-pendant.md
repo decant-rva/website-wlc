@@ -10,8 +10,6 @@ og: {"og:title": "\"Speakeasy\" Pendant Light | Wedding Lighting Co", "og:descri
 schema: {"@type": "Product", "name": "\"Speakeasy\" Pendant Light", "description": "This classic pendant light has a 10\" shade, and fits many themes. This is Speakeasy, a versatile pendant light with an industrial feel. We've seen these used over a casino setup, food stations, and over a head table for a wedding. Speakeasy can be equipped with many different types of bulbs.10.6\"W"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![speakeasy style bar light for hanging over casino games and bars](wix:a16fb7_ab9c37ed20cb463299ff2683c3945208~mv2.jpg)
 
 # "Speakeasy" Pendant Light

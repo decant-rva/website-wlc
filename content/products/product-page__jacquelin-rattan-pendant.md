@@ -10,8 +10,6 @@ og: {"og:title": "\"Jacquelin\" Rattan Pendant | Wedding Lighting Co", "og:descr
 schema: {"@type": "Product", "name": "\"Jacquelin\" Rattan Pendant", "description": "Enhance your wedding’s enchanting allure with the \"Jacquelin\" Rattan Pendant from Wedding Lighting Co. Rattan chandeliers for weddings and events are a charming and rustic addition to any wedding setting. Crafted from natural rattan fibers, these chandeliers exude a warm and inviting ambiance, perfect for outdoor or bohemian-themed weddings. Their intricate woven design adds a touch of earthy elegance, creating a visually captivating focal point for your celebration. Let our expertly crafted lighting and decor elevate your special day with unmatched sophistication and style."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![trendy rattan hanging lantern light bamboo](wix:a16fb7_06c593c9f9884089b4134149b13e7a7d~mv2.jpg)
 
 # "Jacquelin" Rattan Pendant

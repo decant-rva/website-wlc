@@ -10,8 +10,6 @@ og: {"og:title": "Confetti Cannons | Wedding Lighting Co", "og:description": "Co
 schema: {"@type": "Product", "name": "Confetti Cannons", "description": "Confetti is a festive addition to events and celebrations, adding a touch of joy and excitement to the atmosphere. Typically made of thin paper or metallic material, confetti comes in a variety of shapes and sizes, from tiny squares to larger shapes like hearts or stars. Confetti creates a vibrant and dynamic visual effect when scattered or launched into the air, making it a popular choice for parties, weddings, parades, and other special occasions. Confetti cannons can be operated remotely, or be programmed to shoot at a precise time."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Event New years eve confetti cannon rental effect for events](wix:a16fb7_363f8ce031654de28cf7712a93935ce9~mv2.jpg)
 
 # Confetti Cannons

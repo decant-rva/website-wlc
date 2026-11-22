@@ -10,8 +10,6 @@ og: {"og:title": "Pendant - Black | Wedding Lighting Co", "og:description": "A b
 schema: {"@type": "Product", "name": "Pendant - Black", "description": "A bulb on a black cord. You'd be amazed with what you can create with such a simple lighting tool.  Pick from our selection of specialty bulbs, and even add different types of lighting shades to these. They come in a range of options for 3' to 15'."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black hanging lighting pendant rental for weddings](wix:a16fb7_d8d3e2b05a534295a6e386d810187bcd~mv2.jpg)
 
 # Pendant - Black

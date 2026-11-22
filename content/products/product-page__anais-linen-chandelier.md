@@ -10,8 +10,6 @@ og: {"og:title": "\"Anais\" Linen Chandelier | Wedding Lighting Co", "og:descrip
 schema: {"@type": "Product", "name": "\"Anais\" Linen Chandelier", "description": "The \"Anais\" Linen Chandelier is a stunning and elegant addition to any wedding decor. These beautiful chandeliers create a romantic and ethereal ambiance, perfect for a wedding celebration. Made from delicate and airy linen fabric, they gently sway in the breeze, adding a touch of whimsy to the venue. Whether hung from a gazebo, tree branches, or within a wedding marquee, the versatile design seamlessly complements the breathtaking lighting, drape, and decor offered by Wedding Lighting Co. Elevate your special day with the enchanting charm of the \"Anais\" Linen Chandelier, and let our expertise bring your dream wedding to life with absolute perfection."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Linen chandelier coastal rental richmond virginia](wix:a16fb7_1ac7345eb1834809809e79b02d43af14~mv2.png)
 
 # "Anais" Linen Chandelier

@@ -10,8 +10,6 @@ og: {"og:title": "Chauvet Intimidator 375z | Wedding Lighting Co", "og:descripti
 schema: {"@type": "Product", "name": "Chauvet Intimidator 375z", "description": "Moving head lights are versatile fixtures that can be used for several purposes. They can be refocused remotely, which offers many advantages in a room that might be flipped. Instead of having to refocus a light, a button is pressed on a lighting console, and the design is instantly changed! The light includes a zoom, so it can be used as a spot to illuminate a speaker, a pin spot on a table, and more. They can be loaded with GOBOs and used to add texture to the walls or floors that can have motion or change throughout the event. These are the same type of lights used for theater and concerts, so they add flair to a dance floor. They can change colors and move along with the music. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![moving light led white chauvet club light rental for weddings](wix:a16fb7_46e24f29b2184d6a88f78b8431386f04~mv2.jpg)
 
 # Chauvet Intimidator 375z

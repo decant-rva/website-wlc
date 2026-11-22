@@ -10,8 +10,6 @@ og: {"og:title": "\"Katherine\" - Black | Wedding Lighting Co", "og:description"
 schema: {"@type": "Product", "name": "\"Katherine\" - Black", "description": "Katherine is a large farmhouse chandelier that can work on tandem with Townsend nicely. It's great for a head table. The Black Katherine Chandelier is a transitional piece that works well with a variety of décor schemes. With it's airy design  and candelabra sockets in the center, this ceiling fixture directs light from every angle."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![a farmhouse style chandelier that is large and black](wix:a16fb7_7988b2b138ef474387e36f88d46e2387~mv2.jpg)
 
 # "Katherine" - Black

@@ -10,8 +10,6 @@ og: {"og:title": "\"Townsend\" - Black | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "\"Townsend\" - Black", "description": "Townsend is a large farmhouse chandelier that looks great combined with some florals. The Black Townsend Chandelier is a transitional piece that works well with a variety of décor schemes. Shaped like a lantern with an airy design hosting candelabra sockets in the center, this ceiling fixture directs light from every angle."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black townsend candelabra farmhouse chandelier rental for events](wix:a16fb7_e663c804874a4ce0ab0a49a2114621c1~mv2.jpg)
 
 # "Townsend" - Black

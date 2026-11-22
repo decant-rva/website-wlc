@@ -10,8 +10,6 @@ og: {"og:title": "Japanese Cherry Blossoms | Wedding Lighting Co", "og:descripti
 schema: {"@type": "Product", "name": "Japanese Cherry Blossoms", "description": "Some of the best decor for a themed event. Known as sakura in Japan, cherry blossoms are a national obsession with deep cultural significance. They bloom in a mix of pink and white between late March and early April, symbolizing the transience of life and embodying renewal and hope. The Japanese celebrate the blooming with hanami, a springtime tradition of flower watching, picnics, tea ceremonies, and traditional performances. Our silk cherry blossoms are great on their own, or as an add-on to a string lighting concept. Individual cherry blossom hung from above are a great alternative to spending big bucks on real florals. They look great in person, and even better in pictures."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![silk japanese cherry blossom decor rental](wix:a16fb7_0dfa7296cebd493ba88c536568ae87b5~mv2.png)
 
 # Japanese Cherry Blossoms

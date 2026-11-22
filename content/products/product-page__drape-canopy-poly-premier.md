@@ -10,8 +10,6 @@ og: {"og:title": "Drape Canopy - Poly Premier | Wedding Lighting Co", "og:descri
 schema: {"@type": "Product", "name": "Drape Canopy - Poly Premier", "description": "Drape canopy rental service offers a beautiful and versatile option for creating a stunning focal point. The canopy is available in various sizes and colors to complement any theme or decor. Whether you're aiming for a romantic, rustic, or glamorous look, the drape canopy can be customized to suit your needs. It provides a perfect backdrop for exchanging vows, creating an intimate seating area, or framing a dance floor. Our professional team will handle the setup and takedown, ensuring a seamless and stress-free experience for you and your guests. Let us help you turn your vision into a reality with our exquisite drape canopy rental service."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![drape canopy inside a tent for a high-end wedding in richmond virginia](wix:a16fb7_4f03570f904b4702989ffc173ee4acb2~mv2.jpg)
 
 # Drape Canopy - Poly Premier

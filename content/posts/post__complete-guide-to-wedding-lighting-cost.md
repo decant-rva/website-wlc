@@ -14,8 +14,6 @@ tags: ["/blog/tags/wedding-information", "/blog/tags/wedding-inspiration", "/blo
 
 # How much does Wedding Lighting Cost
 
-Jan 25, 2020
-
 ### How much does wedding lighting cost?
 
 Most vendors are familiar with similar questions, and for good reason too. Because of the custom nature of wedding services, it can often be hard for wedding lighting companies to offer a default price tag. Couples will find that lighting companies offering “package pricing” often don’t have packages suited for their wedding or wedding venue.

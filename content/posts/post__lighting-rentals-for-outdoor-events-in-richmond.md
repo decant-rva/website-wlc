@@ -14,8 +14,6 @@ tags: ["/blog/tags/bistro-lights", "/blog/tags/fairy-lights", "/blog/tags/lamp-r
 
 # Lighting Rentals For Outdoor Events In Richmond
 
-Aug 5, 2025
-
 **Richmond loves an outdoor celebration**. River City plays host to weddings, fundraisers, concerts, and corporate gatherings in more than 300 for-hire venues; plus thousands of private spaces that turn into temporary event sites every year. Backyards and courtyards become grand ballrooms or cozy gathering spots with the right vision. Finding high-quality lighting rentals for outdoor events in Richmond is easy, and the right setup can completely transform your space.
 
 ## The highest-rated lighting rentals for outdoor lighting in Richmond

@@ -10,8 +10,6 @@ og: {"og:title": "\"Elena\" 8 Arm Black Crystal Chandelier | Wedding Lighting Co
 schema: {"@type": "Product", "name": "\"Elena\" 8 Arm Black Crystal Chandelier", "description": "A crystal chandelier fixture that features 8 arms adorned with sparkling black crystals. With its intricate design and opulent appearance, a crystal chandelier serves as a stunning centerpiece, enhancing the ambiance of the space and exuding timeless beauty."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![8 Arm Black Crystal Chandelier k9 rental for event wedding](wix:a16fb7_43f33d2008634802988b914438df0061~mv2.jpg)
 
 # "Elena" 8 Arm Black Crystal Chandelier

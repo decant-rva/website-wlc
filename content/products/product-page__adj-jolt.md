@@ -10,8 +10,6 @@ og: {"og:title": "ADJ Jolt | Wedding Lighting Co", "og:description": "American D
 schema: {"@type": "Product", "name": "ADJ Jolt", "description": "American DJ's Jolt series encompasses a range of LED lighting fixtures designed to deliver high-impact visual effects. Known for their versatility and performance, Jolt products are famous in clubs, live events, and mobile setups.   While there are various Jolt models, they generally share common characteristics:\tHigh-powered LEDs: Provide intense brightness and vibrant colors.  \tStrobe effects: Deliver powerful, attention-grabbing visual impacts.\tMultiple color options: Offer a wide range of color choices for customization.\tCompact design: Makes them easy to transport and set up.  \tVersatile applications: Suitable for various lighting scenarios.  \t \tSpecific models within the Jolt series may offer additional features like pixel control, beam effects, or IP rating for outdoor use.  "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Jolt LED flood light colors RGB and strobe rental for events](wix:a16fb7_4a439cbd3aba421ba0544accf692950e~mv2.jpg)
 
 # ADJ Jolt

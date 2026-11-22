@@ -10,8 +10,6 @@ og: {"og:title": "Large black lamp rental", "og:description": "Avery is a mid-si
 schema: {"@type": "Product", "name": "\"Avery\" Shaded Lamp", "description": "Avery is a mid-sized table lamp that can fit many different themes.  Wireless with up to a 12 hour battery, this shaded lamp is great for a table centerpiece or adding something extra to a bar setting."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black wireless lamp rental for events richmond](wix:a16fb7_94125822cbf5445ba1ba0bf524cc24c3~mv2.jpg)
 
 # "Avery" Shaded Lamp

@@ -14,8 +14,6 @@ tags: ["/blog/tags/event-decor", "/blog/tags/event-decorators", "/blog/tags/wedd
 
 # Wedding Decorators - Richmond
 
-Mar 6, 2025
-
 ![Svenja Bauer Photography](wix:a16fb7_e29af5fcee384f189a44367bafad7f74~mv2.jpg)
 
 Svenja Bauer Photography

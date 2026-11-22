@@ -10,8 +10,6 @@ og: {"og:title": "Bubble Hazer | Wedding Lighting Co", "og:description": "A Bubb
 schema: {"@type": "Product", "name": "Bubble Hazer", "description": "A Bubble Hazer is a unique special effects machine that combines the features of a haze machine with the ability to create bubbles. It produces a light, non-obtrusive haze that enhances lighting effects and makes beams of light more visible, while also generating bubbles to add a whimsical and playful element to the atmosphere. This dual functionality makes the Bubble Hazer a versatile and popular choice for events, stage productions, and themed entertainment, creating a magical and enchanting experience for audiences of all ages."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![bubble hazer rental for wedding event richmond virginia](wix:a16fb7_7351b6cd90a3455eb0edb9004f6950d9~mv2.jpg)
 
 # Bubble Hazer

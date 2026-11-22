@@ -14,8 +14,6 @@ tags: ["/blog/tags/decor", "/blog/tags/hanging-decor", "/blog/tags/lighting", "/
 
 # Hanging Decor and Lighting for Weddings
 
-Jul 24, 2024
-
 Let's hang! We spend a lot of time in lifts, on ladders, and on catwalks doing what we do best—hanging lighting and decor for weddings and events. Our crew spends a lot of time discussing and planning this. Who doesn't enjoy brainstorming creative and safe ways to get things in the air?
 
 Let's look at some decor pieces and lighting we've hung recently and how we did it!

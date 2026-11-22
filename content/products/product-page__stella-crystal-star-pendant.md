@@ -10,8 +10,6 @@ og: {"og:title": "\"Stella\" Crystal Star Pendant | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "\"Stella\" Crystal Star Pendant", "description": "A crystal pendant fixture that features a single source adorned with sparkling glass. With its intricate design and opulent appearance, this pendant is great in groups, enhancing the ambiance of the space and exuding timeless beauty."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![star pendant chandelier rental wedding lighting](wix:a16fb7_b48ef3b1998d45d4b9594407ef506699~mv2.png)
 
 # "Stella" Crystal Star Pendant

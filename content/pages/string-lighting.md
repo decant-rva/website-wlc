@@ -7,6 +7,7 @@ canonical: "https://www.weddinglightingco.com/string-lighting"
 robots: ""
 h1: ["STRING LIGHTING"]
 og: {"og:title": "String Lighting | Wedding Lighting Co", "og:description": "Wedding bistro lights, twinkle lights, pendants in any shape, size and colors you would like. String lighting is a great solution for outdoor and indoor events.", "og:image": "https://static.wixstatic.com/media/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg", "og:image:width": "2500", "og:image:height": "1330", "og:url": "https://www.weddinglightingco.com/string-lighting", "og:site_name": "Wedding Lighting Co", "og:type": "website"}
+related: ["/post/lighting-rentals-for-outdoor-events-in-richmond", "/post/fairy-lights-weddings", "/post/wedding-lighting-decor-richmond-virginia"]
 ---
 
 ![twinkle fairy light canopy and chandeliers in a tent at cumberland estates](wix:337130_fde8d225526d4d359de8ee4c84d318de~mv2.webp)

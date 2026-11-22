@@ -14,8 +14,6 @@ tags: []
 
 # What do I need to know about wedding lighting?
 
-Aug 10, 2022
-
 It’s time to pick the vendors for your wedding. Your vendors should know best, but you must know enough to choose them. Here are some things you need to know about wedding lighting. The choices are nearly endless, but we’ll help you narrow things down a little bit to help discover the best vendors for you.
 
 ![hanging Floral and lighting display and band uplighting](wix:a16fb7_f43aa8e2176a420fab49ad42f58ae326~mv2.jpg)

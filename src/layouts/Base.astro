@@ -1,7 +1,7 @@
 ---
 import '../styles/site.css';
 import site from '../data/site.json';
-import { allEntries } from '../lib/entries.js';
+import { allEntries, trail } from '../lib/entries.js';
 import { schemaFor } from '../lib/schema.js';
 
 const { entry } = Astro.props;
@@ -9,6 +9,9 @@ const d = entry.data;
 const entries = await allEntries();
 const staging = import.meta.env.PUBLIC_STAGING === '1';
 const robots = staging ? 'noindex, nofollow' : d.robots;
+const crumbs = trail(entry, entries, site.nav);
+const section = crumbs[1]?.path;
+const current = (item) => item.href === d.path || (item.href !== '/' && item.href === section);
 ---
 <!doctype html>
 <html lang="en">
@@ -20,31 +23,70 @@ const robots = staging ? 'noindex, nofollow' : d.robots;
 <link rel="canonical" href={d.canonical}>
 {robots && <meta name="robots" content={robots}>}
 {Object.entries(d.og).map(([property, content]) => <meta property={property} content={content}>)}
-<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preload" href="/fonts/poppins-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 {schemaFor(entry, entries).map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+<script src="/js/menu.js" defer is:inline></script>
 </head>
-<body>
-<a class="skip" href="#main">Skip to main content</a>
+<body class={`t-${d.template}`}>
+<a class="skip" href="#main">Skip to Main Content</a>
 <header class="site-header">
-  <a class="brand" href="/">{site.shortName}</a>
-  <nav aria-label="Main">
+  <a class="brand" href="/"><img src="/img/logo.png" alt="Wedding Lighting Co home" width="86" height="86"></a>
+  <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
+    <span class="visually-hidden">Menu</span><span class="bars" aria-hidden="true"></span>
+  </button>
+  <nav id="site-nav" aria-label="Main">
     <ul>
-      {site.nav.map((l) => <li><a href={l.href} aria-current={l.href === d.path ? 'page' : undefined}>{l.label}</a></li>)}
+      {site.nav.map((item) => (
+        <li>
+          <a href={item.href} aria-current={item.href === d.path ? 'page' : undefined} class={current(item) ? 'current' : undefined}>{item.label}</a>
+          {item.children && (
+            <ul>
+              {item.children.map((c) => <li><a href={c.href} aria-current={c.href === d.path ? 'page' : undefined}>{c.label}</a></li>)}
+            </ul>
+          )}
+        </li>
+      ))}
     </ul>
   </nav>
-  <a class="button" href="/get-a-quote">Get A Quote</a>
+  <a class="pill solid quote-link" href="/get-a-quote">Get A Quote</a>
 </header>
+{crumbs.length > 0 && (
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol>
+      {crumbs.map((c, i) => (
+        <li>{i < crumbs.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>
+      ))}
+    </ol>
+  </nav>
+)}
 <main id="main">
   <slot />
 </main>
 <footer class="site-footer">
-  <p class="areas">Richmond | Charlottesville | DC</p>
-  <nav aria-label="Footer">
-    <ul>
-      {site.footer.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-    </ul>
-  </nav>
-  <p><a href={`mailto:${site.email}`}>{site.email}</a> <a href={`tel:${site.phone}`}>{site.phone}</a></p>
+  <div class="footer-inner">
+    <a class="footer-logo" href="/"><img src="/img/logo-dark.png" alt="Wedding Lighting Co home" width="164" height="164" loading="lazy"></a>
+    {site.footer.map((col) => (
+      <nav aria-label={col.heading}>
+        <p class="footer-heading">{col.heading}</p>
+        <ul>
+          {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+    ))}
+    <div class="footer-contact">
+      <p class="areas">Richmond | Charlottesville | DC</p>
+      <a class="pill solid" href="/get-a-quote">Get A Quote</a>
+      <p><a href={site.emailHref}>{site.email}</a></p>
+      <p><a href={`tel:${site.phone}`}>{site.phone}</a></p>
+      {site.social.length > 0 && (
+        <ul class="social">
+          {site.social.map((s) => <li><a href={s.href} rel="noopener">{s.label}</a></li>)}
+        </ul>
+      )}
+    </div>
+  </div>
 </footer>
 </body>
 </html>

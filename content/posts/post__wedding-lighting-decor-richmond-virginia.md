@@ -14,8 +14,6 @@ tags: ["/blog/tags/lamp-rental", "/blog/tags/lighting", "/blog/tags/silk-florals
 
 # Wedding Lighting in Richmond, Virginia
 
-Mar 6, 2024
-
 Those having their weddings in Richmond, Virginia, will be delighted with the incredible wedding lighting and decor options. Richmond is home to vendors that offer charming rental items—so many linen, chair, and cutlery items to choose from. [Visit Party Perfect for some great linen, table, chair and tent options.](https://www.partyperfect.com/)
 
 ![Bistro Lighting In a pole tent at Tuckahoe Plantation in Richmond Virginia](wix:a16fb7_50b214aa2442486c8a0ffb23d4c8f498~mv2.jpeg)

@@ -10,8 +10,6 @@ og: {"og:title": "Globe Bistro - White | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "Globe Bistro - White", "description": "Also called cafe lighting or string lighting, we call it bistro lighting as it gives that classic bistro feel. Globe bistro is smaller and lighter weight than its Drop-down Edison counterpart. This gives us a lot of flexibility to hang it without bulky supports! The cords of white bistro lights will blend in well with a tent, so we recommend them for most tent setups that want simple, timeless lighting."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white globe bistro string lighting for outdoor events and weddings](wix:a16fb7_5bcddde865bd4e69901f1634c1fc9f29~mv2.jpg)
 
 # Globe Bistro - White

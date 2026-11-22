@@ -10,8 +10,6 @@ og: {"og:title": "Silk Olive Tree | Wedding Lighting Co", "og:description": "Art
 schema: {"@type": "Product", "name": "Silk Olive Tree", "description": "Artificial silk olive trees are an excellent alternative to hiring real trees. No bugs, and no mess, while still achieving a realistic look!"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![silk artificial olive tree rental richmond virginia wedding lighting](wix:a16fb7_580efc3bfae34719a8b2fc269f4b9d45~mv2.png)
 
 # Silk Olive Tree

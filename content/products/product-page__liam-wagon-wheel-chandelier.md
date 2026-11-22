@@ -10,8 +10,6 @@ og: {"og:title": "\"Liam\" Wagon Wheel Chandelier | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "\"Liam\" Wagon Wheel Chandelier", "description": "This hoop chandelier is an elegant and eye-catching lighting fixture that features a circular frame topped with 24 lights. The hoop design provides a modern and sophisticated touch to any room, making it a stunning focal point. This chandelier is perfect for adding a touch of glamour and luxury your event. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![5' wagon wheel chandelier rental richmond virginia](wix:a16fb7_704d56e8d69e4a08bc1027a40fb663b0~mv2.jpg)
 
 # "Liam" Wagon Wheel Chandelier

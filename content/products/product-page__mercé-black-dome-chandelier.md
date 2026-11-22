@@ -10,8 +10,6 @@ og: {"og:title": "\"Mercé\" Black Dome Pendant  | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": " \"Mercé\" Black Dome Pendant ", "description": "This unique dome chandelier provides a sleek and modern look. Great over tables, the beautiful pendant is simple yet elegant. Mercé is great lighting for modern or industrial-themed events and weddings."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![black dome elegant pendant wedding lighting for events and weddings](wix:a16fb7_9ccf810107f34be8a9cd06952f5d71a1~mv2.png)
 
 # "Mercé" Black Dome Pendant

@@ -10,8 +10,6 @@ og: {"og:title": "Drape Wall - Poly Premiere | Wedding Lighting Co", "og:descrip
 schema: {"@type": "Product", "name": "Drape Wall - Poly Premiere", "description": "Pipe and Drape are temporary drapes used for weddings and events. There are many styles and drape sizes, making many visions possible. Best used inside, this useful decor item can cover spaces you don't want, divide areas, be used as a backdrop and more."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![drape walls to transform venues and cover unwanted views](wix:a16fb7_26f6191b2c024c16a1ae1f4edf42ed6d~mv2.jpg)
 
 # Drape Wall - Poly Premiere

@@ -10,8 +10,6 @@ og: {"og:title": "\"Danisa\" Pendant Cage Light | Wedding Lighting Co", "og:desc
 schema: {"@type": "Product", "name": "\"Danisa\" Pendant Cage Light", "description": "This classic pendant light has a caged shade and fits many themes. The wire cage is lightweight and fashionable. This is a great and simple addition to a classic pendant with no shade."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![wire cage pendant shade for drop down light](wix:a16fb7_5eccb3aeea964416ae2d11fcc2235ed4~mv2.jpg)
 
 # "Danisa" Pendant Cage Light

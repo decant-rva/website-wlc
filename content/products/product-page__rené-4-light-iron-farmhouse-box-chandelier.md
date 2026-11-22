@@ -10,8 +10,6 @@ og: {"og:title": "\"René\" 4-Light Iron Farmhouse Box Chandelier  | Wedding Lig
 schema: {"@type": "Product", "name": "\"René\" 4-Light Iron Farmhouse Box Chandelier ", "description": "Giselle brings structure and elegance together in perfect balance. Its open iron frame layers clean geometric lines around a column of glowing lights, creating a design that feels both architectural and refined. The tiered silhouette adds height and drama without feeling heavy, making Giselle ideal for grand entries, dining rooms, or open living spaces. Warm light filters through its airy frame, casting a refined glow that complements both modern and transitional interiors. Details:\t\t8-light tiered iron chandelier\t\t\tOpen geometric frame design\t\t\tAdjustable chain for customizable height\t\t\tWorks beautifully with dimmable bulbs\t"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 !["René" 4-Light Iron Farmhouse Box Chandelier](wix:a16fb7_4b556c2086e146c393226f7d3de300bb~mv2.png)
 
 # "René" 4-Light Iron Farmhouse Box Chandelier

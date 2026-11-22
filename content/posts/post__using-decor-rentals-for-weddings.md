@@ -14,8 +14,6 @@ tags: ["/blog/tags/decor-rentals", "/blog/tags/lighting", "/blog/tags/wedding"]
 
 # Why Couples Are Using More Decor Rentals For Weddings
 
-Apr 4, 2025
-
 As prices continue to rise, many couples have discovered a hack: spending less on the venue and more on decor rentals for weddings. This gives you more control over the final design, and opens up locations that might otherwise not be possible. Most importantly? It lowers the final bill.
 
 Additionally, using decor rentals can give you a lot more flexibility to change things up as the logistics of your wedding evolve.

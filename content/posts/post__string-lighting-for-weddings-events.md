@@ -14,8 +14,6 @@ tags: ["/blog/tags/fairy-lights", "/blog/tags/lighting", "/blog/tags/string-ligh
 
 # String Lighting for Weddings & Events
 
-Jun 9, 2023
-
 ## **Elevate Your Wedding Design with String Lighting**
 
 Coving large areas with glorious string lighting is a fantastic way to take your look to the next level. If “wow” is your goal, seek out string lighting. We often describe which lighting fixtures are best for achieving total coverage of large areas. Here are some excellent ways to use string lighting to accomplish your design.

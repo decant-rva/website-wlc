@@ -28,11 +28,13 @@ const redirects = new Map(
 // Every page path the build produced, so a request never touches the disk to
 // find out whether a page exists.
 const pages = new Set();
+const assets = new Set();
 (function collect(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) collect(p);
     else if (e.name.endsWith('.html')) pages.add('/' + path.relative(DIST, p).split(path.sep).join('/').slice(0, -5));
+    else assets.add('/' + path.relative(DIST, p).split(path.sep).join('/'));
   }
 })(DIST);
 
@@ -69,8 +71,10 @@ export function build() {
     if (target) return reply.redirect(target + query, 301);
     if (bare !== pathname) return reply.redirect(encodeURI(bare) + query, 301);
 
-    if (bare === '/sitemap.xml' || bare === '/robots.txt' || bare === '/favicon.ico') {
-      return reply.sendFile(bare.slice(1), DIST, { maxAge: '1h', immutable: false });
+    // Fonts, logos, scripts, sitemap and robots: any other file the build produced.
+    if (assets.has(bare)) {
+      const stable = bare.startsWith('/fonts/');
+      return reply.sendFile(bare.slice(1), DIST, { maxAge: stable ? '1y' : '1h', immutable: stable });
     }
     const page = bare === '/' ? '/index' : bare;
     if (page !== '/404' && pages.has(page)) {

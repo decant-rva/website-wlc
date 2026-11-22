@@ -10,8 +10,6 @@ og: {"og:title": "\"Brimfield\" Portable Lamp Post | Wedding Lighting Co", "og:d
 schema: {"@type": "Product", "name": "\"Brimfield\" Portable Lamp Post", "description": "Brimfield stands at 7 feet 5 Inches, with three  lights extending from the sleek, black metal pole. Each light features a traditional lantern design with glass panels, casting a warm and inviting glow. Brimfield  stands on a sturdy base, adding a touch of vintage charm to any outdoor space."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![classic wedding lighting decor standing lamppost](wix:a16fb7_0feb6e92081b4ff881dc05f4ec123cb0~mv2.jpg)
 
 # "Brimfield" Portable Lamp Post

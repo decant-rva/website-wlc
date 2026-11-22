@@ -10,8 +10,6 @@ og: {"og:title": "\"Andre\" Shaded Lamp | Wedding Lighting Co", "og:description"
 schema: {"@type": "Product", "name": "\"Andre\" Shaded Lamp", "description": " This gold lamp has a midsize profile and is great for cocktail tables. Andre is also perfect for upscale nonprofit events and weddings.For higher visibility, the shade can be traded out for something smaller. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![gold lamp with linen shade rental richmond virginia](wix:a16fb7_b5e8381c500942a1b16b1b565de7ffda~mv2.jpg)
 
 # "Andre" Shaded Lamp

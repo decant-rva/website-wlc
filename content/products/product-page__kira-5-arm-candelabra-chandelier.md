@@ -10,8 +10,6 @@ og: {"og:title": "\"Kira\" 5 Arm Candelabra Chandelier - Black | Wedding Lightin
 schema: {"@type": "Product", "name": "\"Kira\" 5 Arm Candelabra Chandelier - Black", "description": "Kira is a simple chandelier, making it versatile. The black version is no different! Hang florals from them for your wedding, or use them to augment a bar setup for a corporate event. Lightweight and affordable, the Black Kira gold chandelier is a great rental item for any event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Kira Black 5 arm candelabra chandelier for events](wix:a16fb7_8c71d760e42b45118c4d650444f39a28~mv2.jpg)
 
 # "Kira" 5 Arm Candelabra Chandelier - Black

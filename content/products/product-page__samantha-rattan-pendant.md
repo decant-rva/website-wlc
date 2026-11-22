@@ -10,8 +10,6 @@ og: {"og:title": "\"Samantha\" Rattan Pendant | Wedding Lighting Co", "og:descri
 schema: {"@type": "Product", "name": "\"Samantha\" Rattan Pendant", "description": "Rattan chandeliers for weddings and events are a charming and rustic addition to any wedding setting. Crafted from natural rattan fibers, these chandeliers exude a warm and inviting ambiance, perfect for outdoor or bohemian-themed weddings. Their intricate woven design adds a touch of earthy elegance, creating a visually captivating focal point for the venue. Whether suspended above the dance floor or adorning the reception area, rattan chandeliers infuse a sense of organic beauty and relaxed sophistication."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![small rattan hanging pendant light rental for events and weddings](wix:a16fb7_2e10749fe63e4dacbcbfc6e064965274~mv2.jpg)
 
 # "Samantha" Rattan Pendant

@@ -7,6 +7,7 @@ canonical: "https://www.weddinglightingco.com/uplighting"
 robots: ""
 h1: ["UPLIGHTING"]
 og: {"og:title": "Uplighting | Wedding Lighting Co", "og:description": "\nUplighting\n\nCrucial for most indoor receptions, and beautiful outside, uplighting is the best way to set the ambience of your reception area. Powerful wired, wireless, indoor and outdoor uplighting for weddings.", "og:image": "https://static.wixstatic.com/media/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg", "og:image:width": "2500", "og:image:height": "1330", "og:url": "https://www.weddinglightingco.com/uplighting", "og:site_name": "Wedding Lighting Co", "og:type": "website"}
+related: ["/post/wedding-decor-dover-hall", "/post/cheap-dj-uplighting", "/post/why-you-need-wedding-uplighting"]
 ---
 
 ![amber wedding uplighting on a chandelier and drape display](wix:a16fb7_a5721e51e6e04caaacbbe84b9650ba53~mv2.jpg)

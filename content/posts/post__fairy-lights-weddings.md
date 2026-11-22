@@ -14,8 +14,6 @@ tags: ["/blog/tags/fairy-lights", "/blog/tags/lighting", "/blog/tags/string-ligh
 
 # Fairy Lights for Weddings
 
-Feb 17, 2025
-
 Using Fairy lights for weddings has become popular on the East Coast and beyond. The industry saw dozens of beautiful and uniquely creative ways to hang fairy lights emerge. Many lighting companies and wedding planners jumped on the trend.
 
 Now, most lighting rental businesses carry all manner of small-source string lights.

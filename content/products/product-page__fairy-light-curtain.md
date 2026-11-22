@@ -10,8 +10,6 @@ og: {"og:title": "Fairy Light Curtain | Wedding Lighting Co", "og:description": 
 schema: {"@type": "Product", "name": "Fairy Light Curtain", "description": "Create enchanting spaces with our Fairy Light Curtains, also known as Twinkle Light Curtains or Christmas Light Curtains. These stunning light displays feature delicate strands of soft, glowing lights that bring warmth, sparkle, and a magical ambiance to any event or setting. Each curtain stands an impressive 10 feet tall, with a light strand placed every foot for a full, even look. Whether you're designing a wedding backdrop, decorating a holiday party, or adding a cozy glow to a special event, these fairy light backdrops create unforgettable atmospheres. Available in customizable lengths from 10 feet to 300 feet, you can use a single curtain for an intimate feel or line an entire wall for a truly spectacular effect. Perfect for photo booth backgrounds, event draping, ceiling installations, and indoor or outdoor celebrations, our fairy light curtains offer flexible beauty with easy setup. Bring your vision to life with the romantic glow of fairy lights — a must-have for designers, event planners, and anyone wanting to add a dreamy touch to their décor."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![twinkle lighting curtain  or fairy lighting curtain](wix:a16fb7_250f499a759340fd9beb154a046cafd2~mv2.png)
 
 # Fairy Light Curtain

@@ -7,6 +7,7 @@ canonical: "https://www.weddinglightingco.com/silk-florals"
 robots: ""
 h1: ["SILK FLORALS"]
 og: {"og:title": "Silk Florals | Wedding Lighting Co", "og:description": "Silk florals are one of the best ways to cover large spaces with floral charm. Even events with larger budgets can benefit from the subbing out some of the larger installations with silk floral treatments.", "og:image": "https://static.wixstatic.com/media/a16fb7_c590396ccd164e6390e45c008c99d008~mv2.jpg/v1/fill/w_2500,h_3587,al_c/a16fb7_c590396ccd164e6390e45c008c99d008~mv2.jpg", "og:image:width": "2500", "og:image:height": "3587", "og:url": "https://www.weddinglightingco.com/silk-florals", "og:site_name": "Wedding Lighting Co", "og:type": "website"}
+related: ["/post/rattan-lighting", "/post/wedding-lighting-decor-richmond-virginia", "/post/top-wedding-decor-trends-2024"]
 ---
 
 ![globe bistro lights shine through a custom greenery display at upper shirley vineyards](wix:a16fb7_0fcb0009bd5441bda4474bcec95e9bd8~mv2.jpg)

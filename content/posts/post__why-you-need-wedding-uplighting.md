@@ -14,8 +14,6 @@ tags: ["/blog/tags/lighting", "/blog/tags/uplighting-1", "/blog/tags/wedding-dec
 
 # Do I Need Uplighting For My Wedding
 
-Jan 28, 2020
-
 Uplighting is a great way to take control of the ambience of your venue, and every vendor seems to be pushing it. But do you need it?
 
 ![Uplighting and drape for large indian wedding at hilton spa and hotel short pump](wix:337130_e62ae69c4a204573a90222648e4ec9f7~mv2.jpg)

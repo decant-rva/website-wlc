@@ -10,8 +10,6 @@ og: {"og:title": "Chauvet ColorDASH 12 IP | Wedding Lighting Co", "og:descriptio
 schema: {"@type": "Product", "name": "Chauvet ColorDASH 12 IP", "description": "The Chauvet ColorDASH IP is a series of versatile and robust LED wash lights designed for both indoor and outdoor use. These fixtures are known for their exceptional color rendering, brightness, and durability.    Key Features:\tIP Rating: Built to withstand harsh weather conditions, making them suitable for outdoor events and installations.\tRGBWA+UV: Offers a wide color spectrum, including ultraviolet for special effects.  \t1. COLORdash PAR H12X IP - CHAUVET Professional\twww.chauvetprofessional.com\t\tHigh Output: Delivers powerful and even light distribution.\tCompact Design: Lightweight and easy to handle, perfect for mobile setups.\tMultiple Control Options: Compatible with DMX, wireless control, and standalone operation.  \t \tThe ColorDASH IP series includes various models, such as PAR and batten configurations, to cater to different lighting needs. Whether it's a concert, corporate event, or architectural lighting project, these fixtures provide reliable performance and stunning visual effects."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![waterproof outdoor ip65 LED par lighting rental event wedding richmond](wix:a16fb7_8537615877814cdcbef1bcb561bdab55~mv2.jpg)
 
 # Chauvet ColorDASH 12 IP

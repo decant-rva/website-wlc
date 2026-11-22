@@ -10,8 +10,6 @@ og: {"og:title": "Hex Wireless Uplight Bar | Wedding Lighting Co", "og:descripti
 schema: {"@type": "Product", "name": "Hex Wireless Uplight Bar", "description": "Elevate your high-end wedding or event with the Hex Cruz Wireless Uplight Bar from Wedding Lighting Co. This wireless, battery-powered LED uplight is perfect for creating stunning ambient effects, seamlessly fitting elegant décor. Trust Wedding Lighting Co for top-quality lighting and decor. Enjoy wireless LED uplighting for an exceptional celebration."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white wireless uplighting bar for wedding](wix:a16fb7_f85927cc3c894de89fdc921936254305~mv2.jpg)
 
 # Hex Wireless Uplight Bar

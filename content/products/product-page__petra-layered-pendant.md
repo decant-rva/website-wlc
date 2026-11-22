@@ -10,8 +10,6 @@ og: {"og:title": "\"Petra\" Layered Pendant | Wedding Lighting Co", "og:descript
 schema: {"@type": "Product", "name": "\"Petra\" Layered Pendant", "description": "Take a look at “Petra”, our lightweight layered pendant inspired by the beauty of a blooming flower. Its petal-like design creates a soft, organic silhouette that adds movement and dimension to any space. The gentle light it casts sets a serene, romantic tone, ideal for dining areas, dance floors, or ceremony backdrops. Crafted for effortless versatility, Petra’s airy form complements both modern and nature-inspired designs. Whether used as a single statement piece or grouped in multiples, it brings an elegant balance of artistry and warmth to your lighting design."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Rent floral inspired chandelier](wix:a16fb7_4c00295c9c224a22bc26e8597a0203df~mv2.jpg)
 
 # "Petra" Layered Pendant

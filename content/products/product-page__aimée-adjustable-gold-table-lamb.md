@@ -10,8 +10,6 @@ og: {"og:title": "\"Aimée\" Adjustable Gold Table Lamb | Wedding Lighting Co", 
 schema: {"@type": "Product", "name": "\"Aimée\" Adjustable Gold Table Lamb", "description": "This slender metal lamp post plus the structure and adjustment ability of the natural marble base, not only allows the gold table lamps to fit into small spaces, but also allows ample lighting when placed atop a table of any height or size and adjusted at its full height of 30\". Aimée provides a significant amount of flexibility, allowing for day-of changes and adjustments.  The shade on this lamp can be changed to any style you like."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![adjustable gold lamps for wedding rental linen shade](wix:a16fb7_d2b77b8daa174c1c914ba3b28be95a83~mv2.png)
 
 # "Aimée" Adjustable Gold Table Lamb

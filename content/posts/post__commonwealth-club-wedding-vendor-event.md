@@ -14,8 +14,6 @@ tags: ["/blog/tags/chandeliers", "/blog/tags/commonwealth-club-1", "/blog/tags/d
 
 # Taste of the Commonwealth Club - Lighting and Drape 2024
 
-Nov 24, 2024
-
 We were invited to the Taste of the Commonwealth event at the [Commonwealth Club](https://www.thecommonwealthclub.net/) to showcase our lighting, drape and decor in Richmond, Virginia.
 
 Couples attending the event are able to see samples and meet with all types of local wedding vendors. Some of the vendors including [lighting and drape companies](/), chair and linen rental companies, vintage rentals, event caterers and more.

@@ -10,8 +10,6 @@ og: {"og:title": "Chauvet ColorBAND RGB LED Batton | Wedding Lighting Co", "og:d
 schema: {"@type": "Product", "name": "Chauvet ColorBAND RGB LED Batton", "description": "The Chauvet ColorBAND RGB LED Batton is a compact and versatile linear wash light designed for a range of applications, from weddings and events to small-scale productions.  Key Features:\tRGB LED Technology: Delivers a wide spectrum of colors for dynamic lighting effects.  \t1. CHAUVET COLORband T3BT ILS RGB LED batten with Bluetooth and ILS\twww.mdrlighting.co.nz\t\tCompact Design: Lightweight and easy to install or transport.  \t1. CHAUVET COLORband T3BT ILS RGB LED batten with Bluetooth and ILS\twww.mdrlighting.co.nz\t\tMultiple Control Options: Can be controlled via Bluetooth using the BTAir app, DMX, or the included IRC-6 remote.  \t1. CHAUVET COLORband T3BT ILS RGB LED batten with Bluetooth and ILS\twww.mdrlighting.co.nz\t\tPower Linking: Multiple units can be linked together for larger lighting setups.  \t1. CHAUVET COLORband T3BT ILS RGB LED batten with Bluetooth and ILS\twww.mdrlighting.co.nz\t\tZone Control: Offers three zones of control for creating diverse lighting patterns.  \t1. CHAUVET COLORband T3BT ILS RGB LED batten with Bluetooth and ILS\t \tThis LED batton is ideal for creating ambient lighting, uplighting, or accentuating architectural elements. Its user-friendly features and compact size make it a popular choice for both beginners and experienced lighting professionals."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![LED strip batton light rental uplights effect concert lighting richmond](wix:a16fb7_d35828e3aa89456ab442a39342fe9d42~mv2.jpg)
 
 # Chauvet ColorBAND RGB LED Batton

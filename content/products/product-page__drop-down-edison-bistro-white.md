@@ -10,8 +10,6 @@ og: {"og:title": "Edison Bistro Lights - White | Wedding Lighting Co", "og:descr
 schema: {"@type": "Product", "name": "Edison Bistro Lights - White", "description": "Enhance your event with the timeless beauty of White Bistro Lighting, also known as café lighting or string lighting. Here, we call it bistro lighting because it captures the classic, romantic feel of a cozy bistro setting; warm, welcoming, and effortlessly stylish. Bistro lighting is one of the most popular choices for wedding lighting, and for good reason. It’s almost synonymous with weddings, providing a simple yet stunning visual impact that transforms any space into a magical, intimate atmosphere. Our white bistro lights are especially perfect for tented events. The soft white cords blend seamlessly into the fabric of tents, creating a clean, elegant look without distracting from your décor. Whether you're planning a sophisticated wedding reception, a chic garden party, or a timeless corporate event, white bistro lighting offers the perfect balance of simplicity and beauty. We recommend white bistro lighting for any tent setup that calls for classic, understated elegance. Create unforgettable memories with lighting that looks amazing both in person and in photographs — a true must-have for any event."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![White drop down edison bistro string lighting rental for event](wix:a16fb7_e61349c2b2cc42a9ac9ad772445e4433~mv2.jpg)
 
 # Edison Bistro Lights - White

@@ -10,8 +10,6 @@ og: {"og:title": "\"Renae\" - Gold Mid Century Chandelier | Wedding Lighting Co"
 schema: {"@type": "Product", "name": "\"Renae\" - Gold Mid Century Chandelier", "description": "\"Renae\" is a stunning 6-arm gold mid-century chandelier with gold metallic shades available for rental for weddings and events. This elegant chandelier adds a touch of luxury and sophistication to any venue, creating a captivating focal point. With its timeless appeal and warm golden glow, the \"Renae\" chandelier is the perfect choice for couples seeking to enhance the ambiance of their special day."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![6 arm gold mid century chandelier rental for wedding](wix:a16fb7_6cb18c632dc2400899eb833c84892c79~mv2.jpg)
 
 # "Renae" - Gold Mid Century Chandelier

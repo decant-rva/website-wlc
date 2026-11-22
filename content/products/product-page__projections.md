@@ -10,8 +10,6 @@ og: {"og:title": "Projections | Wedding Lighting Co", "og:description": "Large s
 schema: {"@type": "Product", "name": "Projections", "description": "Large scale projections are useful for corporate events and meetings, large awards ceremonies, special events features and more.We have a wide range of projector options and screens that are always being updated, so inquire directly at Info@weddinglightingco.com."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![video projections for academy awards show](wix:a16fb7_3a492250d9864a5bbe6d6d3e968e092f~mv2.jpg)
 
 # Projections

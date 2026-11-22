@@ -14,8 +14,6 @@ tags: []
 
 # Pin Spots For Weddings
 
-Aug 31, 2022
-
 ### Why are pin spots good for weddings?
 
 [Pin spots](/pin-spots) are narrow-beam lighting fixtures which are great for highlighting tables with very little light spill. Their most common application is for event that utilize uplighting. Because they can provide lighting exactly where you need it with little to no spill, they allow for a low-lighting look.

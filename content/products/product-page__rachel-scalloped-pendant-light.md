@@ -10,8 +10,6 @@ og: {"og:title": "\"Rachel\" Scalloped Pendant Light | Wedding Lighting Co", "og
 schema: {"@type": "Product", "name": "\"Rachel\" Scalloped Pendant Light", "description": "Scarlett is designed to impress. Standing 30 inches tall, this chandelier features hundreds of cascading crystals that shimmer along the length of its golden frame. Each detail of the intricately crafted body reflects light with a warm, radiant glow, creating a look that feels both opulent and timeless. Perfect for grand entrances, center installations, and formal receptions, Scarlett transforms any space into a statement setting. Its brilliant crystal layers and rich gold finish make it a favorite for luxury weddings and elegant events. Details• 30\" wide crystal chandelier with gold frame• Cascading crystals from top to base• Ideal for ballrooms, receptions, and statement installs• Works beautifully with warm white or dimmable bulbs• Elegant, high-impact design for luxury event settings"}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 !["Rachel" Scalloped Pendant Light](wix:a16fb7_218b28e1fcd640e29c537b3a3402171e~mv2.png)
 
 # "Rachel" Scalloped Pendant Light

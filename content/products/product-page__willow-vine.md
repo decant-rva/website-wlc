@@ -10,8 +10,6 @@ og: {"og:title": "Willow Vine | Wedding Lighting Co", "og:description": "Realist
 schema: {"@type": "Product", "name": "Willow Vine", "description": "Realistic silk willow vines are lifelike artificial vines that closely resemble natural willow vines. These vines are made from high-quality silk materials that mimic the texture and appearance of real willow vines. With their detailed and authentic design, realistic silk willow vines provide a natural and elegant decorative element for various settings, including home decor, event decorations, and themed displays."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![willow vine rental for wedding event](wix:a16fb7_57cb83ac1d0e4b24a6466adbcd7f7897~mv2.jpg)
 
 # Willow Vine

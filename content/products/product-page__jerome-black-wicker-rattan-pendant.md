@@ -10,8 +10,6 @@ og: {"og:title": "\"Jerome\" Black Wicker Rattan Pendant | Wedding Lighting Co",
 schema: {"@type": "Product", "name": "\"Jerome\" Black Wicker Rattan Pendant", "description": "Jerome is a wicker rattan-style pedant that arrives in an audacious black. These gorgeous oversized pendants are perfect in groups, especially if you decide to mix and match. Jerome brings a sophisticated look and works great with many different themes."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![small black wicker pendant](wix:a16fb7_914da6e753334fb4bddf7db9a176b2ca~mv2.png)
 
 # "Jerome" Black Wicker Rattan Pendant

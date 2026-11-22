@@ -10,8 +10,6 @@ og: {"og:title": "\"Pria\" Wicker Rattan Pendant | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Pria\" Wicker Rattan Pendant", "description": "Elevate your décor with the Pria Rattan Pendant Light, a truly one-of-a-kind statement piece. Featuring a bold asymmetrical design and a striking organic shape, Pria brings effortless style and character to any setting. Handcrafted from natural rattan, this versatile pendant is perfect for creating a dynamic display, whether used on its own or as part of a larger installation. Pria’s eye-catching form has been a favorite for vibrant floral displays, boho-chic weddings, and tented events, adding a touch of natural elegance and modern artistry. Its lightweight, airy structure makes it easy to hang and reposition, offering endless styling possibilities. If you're looking for a rattan light fixture that balances beauty with boldness, Pria is the perfect choice to transform your space."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Pria bamboo rattan wicker pendant chandelier](wix:a16fb7_cde62caeac70434b96ed9e96c90b5dd4~mv2.png)
 
 # "Pria" Wicker Rattan Pendant

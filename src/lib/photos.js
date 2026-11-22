@@ -1,7 +1,9 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 // content/photos.json is written by tools/media.js. Each key is a photo ID.
-const file = new URL('../../content/photos.json', import.meta.url);
+// Resolved from the project root because this module is bundled for pages.
+const file = path.resolve(process.cwd(), 'content/photos.json');
 export const photos = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
 
 export const MEDIA = '/media/';

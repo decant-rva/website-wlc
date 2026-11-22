@@ -10,8 +10,6 @@ og: {"og:title": "\"Louis\" Black Mesh Rattan-Style Lantern | Wedding Lighting C
 schema: {"@type": "Product", "name": "\"Louis\" Black Mesh Rattan-Style Lantern", "description": "Louis is a black pendant light in rattan style.  This fixture is made of metal, but fits in great with bamboo and wicker rattan of the same color. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Black rattan wicker metal mesh pendant large for events and weddings](wix:a16fb7_bbb85a8feab34196b9ed74f1faf24218~mv2.png)
 
 # "Louis" Black Mesh Rattan-Style Lantern

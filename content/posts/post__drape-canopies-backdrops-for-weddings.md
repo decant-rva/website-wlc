@@ -14,8 +14,6 @@ tags: ["/blog/tags/drape-1", "/blog/tags/wedding-backdrop", "/blog/tags/wedding-
 
 # Drapes For Weddings & Events
 
-Aug 8, 2024
-
 Are you planning a wedding or special event and looking for ways to elevate the ambiance or create a stunning backdrop? Drape canopies, drape walls, and drape backdrops have become indispensable elements in event decor, adding elegance, drama, and functionality to any space.
 
 ![drape canopy, backdrops, and walls for events and weddings in Virginia](wix:a16fb7_4c81dd672e22426bb864199248172f43~mv2.jpg)

@@ -14,8 +14,6 @@ tags: []
 
 # Photogenic Weddings In Outdoor Settings
 
-Feb 16, 2022
-
 ### Photogenic moments exist close to home
 
 What kind of outdoor environment does your wedding have? A bit of decor can make landscape coordination a breeze. Let’s talk about the natural elements related to your setting. Photogenic moments await you at the farm, courtyard, winery, or even your very own backyard!

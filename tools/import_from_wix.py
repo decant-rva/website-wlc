@@ -211,6 +211,8 @@ def main():
                 links.append(unquote(h))
         if tpl in ("store-category", "blog-category", "blog-tag", "blog-index", "catalog"):
             fm["items"] = links
+        if tpl in ("page", "home", "catalog") and any(k == "marker" and "recent-posts" in t for k, t in ex.blocks):
+            fm["related"] = [l for l in links if l.startswith("/post/")][:3]
         if tpl == "post":
             fm["categories"] = sorted({unquote(rel(a["href"])) for a in main_el.find_all("a", href=True) if "/blog/categories/" in a["href"]})
             fm["tags"] = sorted({unquote(rel(a["href"])) for a in main_el.find_all("a", href=True) if "/blog/tags/" in a["href"]})

@@ -14,8 +14,6 @@ tags: []
 
 # How to Prepare for a Wedding Site Survey
 
-Sep 12, 2022
-
 ### Deciding what you want before your lighting site survey
 
 Obviously, there are a few things you’ll need to have together before your lighting site survey. Of course, the most important of which is a venue. While for some vendors the venue isn’t important, for lighting & decor it is. Your lighting & decor company needs to know the space to get an accurate quote. Services like [uplighting](/uplighting), [pin spots](/pin-spots), or [bistro lighting](/string-lighting) require layouts.

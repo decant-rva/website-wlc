@@ -10,8 +10,6 @@ og: {"og:title": "Bil-Jax Staging System | Wedding Lighting Co", "og:description
 schema: {"@type": "Product", "name": "Bil-Jax Staging System", "description": "We use a 4' x 4' Bil Jax staging system to create stages of all heights and sizes. Choose from standard options, or contact us at info@weddinglightingco.com for custom staging options."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![staging rental for wedding](wix:a16fb7_ce74848860f84038a575610e8ea96a2f~mv2.jpg)
 
 # Bil-Jax Staging System

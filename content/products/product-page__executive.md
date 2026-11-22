@@ -10,8 +10,6 @@ og: {"og:title": "\"Executive\" - Wireless Gold Light | Wedding Lighting Co", "o
 schema: {"@type": "Product", "name": "\"Executive\" - Wireless Gold Light", "description": "Meet the Wireless Gold Executive Table Top Lamp, designed for elegance and convenience. This professional-looking lamp is perfect for corporate events, executive offices, and more. With its wireless capabilities, you can easily place it anywhere without the hassle of tangled cords. The sleek gold finish adds a touch of sophistication to any environment while providing ample lighting for the small space surrounding it."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![gold wireless lamp for conference event wedding meeting](wix:a16fb7_3e3aa35dde444b1a9202c74de7ccd0bc~mv2.jpg)
 
 # "Executive" - Wireless Gold Light

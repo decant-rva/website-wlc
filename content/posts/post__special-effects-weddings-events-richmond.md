@@ -14,8 +14,6 @@ tags: []
 
 # Special Effects for Weddings & Events in Richmond
 
-Feb 12, 2024
-
 Special effects can be an important part creating significant moments for your wedding or event. Some of the most memorable parts of you event will be the unique interactions you share with your guests. Help spark excitement at your event by using special effects! From biodegradable steamers, to cold sparks (sparklers) and low fog, special effects are great tools and make for some amazing photos.
 
 Here are some of the best special effects options for weddings and events in Richmond or Charlottesville.

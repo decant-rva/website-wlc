@@ -10,8 +10,6 @@ og: {"og:title": "\"Beau\" Industrial Table Lamp | Wedding Lighting Co", "og:des
 schema: {"@type": "Product", "name": "\"Beau\" Industrial Table Lamp", "description": "\"Beau\" Industrial Table Lamp rental for events and weddings. Industrial table lamp for catering tables and bars, a great rental addition, especially for low-light events."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![industrial table lamp for catering table and bars rental richmond](wix:a16fb7_37bacbd39bfe46fa8563ae815b46b31d~mv2.jpg)
 
 # "Beau" Industrial Table Lamp

@@ -10,8 +10,6 @@ og: {"og:title": "\"Josephine\" Rattan Pendant | Wedding Lighting Co", "og:descr
 schema: {"@type": "Product", "name": "\"Josephine\" Rattan Pendant", "description": "Rattan chandeliers for weddings and events are a charming and rustic addition to any wedding setting. Crafted from natural rattan fibers, these chandeliers exude a warm and inviting ambiance, perfect for outdoor or bohemian-themed weddings. Their intricate woven design adds a touch of earthy elegance, creating a visually captivating focal point for the venue. Whether suspended above the dance floor or adorning the reception area, rattan chandeliers infuse a sense of organic beauty and relaxed sophistication."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 !["Josephine" Rattan Pendant](wix:a16fb7_73182b6d640243288612239311d2e838~mv2.png)
 
 # "Josephine" Rattan Pendant

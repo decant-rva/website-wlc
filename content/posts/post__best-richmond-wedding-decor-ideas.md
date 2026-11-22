@@ -16,8 +16,6 @@ tags: ["/blog/tags/decor", "/blog/tags/drape", "/blog/tags/lighting", "/blog/tag
 
 # Richmond Wedding Decor Rental Ideas
 
-Dec 10, 2024
-
 Planning and designing wedding decor rentals for your wedding is crucial to setting the ambiance for your event. Design elements such as lighting, drapes, and decor rentals can completely transform your space. Understanding how to utilize decor properly will give you more flexibility when finding your venue. With a bit of love, any large space can become a beautiful and elegant setting.
 
 - Dover hall Wedding venue with warm uplighting

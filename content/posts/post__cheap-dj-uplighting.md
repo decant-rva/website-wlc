@@ -14,8 +14,6 @@ tags: ["/blog/tags/dj-uplighting", "/blog/tags/uplighting-1", "/blog/tags/weddin
 
 # Cheap DJ Uplighting: Why you might want to avoid it.
 
-Jan 9, 2025
-
 Most event and wedding DJs now offer some form of DJ uplighting. It's often an inexpensive addon or even provided for free as an incentive to book. Having uplighting at your event for free or cheap can be and attractive offer. But make sure you do your research. Not all DJs & their uplighting are the same, some are professional level and some are not.
 
 How can DJs offer uplighting at a lower price than high-end lighting companies? And how does DJ uplighting differ from the real thing?

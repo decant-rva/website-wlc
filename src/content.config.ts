@@ -16,6 +16,7 @@ const entry = z.object({
   og: z.record(z.string(), z.string()),
   schema: z.record(z.string(), z.any()).optional(),
   items: z.array(z.string()).optional(),
+  related: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
 });

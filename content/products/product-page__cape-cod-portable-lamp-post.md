@@ -10,8 +10,6 @@ og: {"og:title": "\"Cape Cod\" Portable Lamp Post | Wedding Lighting Co", "og:de
 schema: {"@type": "Product", "name": "\"Cape Cod\" Portable Lamp Post", "description": "Cap Cod stands at 6' 10\", with one light sitting atop a black metal pole. This light features a traditional streetlamp design with frosted glass panels, casting a warm and inviting glow. Cape Cod stands on a sturdy base, adding a touch of coastal charm to any space."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Wedding decor lamp post light rental](wix:a16fb7_6425f938ef52470b940fa0fa05def255~mv2.jpg)
 
 # "Cape Cod" Portable Lamp Post

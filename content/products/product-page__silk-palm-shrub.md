@@ -10,8 +10,6 @@ og: {"og:title": "Silk Palm Shrub | Wedding Lighting Co", "og:description": "Dec
 schema: {"@type": "Product", "name": "Silk Palm Shrub", "description": "Decorate your next themed event with the Silk Palm Shrubs! Artificial palm trees are an excellent alternative to hiring real trees—no bugs, and no mess, while still achieving a realistic look! Elevate your venue with the perfect blend of elegance and convenience, courtesy of our expert team specializing in breathtaking lighting, drape, and decor. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![artificial fake silk palm tree rental for meeting, events, wedding](wix:a16fb7_b55898d626f34df69e6cee005d0bb2e1~mv2.png)
 
 # Silk Palm Shrub

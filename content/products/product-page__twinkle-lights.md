@@ -10,8 +10,6 @@ og: {"og:title": "Twinkle Lights - White | Wedding Lighting Co", "og:description
 schema: {"@type": "Product", "name": "Twinkle Lights - White", "description": "Twinkle lights, Christmas lights, mini lights—whatever you call them—are classic lighting tools for any event. White twinkle lights blend in well with tents, so they are perfect for twinkle light canopies. Our enormous inventory of string lighting means we have enough for pretty much anything."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![white christmas string twinkle fairy lights for wedding rental](wix:a16fb7_5ff4f816239b4bc38653c98b2aa39c86~mv2.jpg)
 
 # Twinkle Lights - White

@@ -10,8 +10,6 @@ og: {"og:title": "Big Shiney Ball | Wedding Lighting Co", "og:description": "Big
 schema: {"@type": "Product", "name": "Big Shiney Ball", "description": "Big shiny balls are exactly what they sound like, they are various sized inflatable balls with a unique glossy shine. Big shiny balls come in sizes up to 9 ft, and many different colors."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![big shiney ball to hang from ceiling rental for events](wix:a16fb7_06091f9fd0ee47a9934a5afeda8fbed4~mv2.png)
 
 # Big Shiney Ball

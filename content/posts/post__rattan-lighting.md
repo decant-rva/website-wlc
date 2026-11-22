@@ -14,8 +14,6 @@ tags: ["/blog/tags/decor", "/blog/tags/decor-rentals-1", "/blog/tags/rattan-ligh
 
 # Rattan Lighting
 
-Apr 25, 2025
-
 When it comes to rattan lighting, variety is key.. If you’ve fallen in love with these classic fixtures, you’re not alone. Rattan has quickly become one of the most popular fixtures for wedding lighting. There are dozens of different styles of rattan pendants and chandeliers, giving you plenty of choices to make your event have a unique charm.
 
 ![Rattan Lighting rentals tuckahoe](wix:a16fb7_ff379acf27ab4dfd87d7e3012224507c~mv2.jpg)

@@ -7,6 +7,7 @@ canonical: "https://www.weddinglightingco.com/drapery"
 robots: ""
 h1: ["DRAPE BACKDROPS & CANOPIES"]
 og: {"og:title": "Drapes | Wedding Lighting Co", "og:description": "Drape backdrops or cabanas for your ceremony or reception. Room draping that can completely surround your reception space. Drape canopies to liven up the ceiling of your ballroom or tent.", "og:image": "https://static.wixstatic.com/media/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a%7Emv2.jpg", "og:image:width": "2500", "og:image:height": "1330", "og:url": "https://www.weddinglightingco.com/drapery", "og:site_name": "Wedding Lighting Co", "og:type": "website"}
+related: ["/post/best-richmond-wedding-decor-ideas", "/post/commonwealth-club-wedding-vendor-event", "/post/top-wedding-decor-trends-2024"]
 ---
 
 ![drape backdrop bolling haxall house](wix:a16fb7_a5721e51e6e04caaacbbe84b9650ba53~mv2.jpg)

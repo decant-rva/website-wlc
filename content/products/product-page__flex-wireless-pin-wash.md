@@ -10,8 +10,6 @@ og: {"og:title": "Flex Wireless Pin Wash | Wedding Lighting Co", "og:description
 schema: {"@type": "Product", "name": "Flex Wireless Pin Wash", "description": "Much like our Flex Wireless Pin Spot, this handy light is designed for high-end events, this pin spot offers precision lighting to beautifully highlight your decor. While pin spots are designed for precisely lighting objects from across the room, these have a similar form factor while serving a more versatile role. Due to its larger beam angle when used as a pin spot, Flex Pin Wash can be used a lot closer to the table and still illuminate the entire thing.  The brightness can be significant enough for face lighting for a band or speaker or wash lighting for a bar. All while maintaining a modern, sleek chassis. "}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Flex Pin wash wireless wide angle pin spot for events](wix:a16fb7_cc0e60d66d024e11ba76c7c4a069b0f6~mv2.jpg)
 
 # Flex Wireless Pin Wash

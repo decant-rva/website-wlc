@@ -10,8 +10,6 @@ og: {"og:title": "Meteor Shower Lights | Wedding Lighting Co", "og:description":
 schema: {"@type": "Product", "name": "Meteor Shower Lights", "description": "Illuminate your event with the captivating glow of our “Meteor Shower” Lights. Designed with vibrant RGB LEDs, these lights create a dynamic display that captures the magic of falling stars. Choose between animated and static lighting looks to suit your atmosphere, from soft, romantic glimmers to bold, colorful cascades. Perfect for outdoor installations, the Meteor Shower Lights shine beautifully when suspended from trees or arranged in large groups. Their energy-efficient design and customizable color options make them ideal for creating immersive environments that feel both modern and enchanting.Use them to transform open-air spaces into dazzling nightscapes that will leave your guests in awe."}
 ---
 
-[Home](/) / [Catalog](/catalog)
-
 ![Meteor Shower String Lights White Background](wix:a16fb7_d595190a375c4dc0862390d0d60051af~mv2.jpg)
 
 # Meteor Shower Lights
