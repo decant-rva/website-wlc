@@ -31,9 +31,11 @@ function tiles(chosen) {
   // a quarter of the row wide, but never narrower than 100px.
   const cell = (n) => {
     const on = chosen.includes(n);
-    return `<span style="display:inline-block;vertical-align:top;width:25%;min-width:100px"><span style="${F}display:block;margin:3px;padding:14px 4px;text-align:center;font-size:12px;line-height:1.25;font-weight:bold;${on
+    // Every tile is the same height, tall enough for a two-line name, with the name centred in it.
+    const look = on
       ? `background:#ffffff;color:${NAVY};border:2px solid ${NAVY};border-top:6px solid ${AMBER}`
-      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${MIST}`}">${esc(n)}</span></span>`;
+      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${MIST}`;
+    return `<span style="display:inline-block;vertical-align:top;width:25%;min-width:100px"><span style="display:block;margin:3px"><span style="display:table;width:100%;height:58px;table-layout:fixed;border-collapse:separate"><span style="${F}display:table-cell;height:58px;padding:0 4px;vertical-align:middle;text-align:center;font-size:12px;line-height:15px;font-weight:bold;box-sizing:border-box;${look}">${esc(n)}</span></span></span></span>`;
   };
   return `<div style="padding:14px 14px 11px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="margin:5px -3px 0;font-size:0">${names.map(cell).join('')}</div></div>`;
 }
