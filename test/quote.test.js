@@ -3,6 +3,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newDb } from 'pg-mem';
+import sharp from 'sharp';
+import { safePhoto } from '../server/lib/images.js';
 import { build } from '../server/server.js';
 import { migrate, quoteStore } from '../server/lib/store.js';
 import { deliver, retryPass, backoff } from '../server/lib/deliver.js';
@@ -116,29 +118,66 @@ test('failed deliveries are kept, retried later, and reported after an hour', as
   assert.equal(sent.email.length, 1, 'a sent email is not sent again');
 });
 
-test('an uploaded photo is stored and passed to the email', async () => {
-  const { app, pool, sent } = await setup();
-  const b = '----t';
+const multipartBody = (b, files) => {
   const part = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
-  const payload = Buffer.concat([
-    Buffer.from(Object.entries(good).map(([k, v]) => part(k, v)).join('') + part('services', 'Uplighting') + part('services', 'Drapes')
-      + `--${b}\r\nContent-Disposition: form-data; name="files"; filename="idea.png"\r\nContent-Type: image/png\r\n\r\n`),
-    Buffer.from([137, 80, 78, 71, 1, 2, 3]), Buffer.from(`\r\n--${b}--\r\n`),
-  ]);
-  const res = await app.inject({ method: 'POST', url: '/api/quote', payload, headers: { 'content-type': `multipart/form-data; boundary=${b}` } });
+  const chunks = [Buffer.from(Object.entries(good).map(([k, v]) => part(k, v)).join('') + part('services', 'Uplighting') + part('services', 'Drapes'))];
+  for (const [name, type, bytes] of files) {
+    chunks.push(Buffer.from(`--${b}\r\nContent-Disposition: form-data; name="files"; filename="${name}"\r\nContent-Type: ${type}\r\n\r\n`), bytes, Buffer.from('\r\n'));
+  }
+  chunks.push(Buffer.from(`--${b}--\r\n`));
+  return Buffer.concat(chunks);
+};
+const upload = (app, files) => app.inject({ method: 'POST', url: '/api/quote', payload: multipartBody('----t', files), headers: { 'content-type': 'multipart/form-data; boundary=----t' } });
+const png = () => sharp({ create: { width: 40, height: 30, channels: 3, background: '#336699' } }).withMetadata({ exif: { IFD0: { Copyright: 'secret-marker' } } }).png().toBuffer();
+
+test('an uploaded photo is rewritten as a clean JPEG, stored, and shown in the email', async () => {
+  const { app, pool, sent } = await setup();
+  const res = await upload(app, [['My Idea!!.png', 'image/png', await png()]]);
   assert.equal(res.statusCode, 303);
   await settle();
-  const files = (await pool.query('SELECT filename, mime FROM quote_files')).rows;
-  assert.deepEqual(files, [{ filename: 'idea.png', mime: 'image/png' }]);
+  const files = (await pool.query('SELECT filename, mime, bytes FROM quote_files')).rows;
+  assert.equal(files.length, 1);
+  assert.equal(files[0].filename, 'photo-1.jpg', 'the visitor\'s file name is not kept');
+  assert.equal(files[0].mime, 'image/jpeg');
+  // The bytes themselves are checked in the safePhoto test: pg-mem does not round-trip binary data faithfully.
   assert.equal((await pool.query('SELECT services FROM quote_submissions')).rows[0].services, 'Uplighting, Drapes');
   assert.equal(sent.email[0].files.length, 1);
 });
 
+test('a file that is not a photo is refused and nothing is saved', async () => {
+  const { app, pool } = await setup();
+  for (const [name, type, bytes] of [
+    ['invoice.jpg', 'image/jpeg', Buffer.from('MZ\x90\x00 this is a program renamed to look like a photo')],
+    ['drawing.svg', 'image/svg+xml', Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>')],
+    ['brief.pdf', 'application/pdf', Buffer.from('%PDF-1.4 not accepted')],
+  ]) {
+    const res = await upload(app, [[name, type, bytes]]);
+    assert.equal(res.statusCode, 422, name);
+    assert.match(res.body, /could only accept photos/);
+  }
+  assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 0);
+});
+
+test('safePhoto shrinks large photos and refuses oversized pixel counts', async () => {
+  const big = await sharp({ create: { width: 4000, height: 3000, channels: 3, background: '#000' } }).jpeg().toBuffer();
+  const out = await safePhoto(big);
+  assert.equal(out.width, 2000);
+  assert.equal(out.height, 1500);
+  assert.equal(await safePhoto(Buffer.from('not an image')), null);
+  const src = await png();
+  assert.ok(src.includes('secret-marker'));
+  const clean = await safePhoto(src);
+  assert.equal((await sharp(clean.bytes).metadata()).format, 'jpeg');
+  assert.ok(!clean.bytes.includes('secret-marker'), 'metadata is stripped');
+});
+
 test('the email keeps the subject and labels the inbox already expects', () => {
-  const { subject, text, html } = quoteEmail({ name: 'A <b>', email: 'a@example.com', referral: 'Google', event_date: '2027-05-01', venue: 'Dover Hall', details: 'Hi', services: '' });
+  const row = { name: 'A <b>', email: 'a@example.com', referral: 'Google', event_date: '2027-05-01', venue: 'Dover Hall', details: 'Hi', services: 'Uplighting' };
+  const { subject, text, html, cids } = quoteEmail(row, [{ filename: 'photo-1.jpg', mime: 'image/jpeg', bytes: Buffer.from('x') }]);
   assert.equal(subject, 'New RFQ: A <b> filled out Get a Quote Form');
-  assert.equal(text, 'Name: A <b>\nEmail: a@example.com\nReferral Source: Google\nEvent Date: 2027-05-01\nVenue: Dover Hall\nVision: Hi');
-  assert.ok(html.includes('A &lt;b&gt;'));
+  assert.equal(text, 'Name: A <b>\nEmail: a@example.com\nReferral Source: Google\nEvent Date: 2027-05-01\nVenue: Dover Hall\nVision: Hi\nServices: Uplighting\nPhotos: 1');
+  assert.ok(html.includes('A &lt;b&gt;') && !html.includes('A <b>'));
+  assert.ok(html.includes(`cid:${cids[0]}`), 'the photo is shown in the body');
 });
 
 test('validation and backoff', () => {

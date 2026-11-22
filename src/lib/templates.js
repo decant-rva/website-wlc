@@ -529,7 +529,7 @@ async function quote(entry, trail, h) {
     ['q-venue', 'What is your venue?', '<input name="venue">', false],
     ['q-vision', 'Tell us about yourself, your vision, and where you are in your event planning process.', '<textarea name="details" rows="5"></textarea>', false, 'w'],
     ['q-ref', 'How did you find us?', '<input name="howDidYouFindUs">', false],
-    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/*,application/pdf">', false, 'w'],
+    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/gif">', false, 'w'],
   ];
   const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
   // Hidden from people; a filled value marks the submission as spam.

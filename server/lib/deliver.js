@@ -34,13 +34,14 @@ export async function sendEmail(row, files, fetchFn = fetch) {
   if (!token || !to || !from) throw new Error('notification email is not configured');
   const total = files.reduce((n, f) => n + f.bytes.length, 0);
   const attach = total <= MAX_ATTACH_BYTES ? files : [];
-  const { subject, text, html } = quoteEmail(row, files, attach.length === files.length);
+  const { subject, text, html, cids } = quoteEmail(row, files, attach.length === files.length);
   const res = await fetchFn('https://api.postmarkapp.com/email', {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/json', 'X-Postmark-Server-Token': token },
     body: JSON.stringify({
       From: from, To: to, ReplyTo: row.email, Subject: subject, TextBody: text, HtmlBody: html, MessageStream: 'outbound',
-      Attachments: attach.map((f) => ({ Name: f.filename, Content: Buffer.from(f.bytes).toString('base64'), ContentType: f.mime })),
+      // A content id lets the body show each photo in place; mail apps still list them as attachments.
+      Attachments: attach.map((f, i) => ({ Name: f.filename, Content: Buffer.from(f.bytes).toString('base64'), ContentType: f.mime, ContentID: `cid:${cids[i]}` })),
     }),
   });
   if (!res.ok) throw new Error(`email provider answered ${res.status}`);

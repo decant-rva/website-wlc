@@ -10,12 +10,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import multipart from '@fastify/multipart';
 import { deliver, retryPass } from './lib/deliver.js';
+import { safePhoto } from './lib/images.js';
+import { setServiceList } from './lib/quote-email.js';
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 const RATE_LIMIT = 5;                 // submissions per address
 const RATE_WINDOW = 10 * 60 * 1000;   // in ten minutes
-const FILE_TYPES = /^(image\/(jpeg|png|webp|gif|heic|heif)|application\/pdf)$/;
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const clean = (v, max) => String(v ?? '').replace(/\r\n/g, '\n').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, max);
@@ -53,6 +54,8 @@ export function formWithErrors(html, s, bad, extra = '') {
 
 export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date() }) {
   const page = (name) => fs.readFileSync(path.join(dist, `${name}.html`), 'utf8');
+  // The email shows every service tile with the chosen ones lit, so it needs the full list.
+  try { setServiceList([...page('get-a-quote').matchAll(/name="services" value="([^"]*)"/g)].map((m) => m[1].replace(/&amp;/g, '&'))); } catch { /* quote page not built */ }
   const hits = new Map();
   const limited = (ip) => {
     const t = now().getTime();
@@ -77,13 +80,20 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const fields = {};
     const files = [];
     let tooBig = false;
+    let notPhotos = 0;
     try {
       if (req.isMultipart()) {
         for await (const part of req.parts()) {
           if (part.type === 'file') {
             const bytes = await part.toBuffer();
             if (part.file.truncated) tooBig = true;
-            else if (bytes.length && FILE_TYPES.test(part.mimetype)) files.push({ filename: clean(part.filename, 200) || 'file', mime: part.mimetype, bytes });
+            else if (bytes.length) {
+              // Never trust the name or type the browser sent. The file is decoded and rewritten as a
+              // plain JPEG; anything that is not a picture is refused. See lib/images.js.
+              const photo = await safePhoto(bytes);
+              if (photo) files.push({ filename: `photo-${files.length + 1}.jpg`, mime: photo.mime, bytes: photo.bytes });
+              else notPhotos += 1;
+            }
           } else if (part.fieldname === 'services') (fields.services ||= []).push(part.value);
           else fields[part.fieldname] = part.value;
         }
@@ -96,7 +106,8 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     if (fields.company) return reply.redirect('/quote-sent', 303);
 
     const { s, bad } = validate(fields);
-    const extra = tooBig ? `Send up to ${MAX_FILES} files of ${MAX_FILE_BYTES / 1024 / 1024} MB or less each.` : '';
+    const extra = tooBig ? `Send up to ${MAX_FILES} photos of ${MAX_FILE_BYTES / 1024 / 1024} MB or less each.`
+      : notPhotos ? 'We could only accept photos (JPEG, PNG, WebP, HEIC or GIF). One of your files was not a photo we could open. Please choose your photos again.' : '';
     if (Object.keys(bad).length || extra) return html(422, formWithErrors(page('get-a-quote'), s, bad, extra));
     if (limited(req.ip)) return html(429, page('quote-problem'));
 

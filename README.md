@@ -91,7 +91,12 @@ every change.
 `POST /api/quote` (`server/quote.js`) checks the request, saves it to Postgres, sends the visitor
 to `/quote-sent`, then posts the lead to GigFriend and emails the office (`server/lib/deliver.js`).
 A delivery that fails is retried with growing waits, and one email reports anything still
-undelivered after an hour. Uploaded files are kept in Postgres with the request.
+undelivered after an hour.
+
+Uploads are photos only. `server/lib/images.js` decodes each one and writes it out again as a JPEG
+of at most 2000 px, so a file that is not really a picture is refused, metadata (including phone GPS)
+is dropped, and the visitor's file name is not kept. SVG and PDF are refused. The cleaned photos are
+kept in Postgres with the request and shown in the body of the notification email.
 
 | Setting | For |
 |---|---|
