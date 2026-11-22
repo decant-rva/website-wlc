@@ -1,0 +1,2218 @@
+{
+ "_note": "Venue list exported from gigFriend on 22 November 2026, less places of worship and private houses. Photos were matched to venues by name from the photo descriptions. region and district drive the list on /venue.",
+ "order": [
+  {
+   "region": "Richmond",
+   "district": "Downtown"
+  },
+  {
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill"
+  },
+  {
+   "region": "Richmond",
+   "district": "The Fan & VCU"
+  },
+  {
+   "region": "Richmond",
+   "district": "Museum District"
+  },
+  {
+   "region": "Richmond",
+   "district": "Scott's Addition"
+  },
+  {
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont"
+  },
+  {
+   "region": "Richmond",
+   "district": "Manchester"
+  },
+  {
+   "region": "Richmond",
+   "district": "Northside"
+  },
+  {
+   "region": "Richmond",
+   "district": "West End"
+  },
+  {
+   "region": "Richmond",
+   "district": "Short Pump & Far West End"
+  },
+  {
+   "region": "Richmond",
+   "district": "South Side"
+  },
+  {
+   "region": "Richmond",
+   "district": "East End"
+  },
+  {
+   "region": "Richmond",
+   "district": "District to confirm"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Henrico County"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Chesterfield County"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Hanover County"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Goochland County"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Powhatan County"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Petersburg & south"
+  },
+  {
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa"
+  },
+  {
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville"
+  },
+  {
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County"
+  },
+  {
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley"
+  },
+  {
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper"
+  },
+  {
+   "region": "Northern Virginia & DC",
+   "district": ""
+  },
+  {
+   "region": "Williamsburg & the coast",
+   "district": ""
+  },
+  {
+   "region": "Southwest & Southside Virginia",
+   "district": ""
+  },
+  {
+   "region": "Elsewhere in Virginia",
+   "district": ""
+  },
+  {
+   "region": "Out of state",
+   "district": ""
+  }
+ ],
+ "venues": [
+  {
+   "name": "The Farmhouse at Veritas",
+   "slug": "the-farmhouse-at-veritas",
+   "city": "Afton",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Veritas Winery",
+   "slug": "veritas-winery",
+   "city": "Afton",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Above ALX Community",
+   "slug": "above-alx-community",
+   "city": "Alexandria",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Hendry House",
+   "slug": "hendry-house",
+   "city": "Arlington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Hanover Vegetable Farm",
+   "slug": "hanover-vegetable-farm",
+   "city": "Ashland",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "Oakdale RVA",
+   "slug": "oakdale-rva",
+   "city": "Ashland",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "University of Georgia",
+   "slug": "university-of-georgia",
+   "city": "Athens",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Georgia Tech",
+   "slug": "georgia-tech",
+   "city": "Atlanta",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "German Club Manor",
+   "slug": "german-club-manor",
+   "city": "Blacksburg",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Virginia Tech University",
+   "slug": "virginia-tech-university",
+   "city": "Blacksburg",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Poplar Hill",
+   "slug": "poplar-hill",
+   "city": "Blackstone",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Bon Air Community Center",
+   "slug": "bon-air-community-center",
+   "city": "Bon Air",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "The Liberty Hotel",
+   "slug": "the-liberty-hotel",
+   "city": "Boston",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Bowling Green Town Hall",
+   "slug": "bowling-green-town-hall",
+   "city": "Bowling Green",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "Burlington Weddings and Events",
+   "slug": "burlington-weddings-and-events",
+   "city": "Charles City",
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City",
+   "photos": []
+  },
+  {
+   "name": "Upper Shirley Vineyards",
+   "slug": "upper-shirley-vineyards",
+   "city": "Charles City",
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City",
+   "photos": [
+    {
+     "id": "a16fb7_0fcb0009bd5441bda4474bcec95e9bd8~mv2.jpg",
+     "alt": "globe bistro lights shine through a custom greenery display at upper shirley vineyards"
+    }
+   ]
+  },
+  {
+   "name": "Eastwood Winery",
+   "slug": "eastwood-winery",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "James Monroe's Highland",
+   "slug": "james-monroe-s-highland",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Kimpton The Forum Hotel",
+   "slug": "kimpton-the-forum-hotel",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Lodge at Mount Ida Farm",
+   "slug": "lodge-at-mount-ida-farm",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Lost Saint",
+   "slug": "lost-saint",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Old Metropolitan Hall",
+   "slug": "old-metropolitan-hall",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "The Bradbury Charlottesville",
+   "slug": "the-bradbury-charlottesville",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "The Clifton",
+   "slug": "the-clifton",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Trump Winery",
+   "slug": "trump-winery",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "University of Virginia",
+   "slug": "university-of-virginia",
+   "city": "Charlottesville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Charlottesville",
+   "photos": []
+  },
+  {
+   "name": "Adaline Acres",
+   "slug": "adaline-acres",
+   "city": "Chester",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Culture Center of India",
+   "slug": "culture-center-of-india",
+   "city": "Chester",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Marriott Springhill Suites",
+   "slug": "marriott-springhill-suites",
+   "city": "Chester",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Pocahontas State Park Switch Creek Dining Hall",
+   "slug": "pocahontas-state-park-switch-creek-dining-hall",
+   "city": "Chesterfield",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "The Outlook at Saddle Ridge",
+   "slug": "the-outlook-at-saddle-ridge",
+   "city": "Chesterfield",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Highland Golf Club Pavilion",
+   "slug": "highland-golf-club-pavilion",
+   "city": "Chesterfield",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Henley's Orchard",
+   "slug": "henley-s-orchard",
+   "city": "Crozet",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "King Family Vineyards",
+   "slug": "king-family-vineyards",
+   "city": "Crozet",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "Mount Fair Vineyard",
+   "slug": "mount-fair-vineyard",
+   "city": "Crozet",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "Restoration Hall at Old Trail Golf Club",
+   "slug": "restoration-hall-at-old-trail-golf-club",
+   "city": "Crozet",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "Seven on Davis",
+   "slug": "seven-on-davis",
+   "city": "Culpeper",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper",
+   "photos": []
+  },
+  {
+   "name": "White Oak Manor",
+   "slug": "white-oak-manor",
+   "city": "Dinwiddie",
+   "region": "Around Richmond",
+   "district": "Petersburg & south",
+   "photos": []
+  },
+  {
+   "name": "Kings Dominion",
+   "slug": "kings-dominion",
+   "city": "Doswell",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "1757 Golf Club",
+   "slug": "1757-golf-club",
+   "city": "Dulles",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "The Valentine",
+   "slug": "the-valentine",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Rock Spring Mountain Farm",
+   "slug": "rock-spring-mountain-farm",
+   "city": "Faber",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Stacy C. Sherwood Community Center",
+   "slug": "stacy-c-sherwood-community-center",
+   "city": "Fairfax",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Prince Edward Elks Lodge #269",
+   "slug": "prince-edward-elks-lodge-269",
+   "city": "Farmville",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Riverside Weddings by Clore",
+   "slug": "riverside-weddings-by-clore",
+   "city": "Fredericksburg",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "The Cultural Arts Center",
+   "slug": "the-cultural-arts-center",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Atlas 42",
+   "slug": "atlas-42",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Glen Allen Cultural Arts Center",
+   "slug": "glen-allen-cultural-arts-center",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "The Dominion Club",
+   "slug": "the-dominion-club",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": [
+    {
+     "id": "a16fb7_97fb74ec43184eb4944d3e1fae6e2c70~mv2.jpg",
+     "alt": "Cool blue uplighting around the dominion club ballroom"
+    },
+    {
+     "id": "a16fb7_b88a32603b65472cb2f536e9bac839ac~mv2.jpg",
+     "alt": "wedding backdrop dominion club richmond"
+    }
+   ]
+  },
+  {
+   "name": "The Place at Innsbrook",
+   "slug": "the-place-at-innsbrook",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Virginia Crossing Hotel & Conference Center",
+   "slug": "virginia-crossing-hotel-conference-center",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Woodside Farm",
+   "slug": "woodside-farm",
+   "city": "Glen Allen",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Hampden Sydney College",
+   "slug": "hampden-sydney-college",
+   "city": "Hampden Sydney",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Hanover Tavern Coach House",
+   "slug": "hanover-tavern-coach-house",
+   "city": "Hanover",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "The Preserve at Dundee",
+   "slug": "the-preserve-at-dundee",
+   "city": "Hanover",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "Bartizan Events Venue",
+   "slug": "bartizan-events-venue",
+   "city": "Henrico",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Lewis Ginter Botanical Gardens - Bloemendaal House",
+   "slug": "lewis-ginter-botanical-gardens-bloemendaal-house",
+   "city": "Henrico",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Lewis Ginter Robins Center",
+   "slug": "lewis-ginter-robins-center",
+   "city": "Henrico",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "Robinson Park",
+   "slug": "robinson-park",
+   "city": "Henrico",
+   "region": "Around Richmond",
+   "district": "Henrico County",
+   "photos": []
+  },
+  {
+   "name": "The Tides Inn",
+   "slug": "the-tides-inn",
+   "city": "Irvington",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Keswick Hall",
+   "slug": "keswick-hall",
+   "city": "Keswick",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "Keswick Vineyards",
+   "slug": "keswick-vineyards",
+   "city": "Keswick",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "Kilmarnock Boys & Girls Club",
+   "slug": "kilmarnock-boys-girls-club",
+   "city": "Kilmarnock",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Cousiac Manor",
+   "slug": "cousiac-manor",
+   "city": "Lanexa",
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City",
+   "photos": []
+  },
+  {
+   "name": "Laurel Park",
+   "slug": "laurel-park",
+   "city": "Laurel",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Rust Manor House",
+   "slug": "rust-manor-house",
+   "city": "Leesburg",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Virginia Military Institute",
+   "slug": "virginia-military-institute",
+   "city": "Lexington",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Fairfax Highschool",
+   "slug": "fairfax-highschool",
+   "city": "Fairfax",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Prospect Hill Inn",
+   "slug": "prospect-hill-inn",
+   "city": "Louisa",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "The Virginian Hotel",
+   "slug": "the-virginian-hotel",
+   "city": "Lynchburg",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Estate at River Run",
+   "slug": "estate-at-river-run",
+   "city": "Maidens",
+   "region": "Around Richmond",
+   "district": "Goochland County",
+   "photos": []
+  },
+  {
+   "name": "Dover Hall",
+   "slug": "dover-hall",
+   "city": "Manakin-Sabot",
+   "region": "Around Richmond",
+   "district": "Goochland County",
+   "photos": [
+    {
+     "id": "337130_b63b6cff6f7348bb878e5742ec3eacd1~mv2.jpg",
+     "alt": "bistro lights and white drapes at dover hall"
+    },
+    {
+     "id": "a16fb7_0193324518b440b6b77e41ed1db29286~mv2.jpg",
+     "alt": "Uplighting used on drape wall transformation at dover hall in virginia"
+    },
+    {
+     "id": "a16fb7_046de56753624fbbbf1659fe2b21bec1~mv2.jpg",
+     "alt": "sheer drape canopy glass hall at dover hall"
+    },
+    {
+     "id": "a16fb7_109e6c286f5947c499320fffd8beb3ef~mv2.png",
+     "alt": "A bride walks amongst thick white draping, wind is present for this wedding shoot"
+    },
+    {
+     "id": "a16fb7_2cdd15e215334f399d44339591b83e56~mv2.jpg",
+     "alt": "white drape transformation dover hall"
+    },
+    {
+     "id": "a16fb7_5aab4d594d044e41899fcfaae440e5aa~mv2.jpg",
+     "alt": "wedding reception white drape dover hall richmond"
+    },
+    {
+     "id": "a16fb7_634d7a138f114a1bbcfd216e45784efd~mv2.jpg",
+     "alt": "wedding chandeliers at dover hall"
+    },
+    {
+     "id": "a16fb7_6f168744802141eb9024a0e9292ebff3~mv2.jpg",
+     "alt": "crystal chandelier dover hall ballroom"
+    },
+    {
+     "id": "a16fb7_73636e0f1d6944c4b38e09ceb042b2b3~mv2.jpg",
+     "alt": "Tall ballroom of dover hall in virginia. large baby breath and white rose floral clouds hang from temporary but attractive support structure above. white drape surrounds the room"
+    },
+    {
+     "id": "a16fb7_768bac47a3384e2da86b4d965303e5c1~mv2.jpg",
+     "alt": "sheer drape at dover hall"
+    },
+    {
+     "id": "a16fb7_8032914d64d84d06a20e6312564cf1d2~mv2.jpg",
+     "alt": "Tall ballroom of dover hall in virginia. large baby breath and white rose floral clouds hang from temporary but attractive support structure above. white drape surrounds the room"
+    },
+    {
+     "id": "a16fb7_8683c3cc5a214eb38ee7292d6f03ca3c~mv2.jpg",
+     "alt": "white sheer drape dover hall"
+    },
+    {
+     "id": "a16fb7_9c8442c3e6ad4fa3aaed6837060d60ef~mv2.jpg",
+     "alt": "warm white uplighting on tall white drapes dover hall wedding lighting"
+    },
+    {
+     "id": "a16fb7_bda6042b7d7f40f8985ebd2dd509cabe~mv2.jpg",
+     "alt": "Total white drape transformation at dover hall in Virginia."
+    },
+    {
+     "id": "f5b740_16be3193fd934903bf4127cdeaadeecf~mv2.jpg",
+     "alt": "head table bridal party dover hall decor rentals"
+    },
+    {
+     "id": "f5b740_7de54282cdbd4efeb7aec914ea33658b~mv2.jpg",
+     "alt": "the reception is a party at dover hall"
+    },
+    {
+     "id": "f5b740_9df2d23796e1447b9f79fb7f1532c9d4~mv2.jpg",
+     "alt": "Father Daughter dance dover hall"
+    },
+    {
+     "id": "f5b740_a1667ad93cd9405f94000319a08951c6~mv2.jpg",
+     "alt": "white drape transformation dover hall wedding decor"
+    },
+    {
+     "id": "a16fb7_37a2b249f6c04af4ad28e2cdf9d7a831~mv2.jpg",
+     "alt": "warm white uplighting around the perimeter of the ballroom at dover hall"
+    },
+    {
+     "id": "337130_dd4f7cf1c2ba40bdaee920cfdd6c53e1~mv2.jpg",
+     "alt": "Best wedding lighting company at dover hall"
+    },
+    {
+     "id": "337130_906294877a4c4369ada8d75ab057f5fe~mv2.webp",
+     "alt": "Best wedding lighting company at dover hall"
+    },
+    {
+     "id": "f5b740_98b89fe327d5475ea3c31d319c26b68f~mv2.jpg",
+     "alt": "Dover Hall. White drapery. Tall white curtains. wedding venue. Wedding decor."
+    },
+    {
+     "id": "a16fb7_d8037013300e47ddadbff8776eed30f2~mv2.jpg",
+     "alt": "Uplighting at Dover hall"
+    }
+   ]
+  },
+  {
+   "name": "Hermitage Country Club",
+   "slug": "hermitage-country-club",
+   "city": "Manakin-Sabot",
+   "region": "Around Richmond",
+   "district": "Goochland County",
+   "photos": []
+  },
+  {
+   "name": "Sweeney Barn",
+   "slug": "sweeney-barn",
+   "city": "Manassas",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Manor House At Kings Charter",
+   "slug": "manor-house-at-kings-charter",
+   "city": "Mechanicsville",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "The Via Club",
+   "slug": "the-via-club",
+   "city": "Mechanicsville",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "Caroline High School",
+   "slug": "caroline-high-school",
+   "city": "Milford",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "American Legion Post 354",
+   "slug": "american-legion-post-354",
+   "city": "Midlothian",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Harbour Pointe Clubhouse",
+   "slug": "harbour-pointe-clubhouse",
+   "city": "Midlothian",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Independence Golf Course",
+   "slug": "independence-golf-course",
+   "city": "Midlothian",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Miracle On The James",
+   "slug": "miracle-on-the-james",
+   "city": "Midlothian",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "The Boathouse at Sunday Park",
+   "slug": "the-boathouse-at-sunday-park",
+   "city": "Midlothian",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Windy Knob Farm",
+   "slug": "windy-knob-farm",
+   "city": "Millis",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Avonlea Farms",
+   "slug": "avonlea-farms",
+   "city": "Mineral",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "Montpelier Center for Arts and Education",
+   "slug": "montpelier-center-for-arts-and-education",
+   "city": "Montpelier",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": []
+  },
+  {
+   "name": "Celebrations At the Reservoir",
+   "slug": "celebrations-at-the-reservoir",
+   "city": "Moseley",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "The Cardinal at Magnolia Green",
+   "slug": "the-cardinal-at-magnolia-green",
+   "city": "Moseley",
+   "region": "Around Richmond",
+   "district": "Chesterfield County",
+   "photos": []
+  },
+  {
+   "name": "Vanderbilt University",
+   "slug": "vanderbilt-university",
+   "city": "Nashville",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Wintergreen Resort",
+   "slug": "wintergreen-resort",
+   "city": "Nellysford",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": [
+    {
+     "id": "337130_e0d9cc59b55e40709ee4f72e5842edf1~mv2.jpg",
+     "alt": "best wedding lighting company at wintergreen resort with string lighting"
+    },
+    {
+     "id": "337130_e35a899d3905404d833204be3fc3ccc1~mv2.jpg",
+     "alt": "best wedding lighting company at wintergreen resort with string lighting"
+    },
+    {
+     "id": "a16fb7_8c8fa4a1d16f4414b4ad9ca16d77ec11~mv2.jpg",
+     "alt": "Bistro Lighting over the wedding reception area at Wintergreen; Nellysford, Virginia"
+    }
+   ]
+  },
+  {
+   "name": "Cumberland Estate",
+   "slug": "cumberland-estate",
+   "city": "New Kent",
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City",
+   "photos": [
+    {
+     "id": "337130_fde8d225526d4d359de8ee4c84d318de~mv2.webp",
+     "alt": "twinkle fairy light canopy and chandeliers in a tent at cumberland estates"
+    }
+   ]
+  },
+  {
+   "name": "Court Manor",
+   "slug": "court-manor",
+   "city": "New Market",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Chrysler Museum of Art",
+   "slug": "chrysler-museum-of-art",
+   "city": "Norfolk",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Norfolk Botanical Garden",
+   "slug": "norfolk-botanical-garden",
+   "city": "Norfolk",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Norfolk Waterside Marriott",
+   "slug": "norfolk-waterside-marriott",
+   "city": "Norfolk",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Inn at Willow Grove",
+   "slug": "inn-at-willow-grove",
+   "city": "Orange",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper",
+   "photos": []
+  },
+  {
+   "name": "VSU - Virginia Hall",
+   "slug": "vsu-virginia-hall",
+   "city": "Petersburg",
+   "region": "Around Richmond",
+   "district": "Petersburg & south",
+   "photos": []
+  },
+  {
+   "name": "Paddy's Pub",
+   "slug": "paddy-s-pub",
+   "city": "Philadelphia",
+   "region": "Out of state",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Bienvenue",
+   "slug": "bienvenue",
+   "city": "Powhatan",
+   "region": "Around Richmond",
+   "district": "Powhatan County",
+   "photos": []
+  },
+  {
+   "name": "Fairview Farm",
+   "slug": "fairview-farm",
+   "city": "Powhatan",
+   "region": "Around Richmond",
+   "district": "Powhatan County",
+   "photos": []
+  },
+  {
+   "name": "The Foundry",
+   "slug": "the-foundry",
+   "city": "Powhatan",
+   "region": "Around Richmond",
+   "district": "Powhatan County",
+   "photos": []
+  },
+  {
+   "name": "The Mill at Fine Creek",
+   "slug": "the-mill-at-fine-creek",
+   "city": "Powhatan",
+   "region": "Around Richmond",
+   "district": "Powhatan County",
+   "photos": []
+  },
+  {
+   "name": "Barns of Kanak",
+   "slug": "barns-of-kanak",
+   "city": "Prince George",
+   "region": "Around Richmond",
+   "district": "Petersburg & south",
+   "photos": []
+  },
+  {
+   "name": "The Magnolia Mansion",
+   "slug": "the-magnolia-mansion",
+   "city": "Providence Forge",
+   "region": "Around Richmond",
+   "district": "New Kent & Charles City",
+   "photos": []
+  },
+  {
+   "name": "ACCA Shriners Center",
+   "slug": "acca-shriners-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Northside",
+   "photos": [
+    {
+     "id": "a16fb7_b75aac01b2954f8480184c0079bff80c~mv2.jpg",
+     "alt": "Wireless lamps illuminate a silent auction at ACCA shriners Center"
+    }
+   ]
+  },
+  {
+   "name": "Altria Theater",
+   "slug": "altria-theater",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "The Fan & VCU",
+   "photos": []
+  },
+  {
+   "name": "Black History Museum and Cultural Center of Virginia",
+   "slug": "black-history-museum-and-cultural-center-of-virginia",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Bolling Haxall House",
+   "slug": "bolling-haxall-house",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "a16fb7_71c012443fef449299dc3ae33686b904~mv2.jpg",
+     "alt": "drape door archways bolling haxall house"
+    },
+    {
+     "id": "a16fb7_a5721e51e6e04caaacbbe84b9650ba53~mv2.jpg",
+     "alt": "amber wedding uplighting on a chandelier and drape display"
+    },
+    {
+     "id": "a16fb7_eb8419f15f1544738741a89360dc63a7~mv2.jpg",
+     "alt": "pin spot lights bolling haxall house"
+    },
+    {
+     "id": "337130_56a498f22c194594935bf0d83fb5ae53~mv2.jpg",
+     "alt": "Shimmering uplighting provide a fiery look on the walls at Bolling Haxall House. Pin spots bring focus to the tables and highlight the centerpieces, while providing lighting to dine in."
+    }
+   ]
+  },
+  {
+   "name": "Bon Secours Training Center",
+   "slug": "bon-secours-training-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "Branch Museum",
+   "slug": "branch-museum",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Museum District",
+   "photos": []
+  },
+  {
+   "name": "Canal Club",
+   "slug": "canal-club",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": []
+  },
+  {
+   "name": "Celebrations at Redeemer",
+   "slug": "celebrations-at-redeemer",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "City Hall",
+   "slug": "city-hall",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Common House Richmond",
+   "slug": "common-house-richmond",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Copper Hall",
+   "slug": "copper-hall",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "Deco at CNB",
+   "slug": "deco-at-cnb",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Dogtown Dance Theatre",
+   "slug": "dogtown-dance-theatre",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Manchester",
+   "photos": []
+  },
+  {
+   "name": "Greater Richmond Convention Center",
+   "slug": "greater-richmond-convention-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Hardywood Brewery",
+   "slug": "hardywood-brewery",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "Havana 59",
+   "slug": "havana-59",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": []
+  },
+  {
+   "name": "Hilton Richmond Hotel & Spa/Short Pump",
+   "slug": "hilton-richmond-hotel-spa-short-pump",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Short Pump & Far West End",
+   "photos": [
+    {
+     "id": "a16fb7_79efa74f7e0f4aef95a4cc7d389490d3~mv2.jpg",
+     "alt": "wedding gobo hilton hotel richmond"
+    },
+    {
+     "id": "337130_e62ae69c4a204573a90222648e4ec9f7~mv2.jpg",
+     "alt": "Uplighting and drape for large indian wedding at hilton spa and hotel short pump"
+    },
+    {
+     "id": "a16fb7_cb8db835c33648e59fa709c8018753b1~mv2.jpg",
+     "alt": "warm orange uplighting at hotel hilton in short pump"
+    }
+   ]
+  },
+  {
+   "name": "Hippodrome Theater",
+   "slug": "hippodrome-theater",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Historic Mankin Mansion",
+   "slug": "historic-mankin-mansion",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "East End",
+   "photos": []
+  },
+  {
+   "name": "Historic Tuckahoe",
+   "slug": "historic-tuckahoe",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Short Pump & Far West End",
+   "photos": [
+    {
+     "id": "a16fb7_2f5118386824400ebba64ffb26a7f3bc~mv2.jpg",
+     "alt": "Rattan lighting fixtures and greenery at Tuckahoe"
+    },
+    {
+     "id": "a16fb7_a8fbfed6a6e04faf9118be08eaa48303~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_d132e2a0d31c4665addcbe6a8810b6e3~mv2.jpg",
+     "alt": "uplighting behind stage on sheert curtains for wedding at historic tuckahoe"
+    },
+    {
+     "id": "a16fb7_d434a33938ca4de6a3f9cbf3ef0d95c9~mv2.jpg",
+     "alt": "Rattan Lighting rentals tuckahoe  chandliers and pendants"
+    },
+    {
+     "id": "a16fb7_ff379acf27ab4dfd87d7e3012224507c~mv2.jpg",
+     "alt": "Rattan Lighting rentals tuckahoe"
+    },
+    {
+     "id": "a16fb7_9e8d1607ab1a4a20bd1b7ea070a584d9~mv2.jpg",
+     "alt": "Black Rattan Lighting rentals tuckahoe"
+    },
+    {
+     "id": "a16fb7_50b214aa2442486c8a0ffb23d4c8f498~mv2.jpeg",
+     "alt": "Bistro Lighting In a pole tent at Tuckahoe Plantation in Richmond Virginia"
+    }
+   ]
+  },
+  {
+   "name": "Hotel John Marshall",
+   "slug": "hotel-john-marshall",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "337130_38be9da391d0477190f26179c6f728b4~mv2.jpg",
+     "alt": "women dancing with uplighting behind them at the hotel john marshall"
+    },
+    {
+     "id": "a16fb7_42f2d12a28c74135bf88914ac709702d~mv2.jpg",
+     "alt": "blue uplighting john marshall ballrooms"
+    },
+    {
+     "id": "a16fb7_6ed1e6dd0856491f8f5af6ca8faf3b37~mv2.jpg",
+     "alt": "pin spots on floral centerpieces at john marshall ballrooms"
+    },
+    {
+     "id": "a16fb7_9b1ac8df2def406595e107138141e774~mv2.jpg",
+     "alt": "wedding lighting richmond john marshall"
+    },
+    {
+     "id": "a16fb7_9b63d58ea4ee489cb2a599316d347c8a~mv2.jpg",
+     "alt": "custom name monogram gobo john marshall ballrooms"
+    },
+    {
+     "id": "a16fb7_b89c9d7696cd49e4ab98e5007298b28e~mv2.jpg",
+     "alt": "intense red uplighting and pinspots john marshall ballrooms"
+    },
+    {
+     "id": "a16fb7_c378b4e2471e46a2aa31a2b1f13e9ae4~mv2.jpg",
+     "alt": "paper lanterns prom john marshall uplighting richmond virginia"
+    },
+    {
+     "id": "a16fb7_cbbbff601a2041e488a777b1e8d56505~mv2.jpg",
+     "alt": "custom projections ceiling john marhsall"
+    },
+    {
+     "id": "a16fb7_e418267283e348b7a700796129654423~mv2.jpg",
+     "alt": "blue uplighting, bistro lights strung over the ballroom, and paper lanterns at Hotel John Marshall"
+    },
+    {
+     "id": "a16fb7_fbc7e4457f0f4e7dafefbeca1436f06f~mv2.jpg",
+     "alt": "warm pin spots on tables john marshall balroom"
+    },
+    {
+     "id": "337130_0a2bdcd8f5c54caebe9f2a15d412e86d~mv2.jpg",
+     "alt": "bistro lighting strung from the balconies across the ballroom at john marshall ballroom"
+    },
+    {
+     "id": "a16fb7_36693fcd75214c7c8c64349f8778a99a~mv2.jpg",
+     "alt": "uplighting paper lanterns prom john marshall hotel ballrooms"
+    }
+   ]
+  },
+  {
+   "name": "Hovey Field VUU",
+   "slug": "hovey-field-vuu",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Northside",
+   "photos": []
+  },
+  {
+   "name": "Jefferson Hotel - Empire Ballroom",
+   "slug": "jefferson-hotel-empire-ballroom",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Jefferson Hotel - Grand Ballroom",
+   "slug": "jefferson-hotel-grand-ballroom",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Jepson Alumni Center",
+   "slug": "jepson-alumni-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": []
+  },
+  {
+   "name": "Kabana Rooftop",
+   "slug": "kabana-rooftop",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "a16fb7_f4daa318f4c5475ca79d9c27973143f2~mv2.jpg",
+     "alt": "kabana rooftop Video wall screen for concerts, events, weddings"
+    }
+   ]
+  },
+  {
+   "name": "Library of Virginia",
+   "slug": "library-of-virginia",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Linden Row Inn",
+   "slug": "linden-row-inn",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "337130_320a17b00c084ece99d7dfddcd2a9ffd~mv2.jpg",
+     "alt": "Cascading Edison bistro lghting hangs over guest's seats at Linden Row Inn. Lively uplighting gleams on the garden's trees"
+    },
+    {
+     "id": "a16fb7_0a3a5fec4ece475cb21c7d9f18dc3c27~mv2.jpg",
+     "alt": "Wedding setup on the courtyard of linden row inn with a garden vibe, chandeliers hang on hooks over the table."
+    },
+    {
+     "id": "a16fb7_0ca6b5b467b2487d8085ff57675b4311~mv2.jpg",
+     "alt": "wedding lighting richmond Linden Row Inn"
+    },
+    {
+     "id": "a16fb7_4d05c3efc07841f7b9bc8de52f4ef6ef~mv2.jpg",
+     "alt": "Uplighting on the trees for a wedding at linden row inn waterproo uplighting"
+    },
+    {
+     "id": "a16fb7_a6a429fa7f5b4a09839173c81ab6cec1~mv2.jpg",
+     "alt": "crystal chandelier linden row inn"
+    },
+    {
+     "id": "a16fb7_d43c0058eb2649af80dce3586c8b84c2~mv2.jpg",
+     "alt": "bistro lighting string lights paper lanterns uplights linden row inn"
+    },
+    {
+     "id": "a16fb7_d7df8616ebdf450588502844547ebac2~mv2.png",
+     "alt": "paper lanterns bistro lighting wedding linden row inn"
+    },
+    {
+     "id": "a16fb7_f5720f59bdcb45868255dc0cb6facbd1~mv2.jpg",
+     "alt": "pendant and rattan chandeliers Linden Row Inn tent"
+    },
+    {
+     "id": "a16fb7_242ceb82f5d442828866b6aeb5f37a1e~mv2.jpg",
+     "alt": "Rattan lighting rentals linden Row Inn"
+    },
+    {
+     "id": "a16fb7_b071d5deeedb407684b1cdbca90b9219~mv2.jpg",
+     "alt": "Paper lanterns and bistro lighting at Linden Row Inn"
+    }
+   ]
+  },
+  {
+   "name": "Main Street Station",
+   "slug": "main-street-station",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": [
+    {
+     "id": "337130_b8a09c74944f42f99164452f1817a930~mv2.jpg",
+     "alt": "Sparkling Chandelier group hangs above a wedding at Main Street Station"
+    },
+    {
+     "id": "337130_fc7f6b969fe34b64a513440be8c65f2f~mv2.jpg",
+     "alt": "Trio of chandeliers hanging at main street station in richmond virginia"
+    }
+   ]
+  },
+  {
+   "name": "Maymont Garden Hall",
+   "slug": "maymont-garden-hall",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont",
+   "photos": []
+  },
+  {
+   "name": "Maymont Mansion",
+   "slug": "maymont-mansion",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont",
+   "photos": []
+  },
+  {
+   "name": "Maymont Nature Center",
+   "slug": "maymont-nature-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont",
+   "photos": [
+    {
+     "id": "a16fb7_6588838e1b074ab3b534b50f117427c7~mv2.jpg",
+     "alt": "rattan and silk florals maymont nature center"
+    }
+   ]
+  },
+  {
+   "name": "NAMA",
+   "slug": "nama",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Omni Richmond",
+   "slug": "omni-richmond",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Quirk Hotel Richmond",
+   "slug": "quirk-hotel-richmond",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Richmond Flying Squirrels Party Pavilion",
+   "slug": "richmond-flying-squirrels-party-pavilion",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "Richmond Marriott",
+   "slug": "richmond-marriott",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Robinson Theater",
+   "slug": "robinson-theater",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": []
+  },
+  {
+   "name": "Schoolhouse at Hawthorne",
+   "slug": "schoolhouse-at-hawthorne",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "Science Museum of Virginia - Dewey Gottwald",
+   "slug": "science-museum-of-virginia-dewey-gottwald",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "Science Museum of Virginia Rotunda",
+   "slug": "science-museum-of-virginia-rotunda",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": [
+    {
+     "id": "337130_cf5f7ffd33eb41dbbc7b8ce73146b3d8~mv2.jpg",
+     "alt": "Beautiful Uplighting & Gobo Lighting look at Science Musuem of Virginia Rotunda"
+    }
+   ]
+  },
+  {
+   "name": "Science Museum of Virginia Thalheimer Pavilion",
+   "slug": "science-museum-of-virginia-thalheimer-pavilion",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "Shalom Farm Northside",
+   "slug": "shalom-farm-northside",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Northside",
+   "photos": [
+    {
+     "id": "a16fb7_4dc4eaed04b346eaac10b4db4972b5db~mv2.jpg",
+     "alt": "shalom farms events nonprofit lighting crystal lamps"
+    }
+   ]
+  },
+  {
+   "name": "Spang TV Studio",
+   "slug": "spang-tv-studio",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "Studio Two Three",
+   "slug": "studio-two-three",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Manchester",
+   "photos": []
+  },
+  {
+   "name": "The Boathouse at Rocketts Landing -The River View Room",
+   "slug": "the-boathouse-at-rocketts-landing-the-river-view-room",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": []
+  },
+  {
+   "name": "The Carillon",
+   "slug": "the-carillon",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont",
+   "photos": []
+  },
+  {
+   "name": "The Commonwealth Club",
+   "slug": "the-commonwealth-club",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "337130_f63162b491c749e2a8fa9c342b1eca40~mv2.jpg",
+     "alt": "Bride & Groom dance surrounded by vibrant uplighting in the Commonwealth Club of VA"
+    },
+    {
+     "id": "a16fb7_121ba2033b4c455fad6f7d4a379536fe~mv2.jpg",
+     "alt": "sheer drape archway over the event entrance at an event at the commonwealth club"
+    },
+    {
+     "id": "a16fb7_42123265798f4ffbbd00b48b9f141740~mv2.jpg",
+     "alt": "wedding uplighting at commonwealth club"
+    },
+    {
+     "id": "a16fb7_42c05227ab1945408ebacf7d05728593~mv2.jpg",
+     "alt": "Chandeliers and drape  backdrop cover the stage at the commonwealth club ballroom"
+    },
+    {
+     "id": "a16fb7_a79802d5aa774d468ec7b1223ea5abbc~mv2.jpg",
+     "alt": "pin spots for wedding at commonwealth club of VA"
+    },
+    {
+     "id": "a16fb7_ac1cc6aaa3d54026b78adf967719db48~mv2.jpg",
+     "alt": "sheer drape backdrop behind the photobooth at an event at the commonwealth club"
+    },
+    {
+     "id": "a16fb7_f619f009f5ad4d1dae7e0732738bf9b8~mv2.jpg",
+     "alt": "Chandeliers and drape  backdrop cover the stage at the commonwealth club ballroom. Empire chanderliers hang from gooseneck chandelier stands and velvet drape lines the back of the stage."
+    },
+    {
+     "id": "a16fb7_6840b47b06a34ae3b13395800334602c~mv2.jpg",
+     "alt": "uplighting at commonwealth club"
+    }
+   ]
+  },
+  {
+   "name": "The Country Club of Virginia - James River",
+   "slug": "the-country-club-of-virginia-james-river",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Short Pump & Far West End",
+   "photos": []
+  },
+  {
+   "name": "The Country Club of Virginia - Westhampton",
+   "slug": "the-country-club-of-virginia-westhampton",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": []
+  },
+  {
+   "name": "The Diamond",
+   "slug": "the-diamond",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Scott's Addition",
+   "photos": []
+  },
+  {
+   "name": "The Faison Center",
+   "slug": "the-faison-center",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": []
+  },
+  {
+   "name": "The Foundry at Tredegar",
+   "slug": "the-foundry-at-tredegar",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": [
+    {
+     "id": "337130_8e9851167a7f4fa9828055209dfded0a~mv2.jpg",
+     "alt": "Wedding Lighting at Tredegar Iron Works"
+    }
+   ]
+  },
+  {
+   "name": "The Hidden Oaks",
+   "slug": "the-hidden-oaks",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "The Poe Museum",
+   "slug": "the-poe-museum",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Shockoe & Church Hill",
+   "photos": []
+  },
+  {
+   "name": "The Tuckahoe Woman's Club",
+   "slug": "the-tuckahoe-woman-s-club",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": []
+  },
+  {
+   "name": "The Westin Richmond",
+   "slug": "the-westin-richmond",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": [
+    {
+     "id": "337130_6b8111656b1b40209fa298c5c61dc9e8~mv2.jpg",
+     "alt": "Best wedding lighting pins spot at westin richmond"
+    },
+    {
+     "id": "a16fb7_1cdfb6f7ead84ccc9267c78c52193b7a~mv2.jpg",
+     "alt": "Sparse uplighting at Richmond Westin"
+    },
+    {
+     "id": "a16fb7_b5e5a489aae34a86b26927d411ef5aa1~mv2.jpg",
+     "alt": "pin spotting westin richmond"
+    }
+   ]
+  },
+  {
+   "name": "The Workshop by T&D",
+   "slug": "the-workshop-by-t-d",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "District to confirm",
+   "photos": []
+  },
+  {
+   "name": "VCU - Engineering Research Building",
+   "slug": "vcu-engineering-research-building",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "The Fan & VCU",
+   "photos": []
+  },
+  {
+   "name": "Veritas School",
+   "slug": "veritas-school",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Northside",
+   "photos": []
+  },
+  {
+   "name": "Virginia House",
+   "slug": "virginia-house",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "West End",
+   "photos": [
+    {
+     "id": "337130_d9c5fe50e0ef442ba5aed99638ab54a6~mv2.webp",
+     "alt": "Wedding Lighting Inspiration for string lighting canopy at Virginia House in Richmond, VA."
+    },
+    {
+     "id": "47fe9c_3508336410ff4f19bea9f32bdd68abe8~mv2.jpg",
+     "alt": "crystall chandelier virginia house"
+    },
+    {
+     "id": "a16fb7_75f863ba13194ea79b71c93bb4feefc7~mv2.jpg",
+     "alt": "twinkle lighting canopy in a clear-top tent at virginia house"
+    },
+    {
+     "id": "a16fb7_a671049644704cffbab24b7098b9375e~mv2.jpg",
+     "alt": "Wedding string lighting canopy Virginia House top wedding lighting trends 2024"
+    },
+    {
+     "id": "a16fb7_eb019a8fec284cbfb21d0b8c6fa4f89a~mv2.jpg",
+     "alt": "twinkle light canopy in a clear top tent for a wedding at virginia house in richmond"
+    },
+    {
+     "id": "a16fb7_684bd5ae5f6d461eb0a5e44bdb302965~mv2.jpg",
+     "alt": "silk greenery crystal chandeliers bistro lighting virginia house"
+    }
+   ]
+  },
+  {
+   "name": "Virginia Museum of Fine Arts",
+   "slug": "virginia-museum-of-fine-arts",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Museum District",
+   "photos": []
+  },
+  {
+   "name": "Virginia Museum of History & Culture",
+   "slug": "virginia-museum-of-history-culture",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Museum District",
+   "photos": []
+  },
+  {
+   "name": "Virginia War Memorial",
+   "slug": "virginia-war-memorial",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Downtown",
+   "photos": []
+  },
+  {
+   "name": "Wellesley Clubhouse",
+   "slug": "wellesley-clubhouse",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Short Pump & Far West End",
+   "photos": []
+  },
+  {
+   "name": "Westover at Maymont",
+   "slug": "westover-at-maymont",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Byrd Park & Maymont",
+   "photos": []
+  },
+  {
+   "name": "Willow Oaks Country Club",
+   "slug": "willow-oaks-country-club",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "South Side",
+   "photos": []
+  },
+  {
+   "name": "Windgate by Wyndham - Short Pump",
+   "slug": "windgate-by-wyndham-short-pump",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "Short Pump & Far West End",
+   "photos": []
+  },
+  {
+   "name": "ICA at VCU",
+   "slug": "ica-at-vcu",
+   "city": "Richmond",
+   "region": "Richmond",
+   "district": "The Fan & VCU",
+   "photos": []
+  },
+  {
+   "name": "Berglund Center",
+   "slug": "berglund-center",
+   "city": "Roanoke",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "The Hotel Roanoke & Conference Center",
+   "slug": "the-hotel-roanoke-conference-center",
+   "city": "Roanoke",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "The Rockville Center",
+   "slug": "the-rockville-center",
+   "city": "Rockville",
+   "region": "Around Richmond",
+   "district": "Hanover County",
+   "photos": [
+    {
+     "id": "a16fb7_01c62d3583c74ec5b8861efd42683500~mv2.png",
+     "alt": "drape canopy wedding richmond virginia Rockville Center"
+    }
+   ]
+  },
+  {
+   "name": "Guildford Farm",
+   "slug": "guildford-farm",
+   "city": "Ruckersville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper",
+   "photos": []
+  },
+  {
+   "name": "Barns At Mattaponi Springs - Pine Barn",
+   "slug": "barns-at-mattaponi-springs-pine-barn",
+   "city": "Ruther Glen",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "The Barns at Mattaponi Springs - Poplar Barn",
+   "slug": "the-barns-at-mattaponi-springs-poplar-barn",
+   "city": "Ruther Glen",
+   "region": "Around Richmond",
+   "district": "Caroline & Louisa",
+   "photos": []
+  },
+  {
+   "name": "Mount Ida Event Barn",
+   "slug": "mount-ida-event-barn",
+   "city": "Scottsville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": [
+    {
+     "id": "a16fb7_69230b458d454b9fa56a877b49e68da4~mv2.jpg",
+     "alt": "Drape Canopy and bistro lights at Mount Ida Charlottesville Virginia wedding"
+    },
+    {
+     "id": "a16fb7_9e9a6595622c4531aecf1cfaa0a939ae~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_cc1e8a36e56e4934907328fc5fc8cc56~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_6cdd6d5a3e1c4deb8ba15a109c7cfd0f~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_6e456c4ded924d418c82d69c8edc3f9f~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_98e7ac8961564971acb0fd2a2d1e5b31~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_44d43cabd7084b2caf20be28fc29db92~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_de634a708e544d449c300cd86cc6e28f~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_65271051e26e4f2c914aefcde04fd166~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_92337a17f0b44875aa0d310b91b491eb~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_b571d98a3ae34ac58944940b6a11c133~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_6296c7d7a51140208e67d30fa8097b63~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_583e9ecde4644a5b9c6bd6b11778c247~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_b0f7646275d3497d87f619e72664911f~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_1e94271c029a4e198f2dafcf63c839fa~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_c5eb263302934fb7809284a5abd87ee9~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_a5b3f33bff12457ab68c62fdc54df6aa~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_b0329e5c43754cf0a80131dca5b37c66~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_73b8751b62874ee7a6f58249e25621c9~mv2.jpg",
+     "alt": ""
+    },
+    {
+     "id": "a16fb7_b76790dc27d04330b77a02d4b0ee6013~mv2.jpg",
+     "alt": ""
+    }
+   ]
+  },
+  {
+   "name": "Waters Edge at Mt. Ida",
+   "slug": "waters-edge-at-mt-ida",
+   "city": "Scottsville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Albemarle County",
+   "photos": []
+  },
+  {
+   "name": "The Market at Grelen",
+   "slug": "the-market-at-grelen",
+   "city": "Somerset",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper",
+   "photos": []
+  },
+  {
+   "name": "Berry Hill Resort",
+   "slug": "berry-hill-resort",
+   "city": "South Boston",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Fawn Lake Country Club",
+   "slug": "fawn-lake-country-club",
+   "city": "Spotsylvania Courthouse",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Lydia Mountain Lodge - Teenie's Sawmill Barn",
+   "slug": "lydia-mountain-lodge-teenie-s-sawmill-barn",
+   "city": "Stanardsville",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Orange, Greene & Culpeper",
+   "photos": []
+  },
+  {
+   "name": "American Hotel Banquet Room",
+   "slug": "american-hotel-banquet-room",
+   "city": "Staunton",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Riverside Vines",
+   "slug": "riverside-vines",
+   "city": "Sutherland",
+   "region": "Around Richmond",
+   "district": "Petersburg & south",
+   "photos": []
+  },
+  {
+   "name": "31st Street Stage VA Beach",
+   "slug": "31st-street-stage-va-beach",
+   "city": "Virginia Beach",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Anderson House",
+   "slug": "anderson-house",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": [
+    {
+     "id": "a16fb7_2f08420a92d5492e89e25e46b4292b07~mv2.png",
+     "alt": "crystal empire chandelier lars anderson house"
+    }
+   ]
+  },
+  {
+   "name": "Decatur House",
+   "slug": "decatur-house",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "District Winery",
+   "slug": "district-winery",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Dock 5",
+   "slug": "dock-5",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Hotel Monaco",
+   "slug": "hotel-monaco",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Ukraine House",
+   "slug": "ukraine-house",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "University of DC",
+   "slug": "university-of-dc",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Viceroy Hotel",
+   "slug": "viceroy-hotel",
+   "city": "Washington",
+   "region": "Northern Virginia & DC",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Sky Ridge Farm",
+   "slug": "sky-ridge-farm",
+   "city": "Waynesboro",
+   "region": "Charlottesville & the Blue Ridge",
+   "district": "Blue Ridge & Shenandoah Valley",
+   "photos": []
+  },
+  {
+   "name": "Pop Castle",
+   "slug": "pop-castle",
+   "city": "White Stone",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "The Maine of Williamsburg",
+   "slug": "the-maine-of-williamsburg",
+   "city": "Williamsburg",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Colonial Heritage Club",
+   "slug": "colonial-heritage-club",
+   "city": "Williamsburg",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "DoubleTree Hotel Williamsburg",
+   "slug": "doubletree-hotel-williamsburg",
+   "city": "Williamsburg",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Kingsmill Resort",
+   "slug": "kingsmill-resort",
+   "city": "Williamsburg",
+   "region": "Williamsburg & the coast",
+   "district": "",
+   "photos": []
+  },
+  {
+   "name": "Puesta Del Sol Farm",
+   "slug": "puesta-del-sol-farm",
+   "city": "Yellow Spring",
+   "region": "Southwest & Southside Virginia",
+   "district": "",
+   "photos": []
+  }
+ ]
+}

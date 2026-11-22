@@ -548,10 +548,45 @@ async function quote(entry, trail, h) {
   return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
 }
 
+// ---- pictures by venue: every venue by area on the left, a wall of the venues we have photos of
+const VENUES = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'content/venues.json'), 'utf8'));
+const venuePhotos = (v) => v.photos.filter((x) => photos[x.id]);
+/** Venues that have at least one photo we hold, most photos first. Each gets its own page at /venue/<slug>. */
+export const venuesWithPhotos = () => VENUES.venues.filter((v) => venuePhotos(v).length).sort((a, b) => venuePhotos(b).length - venuePhotos(a).length);
+const byName = (a, b) => a.name.toLowerCase().replace('the ', '').localeCompare(b.name.toLowerCase().replace('the ', ''));
+function venues(entry, trail, h) {
+  let side = '';
+  let label = null;
+  for (const { region, district } of VENUES.order) {
+    const vs = VENUES.venues.filter((v) => v.region === region && v.district === district).sort(byName);
+    if (!vs.length) continue;
+    const group = district ? region : 'Further afield';
+    if (group !== label) { side += `<p class="vg-lab">${esc(group)}</p>`; label = group; }
+    const items = vs.map((v) => {
+      const n = venuePhotos(v).length;
+      return n ? `<li><a href="/venue/${v.slug}">${esc(v.name)}<span>${n}</span></a></li>` : `<li class="np">${esc(v.name)}</li>`;
+    }).join('');
+    side += `<details><summary><h2>${esc(district || region)}</h2><span>${vs.length}</span></summary><ul>${items}</ul></details>`;
+  }
+  const wall = venuesWithPhotos().map((v, k) => {
+    const ph = venuePhotos(v);
+    return `<li class="vg-t"><a href="/venue/${v.slug}">${pic(ph[0].id, { alt: ph[0].alt, sizes: '(min-width: 62rem) 24rem, 50vw', eager: k < 2 })}<span class="vg-n">${esc(v.name)}</span><span class="vg-c">${ph.length}</span></a></li>`;
+  }).join('');
+  const html = `${pageHead(h.text, trail, { tag: h.tag })}<div class="vg-split"><nav class="vg-side" aria-label="Venues by area">${side}</nav><ul class="vg-grid vg-big">${wall}</ul></div>`;
+  return { html, bodyClass: 'vgp vg9' };
+}
+/** Markup for one venue's page. */
+export function venuePage(v) {
+  const trail = [{ name: 'Home', path: '/' }, { name: 'Pictures', path: '/venue' }, { name: v.name, path: `/venue/${v.slug}` }];
+  const figs = venuePhotos(v).map((x, k) => `<figure>${pic(x.id, { alt: x.alt, sizes: '(min-width: 62rem) 28rem, 100vw', eager: k === 0 })}${x.alt ? `<figcaption>${esc(x.alt)}</figcaption>` : ''}</figure>`).join('');
+  return `${pageHead(v.name, trail)}<div class="vg-ven">${figs}</div><p class="kcat-b"><a class="btn" href="/venue">Pictures by Venue</a></p>`;
+}
+
 const BY_PATH = {
   '/': home,
   '/services': services,
   '/reviews': reviews,
+  '/venue': venues,
   '/get-a-quote': quote,
   '/catalog': catalog,
   '/chandelier-pendant-catalog': chandeliers,

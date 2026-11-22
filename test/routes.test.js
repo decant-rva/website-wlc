@@ -54,7 +54,11 @@ test('sitemap lists only indexable pages', async () => {
   assert.equal(res.statusCode, 200);
   const locs = [...res.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const indexable = Object.values(inventory).filter((p) => !/noindex/i.test(p.robots)).length;
-  assert.equal(locs.length, indexable);
+  // The only pages added since the inventory are the per-venue photo pages.
+  const venuePages = locs.filter((l) => /\/venue\/[^/]+$/.test(l));
+  assert.ok(venuePages.length > 0);
+  assert.equal(locs.length - venuePages.length, indexable);
+  for (const l of venuePages) assert.equal((await get(new URL(l).pathname)).statusCode, 200, l);
   assert.ok(!locs.some((l) => l.includes('/blog/tags/')));
 });
 

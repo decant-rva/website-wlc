@@ -47,13 +47,17 @@ properties at the top of the stylesheet; `--white` is the single grey-white used
 
 `src/layouts/Base.astro` is the header, footer and closing band. `src/lib/templates.js` has one
 function per page type (home, services, service, catalog, chandeliers, product, blog, post, about,
-contact, FAQ, packages, reviews). Each reads the page's Markdown and lays it out. A page with no
+contact, FAQ, packages, reviews, quote, pictures by venue). Each reads the page's Markdown and lays it out. A page with no
 template of its own gets the navy header and its Markdown as prose, laid out by
 `src/lib/rehype-layout.js`.
 
 Content that templates read besides the Markdown: `facts` in a service page's front matter (the
 colour tiles), `content/chandeliers.json` (the chandelier sorting), and the photo and price pairs
 in `content/pages/wedding-decor-package-cost.md`.
+
+`content/venues.json` is the venue list behind `/venue`. Each venue with at least one photo also
+gets a page at `/venue/<slug>` (`src/pages/venue/[slug].astro`). These are the only URLs that were
+not on the previous site.
 
 Every page has one main heading (owner decision, 22 November 2026). Where the previous site had
 several H1s the first is kept; where it had none, the heading is an H2 styled the same, so the

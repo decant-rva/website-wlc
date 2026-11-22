@@ -1,0 +1,15 @@
+---
+// One page per venue we have photos of. The list comes from content/venues.json.
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site.json';
+import { venuePage, venuesWithPhotos } from '../../lib/templates.js';
+
+export function getStaticPaths() {
+  return venuesWithPhotos().map((venue) => ({ params: { slug: venue.slug }, props: { venue } }));
+}
+
+const { venue } = Astro.props;
+---
+<Base title={`${venue.name} | ${site.shortName}`} canonical={`${site.url}/venue/${venue.slug}`} section="/venue" bodyClass="vgp vgv">
+  <Fragment set:html={venuePage(venue)} />
+</Base>
