@@ -140,6 +140,25 @@ figure.wide img { width: 100%; max-height: 85vh; object-fit: cover; }
 .credit { margin-top: -1.5rem; font-size: .8125rem; text-align: right; }
 .credit a { color: var(--ink); }
 
+/* Captioned photo tiles (venue galleries) */
+.tiles { list-style: none; max-width: var(--wide); padding: 0 !important; display: grid; gap: 1.5rem 1rem; grid-template-columns: repeat(2, 1fr); font-weight: 700; font-size: .9375rem; line-height: 1.35; color: var(--ink); text-align: center; }
+.tiles li { margin: 0; }
+.tiles picture, .tiles > li > img { display: block; margin-bottom: .6rem; }
+.tiles img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+@media (min-width: 40rem) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 62rem) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+
+/* Reviews: photo, name, then the review, in one readable column */
+.p-reviews figure.wide { max-width: var(--measure); margin: 3rem auto 0; }
+.p-reviews figure.wide img { max-height: 26rem; }
+.p-reviews .content h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-top: 1.25rem; }
+
+.subscribe { margin-top: 1rem; }
+
+/* Catalog index: product shots are shown whole, not cropped */
+.p-catalog .gallery { max-width: var(--wide); margin: 1.5rem auto; gap: 1rem; }
+.p-catalog .gallery img { object-fit: contain; aspect-ratio: 1; background: var(--white); }
+
 /* Cards */
 .cards { list-style: none; max-width: var(--wide); padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
 .cards li { margin: 0; }

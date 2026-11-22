@@ -48,9 +48,11 @@ function photoOf(p) {
   if (isEl(node, 'a') && kids(node).length === 1) node = kids(node)[0];
   if (isEl(node, 'picture')) node = node.children.find((x) => isEl(x, 'img'));
   if (!isEl(node, 'img')) return null;
-  // Transparent PNGs are logos and drawn graphics, never photographs.
-  const graphic = /\.(png|svg|gif)$/i.test(String(node.properties.src || ''));
-  return { holder, width: Number(node.properties.width) || 0, graphic };
+  // Small transparent PNGs are icons. Large ones are logos or drawings when
+  // they stand alone, and product photos when they sit in a row of photos.
+  const png = /\.(png|svg|gif)$/i.test(String(node.properties.src || ''));
+  const width = Number(node.properties.width) || 0;
+  return { holder, width, png, icon: png && width <= ICON_MAX };
 }
 
 function linkOf(p) {
@@ -72,13 +74,19 @@ function group(parent) {
     if (isEl(node) && /^h[1-6]$/.test(node.tagName)) seenHeading = true;
 
     const photo = photoOf(node);
-    if (photo && !photo.graphic) {
+    const nextPhoto = photo && !photo.icon ? photoOf(input[i + 1]) : null;
+    const prevWasPhoto = out.length > 0 && out[out.length - 1].properties?.className?.includes('gallery');
+    if (photo && !photo.icon && (!photo.png || prevWasPhoto || (nextPhoto && !nextPhoto.icon))) {
       const run = [photo.holder];
       while (i + 1 < input.length) {
         const next = photoOf(input[i + 1]);
-        if (!next || next.graphic) break;
+        if (!next || next.icon) break;
         run.push(next.holder);
         i++;
+      }
+      if (prevWasPhoto) {
+        out[out.length - 1].children.push(...run);
+        continue;
       }
       if (run.length >= 3) {
         // Gallery tiles are small, so the browser can pick a smaller file.
@@ -122,6 +130,19 @@ function group(parent) {
     }
 
     if (isEl(node) && (node.tagName === 'section' || node.tagName === 'div')) group(node);
+    // A list whose every item starts with a photo is a grid of captioned tiles.
+    if (isEl(node, 'ul')) {
+      const items = kids(node).filter((c) => isEl(c, 'li'));
+      const lead = (li) => { const f = kids(li)[0]; return isEl(f, 'picture') || isEl(f, 'img') || isEl(f, 'comment') || f?.type === 'comment'; };
+      if (items.length && items.every(lead)) {
+        node.properties = { ...node.properties, className: ['tiles'] };
+        for (const li of items) {
+          for (const c of kids(li)[0].children || []) {
+            if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: '(min-width: 62rem) 25vw, 50vw' };
+          }
+        }
+      }
+    }
     out.push(node);
   }
   parent.children = out;

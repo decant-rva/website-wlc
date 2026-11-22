@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cards from '../components/Cards.astro';
 import QuoteForm from '../components/QuoteForm.astro';
+import SubscribeForm from '../components/SubscribeForm.astro';
 import { allEntries, latestPosts, LISTING } from '../lib/entries.js';
 
 export async function getStaticPaths() {
@@ -35,6 +36,7 @@ if (d.template === 'blog-tag') items = (await latestPosts(Infinity)).filter((e) 
       ? <Cards items={items} variant={d.template === 'store-category' ? 'product' : 'post'} />
       : <Content />}
     {d.path === '/get-a-quote' && <QuoteForm />}
+    {(d.path === '/subscribe' || d.path === '/catalog') && <SubscribeForm />}
     {d.related && d.related.length > 0 && <Cards items={d.related} variant="overlay" />}
     {homePosts.length > 0 && (
       <section class="home-blog">
