@@ -1,15 +1,37 @@
 // The two things that happen to a saved quote request: it is posted to the
 // GigFriend lead intake, and a notification email goes to the office inbox.
 //
+// The email goes out through the Google Workspace SMTP relay, signed in as a
+// Workspace user with an app password.
+//
 // Environment:
 //   LEAD_INTAKE_URL      full URL of gigfriend-server's /lead-intake
 //   LEAD_INTAKE_SECRET   sent as the X-Lead-Token header
-//   POSTMARK_TOKEN       Postmark server token
+//   SMTP_USER            Workspace address the site signs in as
+//   SMTP_PASS            app password for that address
+//   SMTP_HOST            default smtp-relay.gmail.com
+//   SMTP_PORT            default 587 (STARTTLS)
+//   QUOTE_EMAIL_FROM     address the notification is sent from (the Workspace user or one of its aliases)
 //   QUOTE_EMAIL_TO       inbox that receives the notification
-//   QUOTE_EMAIL_FROM     verified sender address
+import nodemailer from 'nodemailer';
 import { quoteEmail } from './quote-email.js';
 
 const MAX_ATTACH_BYTES = 9 * 1024 * 1024;
+
+let cached;
+/** The SMTP connection, made once. Throws when the relay is not configured. */
+function relay() {
+  const { SMTP_USER, SMTP_PASS } = process.env;
+  if (!SMTP_USER || !SMTP_PASS || !process.env.QUOTE_EMAIL_TO || !process.env.QUOTE_EMAIL_FROM) throw new Error('notification email is not configured');
+  cached ||= nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp-relay.gmail.com',
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: false,
+    requireTLS: true,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+  return cached;
+}
 
 export async function postIntake(row, fetchFn = fetch) {
   const url = process.env.LEAD_INTAKE_URL;
@@ -27,42 +49,37 @@ export async function postIntake(row, fetchFn = fetch) {
   if (!res.ok) throw new Error(`lead intake answered ${res.status}`);
 }
 
-export async function sendEmail(row, files, fetchFn = fetch) {
-  const token = process.env.POSTMARK_TOKEN;
-  const to = process.env.QUOTE_EMAIL_TO;
-  const from = process.env.QUOTE_EMAIL_FROM;
-  if (!token || !to || !from) throw new Error('notification email is not configured');
+/** The message for one request, in the shape nodemailer takes. */
+export function quoteMessage(row, files, { from, to }) {
   const total = files.reduce((n, f) => n + f.bytes.length, 0);
   const attach = total <= MAX_ATTACH_BYTES ? files : [];
   const { subject, text, html, cids } = quoteEmail(row, files, attach.length === files.length);
-  const res = await fetchFn('https://api.postmarkapp.com/email', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', accept: 'application/json', 'X-Postmark-Server-Token': token },
-    body: JSON.stringify({
-      From: from, To: to, ReplyTo: row.email, Subject: subject, TextBody: text, HtmlBody: html, MessageStream: 'outbound',
-      // A content id lets the body show each photo in place; mail apps still list them as attachments.
-      Attachments: attach.map((f, i) => ({ Name: f.filename, Content: Buffer.from(f.bytes).toString('base64'), ContentType: f.mime, ContentID: `cid:${cids[i]}` })),
-    }),
-  });
-  if (!res.ok) throw new Error(`email provider answered ${res.status}`);
+  return {
+    from: { name: 'Wedding Lighting Co website', address: from },
+    to,
+    replyTo: { name: row.name, address: row.email },
+    subject,
+    text,
+    html,
+    // A content id lets the body show each photo in place; mail apps still list them as attachments.
+    attachments: attach.map((f, i) => ({ filename: f.filename, content: Buffer.from(f.bytes), contentType: f.mime, cid: cids[i] })),
+  };
 }
 
-export async function sendAlert(stuck, fetchFn = fetch) {
-  const token = process.env.POSTMARK_TOKEN;
-  const to = process.env.QUOTE_EMAIL_TO;
-  const from = process.env.QUOTE_EMAIL_FROM;
-  if (!token || !to || !from) throw new Error('notification email is not configured');
+export async function sendEmail(row, files, transport) {
+  const t = transport || relay();
+  await t.sendMail(quoteMessage(row, files, { from: process.env.QUOTE_EMAIL_FROM, to: process.env.QUOTE_EMAIL_TO }));
+}
+
+export async function sendAlert(stuck, transport) {
+  const t = transport || relay();
   const lines = stuck.map((s) => `#${s.id} ${s.name}: ${s.last_error || 'no error recorded'}`).join('\n');
-  const res = await fetchFn('https://api.postmarkapp.com/email', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', accept: 'application/json', 'X-Postmark-Server-Token': token },
-    body: JSON.stringify({
-      From: from, To: to, MessageStream: 'outbound',
-      Subject: `Website quote requests not delivered: ${stuck.length}`,
-      TextBody: `These quote requests are saved on the website but have not reached GigFriend or the inbox after an hour.\n\n${lines}\n\nThey are still being retried.`,
-    }),
+  await t.sendMail({
+    from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
+    to: process.env.QUOTE_EMAIL_TO,
+    subject: `Website quote requests not delivered: ${stuck.length}`,
+    text: `These quote requests are saved on the website but have not reached GigFriend or the inbox after an hour.\n\n${lines}\n\nThey are still being retried.`,
   });
-  if (!res.ok) throw new Error(`email provider answered ${res.status}`);
 }
 
 // Wait before try n: 1, 2, 4, 8 ... minutes, capped at an hour.

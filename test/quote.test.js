@@ -7,7 +7,8 @@ import sharp from 'sharp';
 import { safePhoto } from '../server/lib/images.js';
 import { build } from '../server/server.js';
 import { migrate, quoteStore } from '../server/lib/store.js';
-import { deliver, retryPass, backoff } from '../server/lib/deliver.js';
+import nodemailer from 'nodemailer';
+import { deliver, retryPass, backoff, quoteMessage, sendEmail } from '../server/lib/deliver.js';
 import { quoteEmail, daysUntil } from '../server/lib/quote-email.js';
 import { validate, newYorkDate } from '../server/quote.js';
 
@@ -191,6 +192,29 @@ test('the email shows how far off the event is on the booking scale', () => {
   assert.match(quoteEmail(row('2026-12-01')).html, /Under 1 month: Rarely available/);
   assert.match(quoteEmail(row('')).html, /No event date given/);
   assert.match(quoteEmail(row('2026-01-01')).html, /already passed/);
+});
+
+test('the message handed to the mail relay is complete', async () => {
+  const row = { name: 'Test Person', email: 'test@example.com', referral: '', event_date: '2027-05-01', submitted_on: '2026-11-22', venue: 'Dover Hall', details: 'Hi', services: 'Uplighting' };
+  const files = [{ filename: 'photo-1.jpg', mime: 'image/jpeg', bytes: Buffer.from('jpegbytes') }];
+  const m = quoteMessage(row, files, { from: 'quotes@example.com', to: 'info@example.com' });
+  assert.equal(m.replyTo.address, 'test@example.com', 'a reply goes to the person who asked');
+  assert.equal(m.attachments[0].cid, 'photo1@quote');
+  assert.ok(m.html.includes('cid:photo1@quote'));
+  // Build the real MIME message without sending it.
+  process.env.QUOTE_EMAIL_FROM = 'quotes@example.com';
+  process.env.QUOTE_EMAIL_TO = 'info@example.com';
+  let raw = '';
+  const transport = nodemailer.createTransport({ streamTransport: true, buffer: true });
+  const send = transport.sendMail.bind(transport);
+  transport.sendMail = async (msg) => { const info = await send(msg); raw = info.message.toString(); return info; };
+  await sendEmail(row, files, transport);
+  assert.match(raw, /Subject: New RFQ: Test Person filled out Get a Quote Form/);
+  assert.match(raw, /Reply-To: Test Person <test@example.com>/);
+  assert.match(raw, /Content-Id: <photo1@quote>/i);
+  assert.match(raw, /multipart\/related/);
+  delete process.env.QUOTE_EMAIL_FROM;
+  delete process.env.QUOTE_EMAIL_TO;
 });
 
 test('validation and backoff', () => {
