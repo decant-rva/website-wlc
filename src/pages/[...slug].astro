@@ -1,9 +1,10 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Cards from '../components/Cards.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import { allEntries, latestPosts, LISTING } from '../lib/entries.js';
+import { allEntries } from '../lib/entries.js';
+import { renderEntry } from '../lib/templates.js';
+import { pageHead } from '../lib/html.js';
 
 export async function getStaticPaths() {
   const entries = await allEntries();
@@ -15,32 +16,20 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const d = entry.data;
-const listing = LISTING.has(d.template);
-const { Content, headings } = await render(entry);
-const bodyHasH1 = headings.some((h) => h.depth === 1);
-const published = d.schema?.datePublished;
-const fmt = (iso) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' });
-const homePosts = d.template === 'home' ? (await latestPosts(2)).map((e) => e.data.path) : [];
-// Blog listings are built from the posts themselves, newest first.
-let items = d.items || [];
-if (d.template === 'blog-index') items = (await latestPosts(Infinity)).map((e) => e.data.path);
-if (d.template === 'blog-category') items = (await latestPosts(Infinity)).filter((e) => (e.data.categories || []).includes(d.path)).map((e) => e.data.path);
-if (d.template === 'blog-tag') items = (await latestPosts(Infinity)).filter((e) => (e.data.tags || []).includes(d.path)).map((e) => e.data.path);
+const page = await renderEntry(entry);
+// Pages without their own template: navy header, then the Markdown as prose.
+const { Content } = page.bespoke ? {} : await render(entry);
 ---
-<Base entry={entry}>
-  <article class="content">
-    {(listing || !bodyHasH1) && d.h1.map((text) => <h1>{text}</h1>)}
-    {d.template === 'post' && published && <p class="post-meta"><time datetime={published}>{fmt(published)}</time></p>}
-    {listing
-      ? <Cards items={items} variant={d.template === 'store-category' ? 'product' : 'post'} />
-      : <Content />}
-    {d.path === '/get-a-quote' && <QuoteForm />}
-    {d.related && d.related.length > 0 && <Cards items={d.related} variant="overlay" />}
-    {homePosts.length > 0 && (
-      <section class="home-blog">
-        <h2><a href="/blog">blog</a></h2>
-        <Cards items={homePosts} variant="post" />
-      </section>
+<Base entry={entry} bodyClass={page.bodyClass} closing={page.closing ?? true} quoteBar={page.quoteBar ?? true}>
+  {page.bespoke
+    ? <Fragment set:html={page.html} />
+    : (
+      <Fragment>
+        <Fragment set:html={pageHead(page.h.text, page.trail, { tag: page.h.tag })} />
+        <article class="prose">
+          <Content />
+          {d.path === '/get-a-quote' && <QuoteForm />}
+        </article>
+      </Fragment>
     )}
-  </article>
 </Base>

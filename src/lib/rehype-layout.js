@@ -1,8 +1,8 @@
 // Gives the flat Markdown output the structure the design needs:
-//   three or more photos in a row   -> <div class="gallery">
-//   one large photo on its own      -> <figure class="wide">
+//   three or more photos in a row   -> <div class="gal">
+//   one large photo on its own      -> <figure class="fig">
 //   a transparent PNG (logo, drawing) -> <p class="icon"> or <p class="graphic"> by size
-//   paragraphs holding one internal link each, in a row -> <div class="actions">
+//   paragraphs holding one internal link each, in a row -> <div class="actions"> of .btn links
 //   a paragraph holding one external link -> <p class="credit"> (photo credits)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -88,11 +88,11 @@ function group(parent) {
             if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: '(min-width: 62rem) 20vw, 50vw' };
           }
         }
-        const g = el('div', 'gallery', run);
+        const g = el('div', 'gal', run);
         if (!seenHeading) g.properties.className.push('lead');
         out.push(g);
       } else {
-        for (const r of run) out.push(el('figure', 'wide', [r]));
+        for (const r of run) out.push(el('figure', 'fig', [r]));
       }
       continue;
     }
@@ -111,7 +111,7 @@ function group(parent) {
         run.push(next);
         i++;
       }
-      for (const a of run) a.properties = { ...a.properties, className: ['pill'] };
+      for (const a of run) a.properties = { ...a.properties, className: ['btn'] };
       out.push(el('div', 'actions', run));
       continue;
     }
@@ -127,6 +127,11 @@ function group(parent) {
   parent.children = out;
 }
 
+// The page header prints the H1 from the front matter, so a copy in the body is dropped.
+function dropH1(tree) {
+  tree.children = tree.children.filter((c) => !isEl(c, 'h1'));
+}
+
 export function rehypeLayout() {
-  return (tree) => { group(tree); nameLinks(tree); };
+  return (tree) => { dropH1(tree); group(tree); nameLinks(tree); };
 }

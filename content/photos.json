@@ -13977,6 +13977,40 @@
   ],
   "fallback": "a16fb7-b0f7646275d3497d87f619e72664911f-1200.jpg"
  },
+ "a16fb7_b1226429f4a74cad8a320dfe8c48fff5~mv2.jpg": {
+  "width": 1159,
+  "height": 869,
+  "alt": "bistro lighting non profit event",
+  "avif": [
+   [
+    480,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-480.avif"
+   ],
+   [
+    800,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-800.avif"
+   ],
+   [
+    1159,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-1159.avif"
+   ]
+  ],
+  "webp": [
+   [
+    480,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-480.webp"
+   ],
+   [
+    800,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-800.webp"
+   ],
+   [
+    1159,
+    "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-1159.webp"
+   ]
+  ],
+  "fallback": "a16fb7-b1226429f4a74cad8a320dfe8c48fff5-1159.jpg"
+ },
  "a16fb7_b21901f8606a499794bc18581ecd6981~mv2.jpg": {
   "width": 2000,
   "height": 2000,
@@ -15550,6 +15584,32 @@
    ]
   ],
   "fallback": "a16fb7-c32b05c40bb04197b254072b3ef6ae61-1200.jpg"
+ },
+ "a16fb7_c35f435086f84db78230a13191035e5f~mv2.jpg": {
+  "width": 683,
+  "height": 911,
+  "alt": "",
+  "avif": [
+   [
+    480,
+    "a16fb7-c35f435086f84db78230a13191035e5f-480.avif"
+   ],
+   [
+    683,
+    "a16fb7-c35f435086f84db78230a13191035e5f-683.avif"
+   ]
+  ],
+  "webp": [
+   [
+    480,
+    "a16fb7-c35f435086f84db78230a13191035e5f-480.webp"
+   ],
+   [
+    683,
+    "a16fb7-c35f435086f84db78230a13191035e5f-683.webp"
+   ]
+  ],
+  "fallback": "a16fb7-c35f435086f84db78230a13191035e5f-683.jpg"
  },
  "a16fb7_c378b4e2471e46a2aa31a2b1f13e9ae4~mv2.jpg": {
   "width": 1545,

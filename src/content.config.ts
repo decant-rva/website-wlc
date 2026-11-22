@@ -19,6 +19,8 @@ const entry = z.object({
   related: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  // Short numbered facts shown as colour tiles on a service page.
+  facts: z.array(z.string()).optional(),
 });
 
 const collection = (dir: string) =>

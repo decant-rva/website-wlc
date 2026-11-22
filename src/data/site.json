@@ -188,6 +188,57 @@
     {
       "label": "Instagram",
       "href": "https://www.instagram.com/weddinglightingco/"
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/weddinglightingco/"
+    },
+    {
+      "label": "Pinterest",
+      "href": "https://www.pinterest.com/weddinglightingco/"
+    }
+  ],
+  "areasLine": "richmond • charlottesville • dc",
+  "footerCatalog": [
+    {
+      "label": "Chandeliers & Pendants",
+      "href": "/chandelier-pendant-catalog"
+    },
+    {
+      "label": "Drape Rentals",
+      "href": "/drape-walls-backdrops-canopies"
+    },
+    {
+      "label": "Hanging Decor",
+      "href": "/hanging-decor"
+    },
+    {
+      "label": "LED Lighting",
+      "href": "/led-lighting-catalog"
+    },
+    {
+      "label": "String Lighting",
+      "href": "/catalog/string-lighting-catalog"
+    },
+    {
+      "label": "Silk Florals",
+      "href": "/catalog/silk-florals-catalog"
+    },
+    {
+      "label": "Standing Lighting & Decor",
+      "href": "/catalog/standing-lighting-decor"
+    },
+    {
+      "label": "Table Lighting & Decor",
+      "href": "/catalog/table-lighting-decor-catalog"
+    },
+    {
+      "label": "Video",
+      "href": "/catalog/event-wedding-band-video"
+    },
+    {
+      "label": "Stages",
+      "href": "/product-page/bil-jax-staging-system"
     }
   ]
 }

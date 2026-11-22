@@ -1,0 +1,186 @@
+{
+ "_note": "Sorted by the owner in the Chandelier Sorter, 22 November 2026. tiers run from most to least prominent; each entry is a product path and its style.",
+ "styles": [
+  "Crystal",
+  "Modern",
+  "Farmhouse & Iron",
+  "Rattan & Wicker",
+  "Linen"
+ ],
+ "tierNames": [
+  "Superstar",
+  "A List",
+  "Rising Star",
+  "New In Town"
+ ],
+ "tiers": [
+  [
+   {
+    "path": "/product-page/madeline-empire-chandelier",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/amber-15-arm-crystal-chandelier",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/simone-bamboo-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/antoinette-8-arm-crystal-chandelier",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/scarlett-crystal-chandelier",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/colette-empire-chandelier",
+    "style": "Crystal"
+   }
+  ],
+  [
+   {
+    "path": "/product-page/stella-crystal-star-pendant",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/pria-wicker-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/elle-crystal-globe-pendant",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/sabine-bamboo-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/samantha-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/jacquelin-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/rena-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/josephine-rattan-pendant",
+    "style": "Rattan & Wicker"
+   }
+  ],
+  [
+   {
+    "path": "/product-page/petra-layered-pendant",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/liam-wagon-wheel-chandelier",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/alain-black-rattan-sphere-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/louis-black-mesh-rattan-style-lantern",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/gabrelle-black-bamboo-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/jerome-black-wicker-rattan-pendant",
+    "style": "Rattan & Wicker"
+   },
+   {
+    "path": "/product-page/danisa-pendant-cage-light",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/pendant-black",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/pendant-white",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/anais-linen-chandelier",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/aurélie-linen-chandelier",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/speakeasy-pendant",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/daisy-farmhouse-chandelier",
+    "style": "Farmhouse & Iron"
+   }
+  ],
+  [
+   {
+    "path": "/product-page/elena-8-arm-black-crystal-chandelier",
+    "style": "Crystal"
+   },
+   {
+    "path": "/product-page/giselle-8-light-iron-tiered-chandelier",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/rachel-scalloped-pendant-light",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/mercé-black-dome-chandelier",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/renae-gold-mid-century-chandelier",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/rené-4-light-iron-farmhouse-box-chandelier",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/kira-5-arm-candelabra-chandelier-gold",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/kira-5-arm-candelabra-chandelier",
+    "style": "Farmhouse & Iron"
+   },
+   {
+    "path": "/product-page/taylor-large-geometric-chandelier",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/anna-modern-geometric-chandelier",
+    "style": "Modern"
+   },
+   {
+    "path": "/product-page/amelie-linen-chandelier",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/aya-linen-chandelier",
+    "style": "Linen"
+   },
+   {
+    "path": "/product-page/paige-farmhouse-chandelier",
+    "style": "Farmhouse & Iron"
+   }
+  ]
+ ]
+}

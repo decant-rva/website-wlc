@@ -58,8 +58,8 @@ test('sitemap lists only indexable pages', async () => {
   assert.ok(!locs.some((l) => l.includes('/blog/tags/')));
 });
 
-test('fonts, logo and menu script are served', async () => {
-  for (const url of ['/fonts/poppins-900.woff2', '/img/logo.png', '/js/menu.js', '/favicon.png', '/robots.txt']) {
+test('fonts and logo are served', async () => {
+  for (const url of ['/fonts/league-spartan-800.woff2', '/img/wordmark.webp', '/favicon.png', '/robots.txt']) {
     assert.equal((await get(url)).statusCode, 200, url);
   }
 });

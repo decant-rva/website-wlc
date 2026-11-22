@@ -1,21 +1,10 @@
 ---
-import '../styles/site.css';
+import Base from '../layouts/Base.astro';
 ---
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Page not found | Wedding Lighting Co</title>
-<meta name="robots" content="noindex">
-</head>
-<body>
-<main id="main">
-  <article>
+<Base title="Page not found | Wedding Lighting Co" noindex closing={false}>
+  <header class="ph nf">
     <h1>Page not found</h1>
-    <p>That page has moved or no longer exists.</p>
-    <p><a href="/">Home</a> · <a href="/services">Services</a> · <a href="/get-a-quote">Get A Quote</a></p>
-  </article>
-</main>
-</body>
-</html>
+    <p class="lede">That page has moved or no longer exists.</p>
+    <div class="actions"><a class="btn" href="/">Home</a><a class="btn" href="/services">Services</a><a class="btn solid" href="/get-a-quote">Get A Quote</a></div>
+  </header>
+</Base>

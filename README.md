@@ -37,15 +37,28 @@ rendered Markdown and will not notice that the photo manifest changed.
 
 ## Design
 
-One stylesheet, `src/styles/site.css`. Poppins is self-hosted from `public/fonts`
-(SIL Open Font License, copy alongside). Colours and widths are custom
-properties at the top of the stylesheet.
+The theme is "Beam Lines": navy, amber and the logo blue, with slanted bands and torn-tape labels.
+League Spartan (700, 800), DM Sans (400, 500) and Kalam (700) are self-hosted from `public/fonts`,
+all under the SIL Open Font License.
 
-`src/lib/rehype-layout.js` gives Markdown its layout: three or more photos in a
-row become a gallery, a single photo runs full width, transparent PNGs are
-treated as graphics, and a row of internal links becomes a row of buttons. The
-home page adds `<section>` wrappers in its Markdown for the hero, banners and
-other blocks.
+`src/styles/site.css` holds every rule from the design build-out. `npm run build` runs
+`tools/prune-css.js` afterwards, which removes the rules no built page uses. Colours are custom
+properties at the top of the stylesheet; `--white` is the single grey-white used site-wide.
+
+`src/layouts/Base.astro` is the header, footer and closing band. `src/lib/templates.js` has one
+function per page type (home, services, service, catalog, chandeliers, product, blog, post, about,
+contact, FAQ, packages, reviews). Each reads the page's Markdown and lays it out. A page with no
+template of its own gets the navy header and its Markdown as prose, laid out by
+`src/lib/rehype-layout.js`.
+
+Content that templates read besides the Markdown: `facts` in a service page's front matter (the
+colour tiles), `content/chandeliers.json` (the chandelier sorting), and the photo and price pairs
+in `content/pages/wedding-decor-package-cost.md`.
+
+Every page has one main heading. Where the previous site had no H1, the heading is an H2 styled
+the same, so the launch freeze on H1 text holds. Four pages had several H1s on the previous site
+and now have one: `/`, `/about-wedding-lighting-co`, `/led-dance-floor` and `/search`.
+`npm run check:inventory` reports these until the owner approves the change.
 
 `node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
 against a running copy.
