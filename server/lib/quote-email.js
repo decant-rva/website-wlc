@@ -60,7 +60,10 @@ function tracker(row) {
   if (days < 0) return wrap(line('The event date given has already passed'));
   const [, range, outlook, lit] = WINDOWS.find(([m]) => days / 30.44 >= m);
   const bars = [0, 1, 2, 3, 4, 5].map((k) => `<span style="display:inline-block;width:26px;height:10px;margin-right:3px;background:${k < lit ? BAR[lit - 1] : '#3A4780'};font-size:0;line-height:0">&nbsp;</span>`).join('');
-  return wrap(`<span style="${F}font-size:30px;line-height:1;font-weight:bold;color:${AMBER}">${days}</span><span style="${F}font-size:15px;color:#ffffff"> ${days === 1 ? 'day' : 'days'} until the event</span>${line(`${range}: ${esc(outlook)}`)}<div style="padding-top:8px;font-size:0">${bars}</div>`);
+  const left = `<span style="${F}font-size:30px;line-height:1;font-weight:bold;color:${AMBER}">${days}</span><span style="${F}font-size:15px;color:#ffffff"> ${days === 1 ? 'day' : 'days'} until the event</span>${line(`${range}: ${esc(outlook)}`)}<div style="padding-top:8px;font-size:0">${bars}</div>`;
+  // The year of the event stands on the right, so next year's and the year after's requests are easy to tell apart.
+  const year = row.event_date.slice(0, 4);
+  return wrap(`<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle">${left}</td><td style="vertical-align:middle;text-align:right;white-space:nowrap;padding-left:12px"><span style="${F}font-size:34px;line-height:1;font-weight:bold;color:#ffffff">${year}</span></td></tr></table>`);
 }
 
 /**

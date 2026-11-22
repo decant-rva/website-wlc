@@ -185,6 +185,7 @@ test('the email shows how far off the event is on the booking scale', () => {
   assert.equal(daysUntil('2027-10-16', '2026-11-22'), 328);
   assert.match(quoteEmail(row('2027-10-16')).html, />328<.*days until the event.*9 to 12 months: Almost certain/);
   assert.match(quoteEmail(row('2028-01-01')).html, /12 months or more: Certain/);
+  assert.match(quoteEmail(row('2028-01-01')).html, />2028<\/span>/, 'the event year is shown');
   assert.match(quoteEmail(row('2026-12-01')).html, /Under 1 month: Rarely available/);
   assert.match(quoteEmail(row('')).html, /No event date given/);
   assert.match(quoteEmail(row('2026-01-01')).html, /already passed/);
