@@ -459,6 +459,17 @@ async function chandeliers(entry, trail, h) {
   return { html, bodyClass: 'kcat kcat3 chx', closing: false };
 }
 
+// ---- catalog sub-pages: a Markdown list of product links becomes a product grid
+async function productList(entry, trail, h) {
+  const entries = await allEntries();
+  const bl = blocks(entry.body);
+  const items = bl.filter((b) => b[0] === 'ul').flatMap((b) => b[1]).map((x) => x.match(/^\[(.+)\]\(([^)]+)\)$/)).filter(Boolean);
+  const cards = items.map((m) => entries.get(decodeURI(m[2])) || entries.get(m[2])).filter(Boolean);
+  if (cards.length < 3 || cards.length < items.length / 2) return null;
+  const lede = bl.find((b) => b[0] === 'p')?.[1];
+  return { html: `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="prods">${cards.map(productCard).join('')}</ul>` };
+}
+
 const BY_PATH = {
   '/': home,
   '/services': services,
@@ -489,6 +500,7 @@ export async function renderEntry(entry) {
   // Service pages: the ones in the Services menu plus every page a card on /services links to.
   const servicePaths = new Set([...SERVICE_PATHS, ...serviceCards(blocks(entries.get('/services')?.body)).map((c) => c.href)]);
   const fn = BY_PATH[entry.data.path] || (servicePaths.has(entry.data.path) && entry.data.template === 'page' ? service : BY_TEMPLATE[entry.data.template]);
-  const out = fn ? await fn(entry, trail, h) : null;
+  let out = fn ? await fn(entry, trail, h) : null;
+  if (!out && ['page', 'catalog'].includes(entry.data.template)) out = await productList(entry, trail, h);
   return { trail, h, ...(out || {}), bespoke: Boolean(out) };
 }
