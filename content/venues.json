@@ -1,5 +1,5 @@
 {
- "_note": "Venue list exported from gigFriend on 22 November 2026, less places of worship and private houses. Photos were matched to venues by name from the photo descriptions. region and district drive the list on /venue.",
+ "_note": "Venue list exported from gigFriend on 22 November 2026, less places of worship and private houses. Photos were matched to venues by name from the photo descriptions. region and district drive the list on /venue. description is the meta description of the venue page; the facts in it were checked against each venue's own site or a tourism or heritage source on 22 November 2026.",
  "order": [
   {
    "region": "Richmond",
@@ -254,7 +254,8 @@
      "id": "a16fb7_0fcb0009bd5441bda4474bcec95e9bd8~mv2.jpg",
      "alt": "globe bistro lights shine through a custom greenery display at upper shirley vineyards"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting and decor at Upper Shirley Vineyards, a winery on the James River in Charles City, Virginia that hosts weddings and private events."
   },
   {
    "name": "Eastwood Winery",
@@ -527,7 +528,8 @@
      "id": "a16fb7_b88a32603b65472cb2f536e9bac839ac~mv2.jpg",
      "alt": "wedding backdrop dominion club richmond"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting and decor at The Dominion Club, a private country club in the Wyndham community of Glen Allen, Virginia, home of the Grand Rotunda Ballroom."
   },
   {
    "name": "The Place at Innsbrook",
@@ -804,7 +806,8 @@
      "id": "a16fb7_d8037013300e47ddadbff8776eed30f2~mv2.jpg",
      "alt": "Uplighting at Dover hall"
     }
-   ]
+   ],
+   "description": "Photos of our lighting, drapery and decor at Dover Hall, a Tudor-style estate on 55 acres in Manakin-Sabot, Virginia with a ballroom, Glass Hall and rose garden."
   },
   {
    "name": "Hermitage Country Club",
@@ -953,7 +956,8 @@
      "id": "a16fb7_8c8fa4a1d16f4414b4ad9ca16d77ec11~mv2.jpg",
      "alt": "Bistro Lighting over the wedding reception area at Wintergreen; Nellysford, Virginia"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at Wintergreen Resort, a four-season mountain resort in the Blue Ridge Mountains of Nelson County, Virginia."
   },
   {
    "name": "Cumberland Estate",
@@ -966,7 +970,8 @@
      "id": "337130_fde8d225526d4d359de8ee4c84d318de~mv2.webp",
      "alt": "twinkle fairy light canopy and chandeliers in a tent at cumberland estates"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting and decor at Cumberland Estate, a historic estate on the Pamunkey River in New Kent, Virginia."
   },
   {
    "name": "Court Manor",
@@ -1083,7 +1088,8 @@
      "id": "a16fb7_b75aac01b2954f8480184c0079bff80c~mv2.jpg",
      "alt": "Wireless lamps illuminate a silent auction at ACCA shriners Center"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at the Acca Shriners center on Bellevue Avenue in Richmond's Northside, which rents its ballroom for events."
   },
   {
    "name": "Altria Theater",
@@ -1124,7 +1130,8 @@
      "id": "337130_56a498f22c194594935bf0d83fb5ae53~mv2.jpg",
      "alt": "Shimmering uplighting provide a fiery look on the walls at Bolling Haxall House. Pin spots bring focus to the tables and highlight the centerpieces, while providing lighting to dine in."
     }
-   ]
+   ],
+   "description": "Photos of our lighting and drapery at the Bolling Haxall House, an 1858 Italianate mansion in downtown Richmond and home of The Woman's Club of Richmond."
   },
   {
    "name": "Bon Secours Training Center",
@@ -1241,7 +1248,8 @@
      "id": "a16fb7_cb8db835c33648e59fa709c8018753b1~mv2.jpg",
      "alt": "warm orange uplighting at hotel hilton in short pump"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at the Hilton Richmond Hotel & Spa/Short Pump on West Broad Street, home of the Capital and Henrico ballrooms."
   },
   {
    "name": "Hippodrome Theater",
@@ -1294,7 +1302,8 @@
      "id": "a16fb7_50b214aa2442486c8a0ffb23d4c8f498~mv2.jpeg",
      "alt": "Bistro Lighting In a pole tent at Tuckahoe Plantation in Richmond Virginia"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting and decor at Historic Tuckahoe, the 18th-century plantation house on River Road near Richmond where Thomas Jefferson lived as a boy."
   },
   {
    "name": "Hotel John Marshall",
@@ -1351,7 +1360,8 @@
      "id": "a16fb7_36693fcd75214c7c8c64349f8778a99a~mv2.jpg",
      "alt": "uplighting paper lanterns prom john marshall hotel ballrooms"
     }
-   ]
+   ],
+   "description": "Photos of our lighting and decor at the John Marshall Ballrooms, the restored ballrooms of the former Hotel John Marshall, which opened in downtown Richmond in 1929."
   },
   {
    "name": "Hovey Field VUU",
@@ -1396,7 +1406,8 @@
      "id": "a16fb7_f4daa318f4c5475ca79d9c27973143f2~mv2.jpg",
      "alt": "kabana rooftop Video wall screen for concerts, events, weddings"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at Kabana Rooftop, the 20th-floor rooftop bar in downtown Richmond that closed at the end of 2024."
   },
   {
    "name": "Library of Virginia",
@@ -1453,7 +1464,8 @@
      "id": "a16fb7_b071d5deeedb407684b1cdbca90b9219~mv2.jpg",
      "alt": "Paper lanterns and bistro lighting at Linden Row Inn"
     }
-   ]
+   ],
+   "description": "Photos of our lighting and decor at Linden Row Inn, a boutique hotel in a row of Greek Revival houses in downtown Richmond with a brick garden courtyard."
   },
   {
    "name": "Main Street Station",
@@ -1470,7 +1482,8 @@
      "id": "337130_fc7f6b969fe34b64a513440be8c65f2f~mv2.jpg",
      "alt": "Trio of chandeliers hanging at main street station in richmond virginia"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at Main Street Station, Richmond's 1901 railway station and National Historic Landmark, now a city-run event venue."
   },
   {
    "name": "Maymont Garden Hall",
@@ -1499,7 +1512,8 @@
      "id": "a16fb7_6588838e1b074ab3b534b50f117427c7~mv2.jpg",
      "alt": "rattan and silk florals maymont nature center"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting and decor at The Robins Nature Center at Maymont, the nature center on the 100-acre Maymont estate in Richmond."
   },
   {
    "name": "NAMA",
@@ -1576,7 +1590,8 @@
      "id": "337130_cf5f7ffd33eb41dbbc7b8ce73146b3d8~mv2.jpg",
      "alt": "Beautiful Uplighting & Gobo Lighting look at Science Musuem of Virginia Rotunda"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting in the Rotunda at the Science Museum of Virginia, the domed hall of Richmond's former Broad Street Station, built in 1917."
   },
   {
    "name": "Science Museum of Virginia Thalheimer Pavilion",
@@ -1597,7 +1612,8 @@
      "id": "a16fb7_4dc4eaed04b346eaac10b4db4972b5db~mv2.jpg",
      "alt": "shalom farms events nonprofit lighting crystal lamps"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at the Shalom Farms Northside Farm, a nonprofit urban farm on Westwood Avenue in Richmond's Northside."
   },
   {
    "name": "Spang TV Studio",
@@ -1670,7 +1686,8 @@
      "id": "a16fb7_6840b47b06a34ae3b13395800334602c~mv2.jpg",
      "alt": "uplighting at commonwealth club"
     }
-   ]
+   ],
+   "description": "Photos of our lighting and decor at The Commonwealth Club, a private social club on West Franklin Street in Richmond, founded in 1890."
   },
   {
    "name": "The Country Club of Virginia - James River",
@@ -1715,7 +1732,8 @@
      "id": "337130_8e9851167a7f4fa9828055209dfded0a~mv2.jpg",
      "alt": "Wedding Lighting at Tredegar Iron Works"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at The Foundry at Tredegar, a brick event venue at the historic Tredegar Iron Works site on the James River in Richmond."
   },
   {
    "name": "The Hidden Oaks",
@@ -1760,7 +1778,8 @@
      "id": "a16fb7_b5e5a489aae34a86b26927d411ef5aa1~mv2.jpg",
      "alt": "pin spotting westin richmond"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at The Westin Richmond on West Broad Street, a hotel with three ballrooms and an outdoor courtyard."
   },
   {
    "name": "The Workshop by T&D",
@@ -1817,7 +1836,8 @@
      "id": "a16fb7_684bd5ae5f6d461eb0a5e44bdb302965~mv2.jpg",
      "alt": "silk greenery crystal chandeliers bistro lighting virginia house"
     }
-   ]
+   ],
+   "description": "Photos of our lighting and decor at Virginia House, the Tudor manor in Windsor Farms, Richmond, built from a 16th-century English priory and finished in 1928."
   },
   {
    "name": "Virginia Museum of Fine Arts",
@@ -1910,7 +1930,8 @@
      "id": "a16fb7_01c62d3583c74ec5b8861efd42683500~mv2.png",
      "alt": "drape canopy wedding richmond virginia Rockville Center"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at The Rockville Center, a community recreation center in Rockville, Virginia with a main hall for rent."
   },
   {
    "name": "Guildford Farm",
@@ -2023,7 +2044,8 @@
      "id": "a16fb7_b76790dc27d04330b77a02d4b0ee6013~mv2.jpg",
      "alt": ""
     }
-   ]
+   ],
+   "description": "Photos of our lighting, drapery and decor at the Event Barn at Mount Ida Farm & Vineyard in Scottsville, Virginia, a renovated barn with a 30-foot stone fireplace."
   },
   {
    "name": "Waters Edge at Mt. Ida",
@@ -2100,7 +2122,8 @@
      "id": "a16fb7_2f08420a92d5492e89e25e46b4292b07~mv2.png",
      "alt": "crystal empire chandelier lars anderson house"
     }
-   ]
+   ],
+   "description": "Photos of our event lighting at Anderson House, the Beaux-Arts mansion on Embassy Row in Washington, DC that is the headquarters of the Society of the Cincinnati."
   },
   {
    "name": "Decatur House",

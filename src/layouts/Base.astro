@@ -10,7 +10,7 @@ import { cta } from '../lib/html.js';
 // quoteBar: false leaves out the full-width Get A Quote bar above the footer.
 // A page with no content entry passes title, and may pass canonical and section
 // (the menu item to mark as current).
-const { entry, bodyClass = '', closing = true, quoteBar = true, title, canonical, section: sectionProp, noindex = false } = Astro.props;
+const { entry, bodyClass = '', closing = true, quoteBar = true, title, description, canonical, section: sectionProp, noindex = false } = Astro.props;
 const d = entry?.data;
 const entries = await allEntries();
 const staging = import.meta.env.PUBLIC_STAGING === '1';
@@ -31,7 +31,7 @@ const footerCols = [
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{d?.title ?? title}</title>
-{d?.description && <meta name="description" content={d.description}>}
+{(d?.description ?? description) && <meta name="description" content={d?.description ?? description}>}
 {(d?.canonical ?? canonical) && <link rel="canonical" href={d?.canonical ?? canonical}>}
 {robots && <meta name="robots" content={robots}>}
 {d && Object.entries(d.og).map(([property, content]) => <meta property={property} content={content}>)}

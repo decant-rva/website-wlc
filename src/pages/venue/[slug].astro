@@ -10,6 +10,6 @@ export function getStaticPaths() {
 
 const { venue } = Astro.props;
 ---
-<Base title={`${venue.name} | ${site.shortName}`} canonical={`${site.url}/venue/${venue.slug}`} section="/venue" bodyClass="vgp vgv">
+<Base title={`${venue.name} | ${site.shortName}`} description={venue.description} canonical={`${site.url}/venue/${venue.slug}`} section="/venue" bodyClass="vgp vgv">
   <Fragment set:html={venuePage(venue)} />
 </Base>
