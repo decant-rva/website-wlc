@@ -8,7 +8,7 @@ import { safePhoto } from '../server/lib/images.js';
 import { build } from '../server/server.js';
 import { migrate, quoteStore } from '../server/lib/store.js';
 import { deliver, retryPass, backoff } from '../server/lib/deliver.js';
-import { quoteEmail } from '../server/lib/quote-email.js';
+import { quoteEmail, daysUntil } from '../server/lib/quote-email.js';
 import { validate, newYorkDate } from '../server/quote.js';
 
 async function setup({ intakeFails = false, emailFails = false } = {}) {
@@ -178,6 +178,16 @@ test('the email keeps the subject and labels the inbox already expects', () => {
   assert.equal(text, 'Name: A <b>\nEmail: a@example.com\nReferral Source: Google\nEvent Date: 2027-05-01\nVenue: Dover Hall\nVision: Hi\nServices: Uplighting\nPhotos: 1');
   assert.ok(html.includes('A &lt;b&gt;') && !html.includes('A <b>'));
   assert.ok(html.includes(`cid:${cids[0]}`), 'the photo is shown in the body');
+});
+
+test('the email shows how far off the event is on the booking scale', () => {
+  const row = (event_date) => ({ name: 'A', email: 'a@example.com', event_date, submitted_on: '2026-11-22', services: '' });
+  assert.equal(daysUntil('2027-10-16', '2026-11-22'), 328);
+  assert.match(quoteEmail(row('2027-10-16')).html, />328<.*days until the event.*9 to 12 months: Almost certain/);
+  assert.match(quoteEmail(row('2028-01-01')).html, /12 months or more: Certain/);
+  assert.match(quoteEmail(row('2026-12-01')).html, /Under 1 month: Rarely available/);
+  assert.match(quoteEmail(row('')).html, /No event date given/);
+  assert.match(quoteEmail(row('2026-01-01')).html, /already passed/);
 });
 
 test('validation and backoff', () => {

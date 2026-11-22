@@ -1,6 +1,6 @@
 // The notification the office receives for each quote request, laid out like
-// the request form on the website: the header strip, the service tiles with
-// the chosen ones lit, each answer in its own box, then the photos.
+// the request form on the website: how far off the event is, the service tiles
+// with the chosen ones lit, each answer in its own box, then the photos.
 //
 // Subject and field labels match the email the previous site sent, so inbox
 // filters and the Gmail lead parser keep working. The plain-text part is the
@@ -38,6 +38,29 @@ function tiles(chosen) {
   return `<div style="padding:14px 14px 11px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="margin:5px -3px 0;font-size:0">${names.map(cell).join('')}</div></div>`;
 }
 
+// The owner's "When to book" scale: months before the event, what to expect, bars lit out of six.
+// The scale has no entry for 1 to 2 months; that range is shown as "Unlikely".
+const WINDOWS = [[12, '12 months or more', 'Certain', 6], [9, '9 to 12 months', 'Almost certain', 5], [6, '6 to 9 months', 'Likely', 4],
+  [3, '3 to 6 months', 'No custom order, dates spotty', 3], [1, '1 to 3 months', 'Unlikely', 2], [0, 'Under 1 month', 'Rarely available. Limited Options', 1]];
+const BAR = ['#E5383B', '#D6249F', '#FFB627', '#5E93FB', '#2FBF71', '#2FBF71'];
+
+/** Days from the day the request came in (New York date) to the event. null when there is no usable date. */
+export function daysUntil(eventDate, from) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(eventDate || '') || !/^\d{4}-\d{2}-\d{2}$/.test(from || '')) return null;
+  return Math.round((Date.parse(`${eventDate}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86400000);
+}
+
+function tracker(row) {
+  const days = daysUntil(row.event_date, row.submitted_on);
+  const wrap = (inner) => `<div style="background:${NAVY};padding:14px 14px 16px">${inner}</div>`;
+  const line = (t) => `<span style="${F}display:block;font-size:14px;line-height:1.4;color:#C9D3EE">${t}</span>`;
+  if (days === null) return wrap(line('No event date given'));
+  if (days < 0) return wrap(line('The event date given has already passed'));
+  const [, range, outlook, lit] = WINDOWS.find(([m]) => days / 30.44 >= m);
+  const bars = [0, 1, 2, 3, 4, 5].map((k) => `<span style="display:inline-block;width:26px;height:10px;margin-right:3px;background:${k < lit ? BAR[lit - 1] : '#3A4780'};font-size:0;line-height:0">&nbsp;</span>`).join('');
+  return wrap(`<span style="${F}font-size:30px;line-height:1;font-weight:bold;color:${AMBER}">${days}</span><span style="${F}font-size:15px;color:#ffffff"> ${days === 1 ? 'day' : 'days'} until the event</span>${line(`${range}: ${esc(outlook)}`)}<div style="padding-top:8px;font-size:0">${bars}</div>`);
+}
+
 /**
  * files: [{ filename, mime, bytes }]. inline: the photos are attached and shown in the body by content id.
  * Returns { subject, text, html, cids } where cids[i] is the content id of files[i].
@@ -57,7 +80,7 @@ export function quoteEmail(row, files = [], inline = true) {
     ? `<div style="padding:14px 14px 4px">${label(`Photos (${files.length})`)}${files.map((f, i) => `<img src="cid:${cids[i]}" alt="Photo ${i + 1} from ${esc(row.name)}" width="570" style="display:block;width:100%;max-width:570px;height:auto;margin:10px 0 0;border:0">`).join('')}</div>`
     : (files.length ? `<div style="padding:14px">${label('Photos')}<span style="${F}font-size:14px;color:${NAVY}">${files.length} too large to attach. They are saved on the website.</span></div>` : '');
   const html = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border:2px solid ${LINE}"><tr><td>`
-    + `<div style="background:${NAVY};padding:12px 14px"><span style="${F}font-size:11px;letter-spacing:2px;font-weight:bold;color:#C9D3EE">RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div>`
+    + tracker(row)
     + `<div style="padding:16px 14px 14px;border-bottom:2px solid ${LINE}"><span style="${F}display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:bold;color:${SLATE}">Quote request</span><span style="${F}display:block;padding-top:4px;font-size:26px;line-height:1.15;font-weight:bold;color:${NAVY}">${esc(row.name)}</span><span style="display:block;width:56px;height:5px;margin-top:10px;background:${AMBER};font-size:0;line-height:0">&nbsp;</span></div>`
     + tiles(chosen)
     + pair(['Name', row.name], ['Email', row.email]) + pair(['Event Date', row.event_date], ['Venue', row.venue]) + box('Vision', row.details) + box('Referral Source', row.referral)
