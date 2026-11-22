@@ -226,7 +226,8 @@ h1,
 .about figure img{clip-path:polygon(12% 0,100% 0,100% 100%,0 100%)}
 .lead{position:relative;margin:calc(var(--cut) * -1 - 1.5rem) var(--gut) 0}
 .lead img{width:112%;max-width:none;aspect-ratio:4/3;object-fit:cover;clip-path:polygon(14% 0,100% 0,86% 100%,0 100%)}
-.lead img:nth-child(2){margin-left:-6%}.lead img:nth-child(3){margin-left:-12%}
+.lead img:nth-child(2),
+.lead picture:nth-child(2)>img{margin-left:-6%}.lead img:nth-child(3),.lead picture:nth-child(3)>img{margin-left:-12%}
 .svc .ph{padding-bottom:calc(var(--cut) + 9rem)}.svc .lead{margin-top:calc(var(--cut) * -1 - 8rem)}
 .svcs li{background:var(--mist)}.svcs p{color:var(--slate)}
 .cats li,.posts li{background:var(--mist)}
@@ -362,7 +363,7 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
  .hero .pic img{clip-path:polygon(0 18%,100% 4%,100% 100%,0 100%)}
  .cols{grid-template-columns:minmax(0,1fr);gap:2rem}
  .lead{grid-template-columns:minmax(0,1fr);gap:.5rem}
- .lead img,.lead img:nth-child(2),.lead img:nth-child(3){width:100%;margin-left:0;aspect-ratio:16/9;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%)}
+ .lead img,.lead img:nth-child(2),.lead picture:nth-child(2)>img,.lead img:nth-child(3),.lead picture:nth-child(3)>img{width:100%;margin-left:0;aspect-ratio:16/9;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%)}
  .svc .ph{padding-bottom:calc(var(--cut) + 5rem)}.svc .lead{margin-top:calc(var(--cut) * -1 - 4rem)}
  .facts div{margin-right:.75rem}
 }
@@ -408,13 +409,18 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 .k-cone img{position:relative;width:100%;aspect-ratio:1/1;object-fit:contain;mix-blend-mode:multiply}
 .k-duo{display:grid;grid-template-columns:1fr 1fr}
 .k-duo img{width:119%;max-width:none;aspect-ratio:4/3;object-fit:cover}
-.k-duo img:first-child{clip-path:polygon(0 0,100% 0,72% 100%,0 100%)}
-.k-duo img:last-child{margin-left:-19%;clip-path:polygon(28% 0,100% 0,100% 100%,0 100%)}
+.k-duo img:first-child,
+.k-duo picture:first-child>img{clip-path:polygon(0 0,100% 0,72% 100%,0 100%)}
+.k-duo img:last-child,
+.k-duo picture:last-child>img{margin-left:-19%;clip-path:polygon(28% 0,100% 0,100% 100%,0 100%)}
 .k-shards{position:relative;aspect-ratio:16/9}
 .k-shards img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.k-shards img:nth-child(1){clip-path:polygon(0 0,38% 0,58% 100%,0 100%)}
-.k-shards img:nth-child(2){clip-path:polygon(40% 0,100% 0,100% 46%,49.2% 46%)}
-.k-shards img:nth-child(3){clip-path:polygon(49.8% 49%,100% 49%,100% 100%,60% 100%)}
+.k-shards img:nth-child(1),
+.k-shards picture:nth-child(1)>img{clip-path:polygon(0 0,38% 0,58% 100%,0 100%)}
+.k-shards img:nth-child(2),
+.k-shards picture:nth-child(2)>img{clip-path:polygon(40% 0,100% 0,100% 46%,49.2% 46%)}
+.k-shards img:nth-child(3),
+.k-shards picture:nth-child(3)>img{clip-path:polygon(49.8% 49%,100% 49%,100% 100%,60% 100%)}
 .k-frame{position:relative;max-width:44rem}
 .k-frame img{width:100%;aspect-ratio:3/2;object-fit:cover;clip-path:polygon(13% 0,100% 0,100% 78%,87% 100%,0 100%,0 22%)}
 .k-frame::before,.k-frame::after{content:"";position:absolute;inset:0;background:var(--blue)}
@@ -949,7 +955,8 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 /* K5 */
 .kcat-mos{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:13rem;grid-auto-flow:dense;gap:.5rem;max-width:84rem;margin:0 auto;padding:1.5rem var(--gut) 0}
 .kcat-mos img{width:100%;height:100%;object-fit:cover}
-.kcat-mos img:nth-child(1){grid-column:span 2;grid-row:span 2}.kcat-mos img:nth-child(6){grid-column:span 2}.kcat-mos img:nth-child(10){grid-column:span 2}
+.kcat-mos img:nth-child(1),
+.kcat-mos picture:nth-child(1)>img{grid-column:span 2;grid-row:span 2}.kcat-mos img:nth-child(6),.kcat-mos picture:nth-child(6)>img{grid-column:span 2}.kcat-mos img:nth-child(10),.kcat-mos picture:nth-child(10)>img{grid-column:span 2}
 .kcat-band{position:relative;margin-top:2.5rem;background:var(--navy);color:var(--white);padding:calc(var(--cut) + 2.5rem) var(--gut) 3rem;clip-path:polygon(0 var(--cut),100% 0,100% 100%,0 100%)}
 .kcat-band::before{content:"";position:absolute;left:0;right:0;top:0;height:calc(var(--cut) + .9rem);background:var(--blue);clip-path:polygon(0 var(--cut),100% 0,100% .9rem,0 calc(var(--cut) + .9rem))}
 .kcat-band>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;max-width:var(--max);margin:0 auto}
@@ -959,7 +966,7 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
  .kcat-row{grid-template-columns:minmax(0,1fr);gap:1.25rem;padding:1.5rem var(--gut)}.kcat-row:nth-of-type(even) figure{order:0}
  .kcat-cols{columns:1}
  .kcat-side{grid-template-columns:minmax(0,1fr)}.kcat-side aside{position:static;max-height:none;border-right:0;border-bottom:.7rem solid var(--blue);padding-right:var(--gut)}.kcat-side .kcat-h{padding-left:var(--gut)}.kcat-side .prods{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:var(--gut)}
- .kcat-mos{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:8.5rem}.kcat-mos img:nth-child(8){grid-row:auto}
+ .kcat-mos{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:8.5rem}.kcat-mos img:nth-child(8),.kcat-mos picture:nth-child(8)>img{grid-row:auto}
  .kcat-band>div{grid-template-columns:minmax(0,1fr)}
 }
 
@@ -976,10 +983,11 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
  .kcat1 .kcat-lead{grid-template-columns:repeat(6,minmax(0,1fr));max-width:none;padding:0 2.2%}
  .kcat1 .kcat-lead img{aspect-ratio:3/4}
  .kcat1 .kcat-g{grid-template-columns:repeat(4,minmax(0,1fr))}
- .kcat1 .kcat-g img:nth-child(-n+3){display:none}
+ .kcat1 .kcat-g img:nth-child(-n+3),
+ .kcat1 .kcat-g picture:nth-child(-n+3)>img{display:none}
  .kcat1 .ph{padding-bottom:calc(var(--cut) + 12rem)}.kcat1 .kcat-lead{margin-top:calc(var(--cut) * -1 - 11rem)}
 }
-@media(max-width:61.99rem){.kcat1 .kcat-lead img:nth-child(n+4){display:none}}
+@media(max-width:61.99rem){.kcat1 .kcat-lead img:nth-child(n+4),.kcat1 .kcat-lead picture:nth-child(n+4)>img{display:none}}
 
 /* catalog page, Newest Products: A cut-outs on navy (.cxcut) / B white band (default) */
 .cx4.cxw:not(.cxcut) .rel{background:var(--white);color:var(--navy);max-width:none;padding-top:2.75rem;padding-bottom:3rem}
@@ -1853,7 +1861,7 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 .ab-film{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.35rem;overflow:visible;padding:0;margin-top:calc(var(--cut) * -1 + .35rem);clip-path:polygon(0 var(--cut),100% 0,100% calc(100% - var(--cut)),0 100%);scroll-snap-type:none}
 .ab-film img{width:100%;aspect-ratio:1/1;object-fit:cover}
 .ab9 .ab-band2{margin-top:calc(var(--cut) * -1 + .35rem)}
-@media(max-width:61.99rem){.ab-film{grid-template-columns:repeat(3,minmax(0,1fr))}.ab-film img:nth-child(n+10){display:none}}
+@media(max-width:61.99rem){.ab-film{grid-template-columns:repeat(3,minmax(0,1fr))}.ab-film img:nth-child(n+10),.ab-film picture:nth-child(n+10)>img{display:none}}
 .ab-wd1{align-items:center}
 .ab-words li:nth-child(5)::after{background:#E5383B}
 .ab-wf{position:relative;margin:0}
@@ -2257,7 +2265,7 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 /* service panels: the beam edge on each photo matches that panel's colour square */
 .sv11 .bq-ch .bq-ph .bq-im::before{background:#5E93FB}
 .sv11 .bq-ch:nth-child(6n+2) .bq-ph .bq-im::before{background:#D6249F}.sv11 .bq-ch:nth-child(6n+3) .bq-ph .bq-im::before{background:#2FBF71}.sv11 .bq-ch:nth-child(6n+4) .bq-ph .bq-im::before{background:var(--amber)}.sv11 .bq-ch:nth-child(6n+5) .bq-ph .bq-im::before{background:#E5383B}
-@media(min-width:62rem){.sv11 .sv-film img:nth-child(6){display:none}}
+@media(min-width:62rem){.sv11 .sv-film img:nth-child(6),.sv11 .sv-film picture:nth-child(6)>img{display:none}}
 /* related-post cards: the strip of tape holding each print is navy (owner) */
 .rel .posts li::before{background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 5px),var(--navy)}
 /* related-post card tape back to logo blue (owner) */
@@ -2374,3 +2382,8 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 .ab-wd::before{background-image:url(/img/badge.svg)}
 .ab9 .ab-lead>*{position:relative;top:20px}
 .prose{overflow-wrap:anywhere}
+/* A <picture> never takes part in layout; its <img> does. Rules that count images
+   (img:nth-child) have a twin that counts the wrapper instead. */
+picture{display:contents}
+/* Without this each <source> would take a cell in a grid or flex row. */
+picture>source{display:none}

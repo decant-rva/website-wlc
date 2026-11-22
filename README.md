@@ -55,10 +55,13 @@ Content that templates read besides the Markdown: `facts` in a service page's fr
 colour tiles), `content/chandeliers.json` (the chandelier sorting), and the photo and price pairs
 in `content/pages/wedding-decor-package-cost.md`.
 
-Every page has one main heading. Where the previous site had no H1, the heading is an H2 styled
-the same, so the launch freeze on H1 text holds. Four pages had several H1s on the previous site
-and now have one: `/`, `/about-wedding-lighting-co`, `/led-dance-floor` and `/search`.
-`npm run check:inventory` reports these until the owner approves the change.
+Every page has one main heading (owner decision, 22 November 2026). Where the previous site had
+several H1s the first is kept; where it had none, the heading is an H2 styled the same, so the
+launch freeze on H1 text holds. `npm run check:inventory` enforces both.
+
+Template photos are `<picture>` elements with AVIF, WebP and a JPEG fallback. The stylesheet sets
+`picture { display: contents }` and hides `<source>` from layout, so a photo lays out as a bare
+`<img>` would.
 
 `node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
 against a running copy.

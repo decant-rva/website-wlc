@@ -47,9 +47,9 @@ export function blocks(body) {
 export const cleanAlt = (a) => (/\.(jpe?g|png|webp)$/i.test(String(a || '').trim()) ? '' : String(a || ''));
 
 /**
- * A responsive photo for a photo ID. Empty string when the photo is not in the manifest.
- * The templates use a plain <img> with a WebP srcset and a JPEG fallback, not <picture>:
- * the layout rules count and select images as direct children, and a wrapper breaks them.
+ * A responsive <picture> for a photo ID: AVIF first, then WebP, then a JPEG fallback.
+ * Empty string when the photo is not in the manifest. The stylesheet sets
+ * picture { display: contents }, so the <img> lays out as if it had no wrapper.
  */
 export function pic(id, { alt, sizes = '(min-width: 62rem) 50vw, 100vw', eager = false, cls = '' } = {}) {
   const p = sourcesFor(id, sizes);
@@ -58,7 +58,7 @@ export function pic(id, { alt, sizes = '(min-width: 62rem) 50vw, 100vw', eager =
   const load = eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
   const c = cls ? ` class="${cls}"` : '';
   if (p.single) return `<img${c} src="${p.single}" alt="${text}" width="${p.width}" height="${p.height}" ${load} decoding="async">`;
-  return `<img${c} src="${p.fallback}" srcset="${p.webp}" sizes="${p.sizes}" alt="${text}" width="${p.width}" height="${p.height}" ${load} decoding="async">`;
+  return `<picture><source type="image/avif" srcset="${p.avif}" sizes="${p.sizes}"><source type="image/webp" srcset="${p.webp}" sizes="${p.sizes}"><img${c} src="${p.fallback}" alt="${text}" width="${p.width}" height="${p.height}" ${load} decoding="async"></picture>`;
 }
 
 /** Breadcrumb: string lights. trail is [{ name, path }], home first. */

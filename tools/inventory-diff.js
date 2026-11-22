@@ -1,6 +1,7 @@
 // Compares the built site in dist/ with the Phase 1 inventory.
 // Fails if any inventoried URL is missing, or if its title, meta description,
-// canonical, robots or H1 text differs from what the live site served.
+// canonical or robots differs from what the live site served, or if its H1 is
+// not the first H1 the live site served (see the one-H1 rule below).
 //
 //   node tools/inventory-diff.js          summary and first differences
 //   node tools/inventory-diff.js --all    every difference
@@ -40,9 +41,13 @@ for (const [url, want] of Object.entries(inventory)) {
   for (const field of ['title', 'description', 'canonical', 'robots']) {
     if (squash(got[field]) !== squash(want[field])) problems.push([url, field, want[field], decode(got[field])]);
   }
-  const a = want.h1.map(squash).join('|');
+  // One H1 per page (owner decision, 22 November 2026). A page that had H1s on the
+  // previous site must have exactly one, matching the first of them. A page that had
+  // none must still have none. Empty and zero-width H1s on the previous site are ignored.
+  const wanted = want.h1.map(squash).filter(Boolean).slice(0, 1);
+  const a = wanted.join('|');
   const b = got.h1.map(squash).join('|');
-  if (a !== b) problems.push([url, 'h1', want.h1.join(' | '), got.h1.map(decode).join(' | ')]);
+  if (a !== b) problems.push([url, 'h1', wanted.length ? want.h1[want.h1.findIndex((x) => squash(x))] : '', got.h1.map(decode).join(' | ')]);
 }
 
 const total = Object.keys(inventory).length;
