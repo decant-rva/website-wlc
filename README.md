@@ -32,6 +32,9 @@ npm start            # http://localhost:8080
 
 Behind a proxy, Node's fetch needs `NODE_USE_ENV_PROXY=1` for `npm run media`.
 
+After `npm run media` adds photos, delete `.astro/` before building. Astro caches
+rendered Markdown and will not notice that the photo manifest changed.
+
 ## Editing content
 
 Edit the Markdown file for the page and deploy. The path in the front matter is

@@ -1,0 +1,80 @@
+[
+ {
+  "from": "/drape-walls-backdrops",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "existing",
+  "note": "Redirect already served by the previous site"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/string-lighting-catalog",
+  "to": "/catalog/string-lighting-catalog",
+  "status": "existing",
+  "note": "Redirect already served by the previous site"
+ },
+ {
+  "from": "/velvet-stretch-drape-walls-backdrops-rental",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/drape-canopies",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/chandelier-pendant-catalog",
+  "to": "/chandelier-pendant-catalog",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/hanging-decor",
+  "to": "/hanging-decor",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/quote",
+  "to": "/get-a-quote",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/uplighting-2",
+  "to": "/uplighting",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/silk-florals-catalog",
+  "to": "/silk-florals",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/special-effects",
+  "to": "/services",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/standing-lighting-decor",
+  "to": "/catalog",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/table-lighting-decor-catalog",
+  "to": "/catalog",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/event-wedding-band-video",
+  "to": "/services",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ }
+]

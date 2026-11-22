@@ -1,0 +1,50 @@
+---
+import '../styles/site.css';
+import site from '../data/site.json';
+import { allEntries } from '../lib/entries.js';
+import { schemaFor } from '../lib/schema.js';
+
+const { entry } = Astro.props;
+const d = entry.data;
+const entries = await allEntries();
+const staging = import.meta.env.PUBLIC_STAGING === '1';
+const robots = staging ? 'noindex, nofollow' : d.robots;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{d.title}</title>
+{d.description && <meta name="description" content={d.description}>}
+<link rel="canonical" href={d.canonical}>
+{robots && <meta name="robots" content={robots}>}
+{Object.entries(d.og).map(([property, content]) => <meta property={property} content={content}>)}
+<link rel="icon" href="/favicon.ico">
+{schemaFor(entry, entries).map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site-header">
+  <a class="brand" href="/">{site.shortName}</a>
+  <nav aria-label="Main">
+    <ul>
+      {site.nav.map((l) => <li><a href={l.href} aria-current={l.href === d.path ? 'page' : undefined}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <a class="button" href="/get-a-quote">Get A Quote</a>
+</header>
+<main id="main">
+  <slot />
+</main>
+<footer class="site-footer">
+  <p class="areas">Richmond | Charlottesville | DC</p>
+  <nav aria-label="Footer">
+    <ul>
+      {site.footer.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <p><a href={`mailto:${site.email}`}>{site.email}</a> <a href={`tel:${site.phone}`}>{site.phone}</a></p>
+</footer>
+</body>
+</html>

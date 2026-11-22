@@ -1,0 +1,28 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Cards from '../components/Cards.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import { allEntries, LISTING } from '../lib/entries.js';
+
+export async function getStaticPaths() {
+  const entries = await allEntries();
+  return [...entries.values()].map((entry) => ({
+    params: { slug: entry.data.path === '/' ? undefined : entry.data.path.slice(1) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const listing = LISTING.has(d.template);
+const { Content, headings } = await render(entry);
+const bodyHasH1 = headings.some((h) => h.depth === 1);
+---
+<Base entry={entry}>
+  <article class={`t-${d.template}`}>
+    {(listing || !bodyHasH1) && d.h1.map((text) => <h1>{text}</h1>)}
+    {listing ? <Cards items={d.items || []} /> : <Content />}
+    {d.path === '/get-a-quote' && <QuoteForm />}
+  </article>
+</Base>

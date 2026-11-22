@@ -1,0 +1,50 @@
+/* Base styles. Layout and type only; the visual design is matched to the
+   current site template by template in later commits. */
+:root {
+  --ink: #1c1c1f;
+  --paper: #fff;
+  --muted: #5a5a63;
+  --line: #dcdce2;
+  --accent: #6b4e00;
+  --measure: 56rem;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.skip { position: absolute; left: -999rem; }
+.skip:focus { left: 1rem; top: 1rem; background: var(--paper); padding: .5rem 1rem; z-index: 10; }
+
+.site-header, .site-footer { padding: 1rem clamp(1rem, 4vw, 3rem); }
+.site-header { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; border-bottom: 1px solid var(--line); }
+.site-header nav { flex: 1; }
+.site-header ul, .site-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+.site-header a, .site-footer a { display: inline-block; padding: .4rem 0; text-decoration: none; color: var(--ink); }
+.site-header a[aria-current] { text-decoration: underline; }
+.brand { font-weight: 700; }
+.button, button { display: inline-block; padding: .6rem 1.2rem; background: var(--ink); color: var(--paper) !important; border: 0; border-radius: .25rem; font: inherit; cursor: pointer; }
+.site-footer { border-top: 1px solid var(--line); color: var(--muted); margin-top: 4rem; }
+
+main { padding: 2rem clamp(1rem, 4vw, 3rem); }
+article { max-width: var(--measure); margin: 0 auto; }
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; }
+article p:has(> picture), article p:has(> img), article p:has(> a > picture) { margin: 1.5rem 0; }
+
+.cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.5rem; }
+.cards a { display: block; text-decoration: none; color: var(--ink); }
+.cards img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; margin-bottom: .5rem; }
+
+.quote { display: grid; gap: .25rem; max-width: 36rem; }
+.quote label { display: block; font-weight: 600; }
+.quote input, .quote textarea { width: 100%; padding: .6rem; font: inherit; border: 1px solid var(--muted); border-radius: .25rem; }
+.quote .trap { position: absolute; left: -999rem; }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }

@@ -1,0 +1,34 @@
+{
+  "name": "The Wedding Lighting Company",
+  "shortName": "Wedding Lighting Co",
+  "url": "https://www.weddinglightingco.com",
+  "phone": "804-410-3605",
+  "email": "info@weddinglightingco.com",
+  "address": {
+    "street": "1535 West Avenue",
+    "city": "Richmond",
+    "region": "VA",
+    "postalCode": "23220",
+    "country": "US"
+  },
+  "serviceAreas": ["Richmond", "Charlottesville", "Washington, DC"],
+  "nav": [
+    { "label": "Home", "href": "/" },
+    { "label": "Services", "href": "/services" },
+    { "label": "Catalog", "href": "/catalog" },
+    { "label": "Gallery", "href": "/portfolio" },
+    { "label": "Reviews", "href": "/reviews" },
+    { "label": "Pricing", "href": "/wedding-decor-package-cost" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "FAQ", "href": "/faq" },
+    { "label": "Contact Us", "href": "/contact-us" }
+  ],
+  "footer": [
+    { "label": "Our Company", "href": "/about-wedding-lighting-co" },
+    { "label": "Jobs", "href": "/careers-overhire-hiring" },
+    { "label": "Privacy Policy", "href": "/privacy-policy" },
+    { "label": "Photo Credit", "href": "/photo-credit" },
+    { "label": "Subscribe", "href": "/subscribe" },
+    { "label": "Accessibility Statement", "href": "/accessibility-statement" }
+  ]
+}

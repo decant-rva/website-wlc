@@ -1,0 +1,29 @@
+---
+import { allEntries, firstPhoto } from '../lib/entries.js';
+import { picture } from '../lib/photos.js';
+
+const { items } = Astro.props;
+const entries = await allEntries();
+const cards = items.map((p) => entries.get(p)).filter(Boolean);
+---
+<ul class="cards">
+  {cards.map((e) => {
+    const id = firstPhoto(e);
+    const p = id && picture(id, '(min-width: 60rem) 18rem, 50vw');
+    const alt = '';
+    return (
+      <li>
+        <a href={e.data.path}>
+          {p && !p.single && (
+            <picture>
+              <source type="image/avif" srcset={p.avif} sizes={p.sizes}>
+              <source type="image/webp" srcset={p.webp} sizes={p.sizes}>
+              <img src={p.fallback} alt={alt} width={p.width} height={p.height} loading="lazy" decoding="async">
+            </picture>
+          )}
+          <span>{e.data.h1[0] || e.data.title}</span>
+        </a>
+      </li>
+    );
+  })}
+</ul>

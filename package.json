@@ -1,0 +1,22 @@
+{
+  "name": "website-wlc",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "media": "node tools/media.js",
+    "check:inventory": "node tools/inventory-diff.js",
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.10",
+    "@fastify/static": "^10.1.12",
+    "astro": "^7.4.13",
+    "fastify": "^5.12.8",
+    "sharp": "^0.35.5"
+  }
+}
