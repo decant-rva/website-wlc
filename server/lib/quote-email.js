@@ -24,6 +24,12 @@ const cell = (k, v, right) => `<td width="50%" style="width:50%;vertical-align:t
 const pair = (a, b) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tr>${cell(a[0], a[1])}${cell(b[0], b[1], true)}</tr></table>`;
 const box = (k, v) => `<div style="padding:12px 14px 14px;border-bottom:2px solid ${LINE}">${label(k)}<span style="${F}display:block;padding-top:6px;font-size:16px;line-height:1.5;color:${NAVY};white-space:pre-wrap">${esc(v) || '&nbsp;'}</span></div>`;
 
+// Each service belongs to a group with its own colour, the same ones the website uses:
+// lights blue, decor green, AV red, drapes magenta. [full colour, pale tint for an unchosen tile]
+const GROUP_COLOUR = { li: ['#5E93FB', '#CFDFFE'], de: ['#2FBF71', '#C1ECD4'], av: ['#E5383B', '#F7C3C4'], dr: ['#D6249F', '#F3BDE2'] };
+const GROUP = { Drapes: 'dr', 'Silk Florals & Trees': 'de', Decor: 'de', 'LED Dance Floor': 'de', Video: 'av', 'Live Audio': 'av', 'Special Effects': 'av' };
+const colourOf = (name) => GROUP_COLOUR[GROUP[name] || 'li'];
+
 function tiles(chosen) {
   const names = [...new Set([...ALL_SERVICES, ...chosen])];
   if (!names.length) return '';
@@ -31,10 +37,11 @@ function tiles(chosen) {
   // a quarter of the row wide, but never narrower than 100px.
   const cell = (n) => {
     const on = chosen.includes(n);
+    const [full, pale] = colourOf(n);
     // Every tile is the same height, tall enough for a two-line name, with the name centred in it.
     const look = on
-      ? `background:#ffffff;color:${NAVY};border:2px solid ${NAVY};border-top:6px solid ${AMBER}`
-      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${MIST}`;
+      ? `background:#ffffff;color:${NAVY};border:2px solid ${NAVY};border-top:6px solid ${full}`
+      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${pale}`;
     return `<span style="display:inline-block;vertical-align:top;width:25%;min-width:100px"><span style="display:block;margin:3px"><span style="display:table;width:100%;height:58px;table-layout:fixed;border-collapse:separate"><span style="${F}display:table-cell;height:58px;padding:0 4px;vertical-align:middle;text-align:center;font-size:12px;line-height:15px;font-weight:bold;box-sizing:border-box;${look}">${esc(n)}</span></span></span></span>`;
   };
   return `<div style="padding:14px 14px 11px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="margin:5px -3px 0;font-size:0">${names.map(cell).join('')}</div></div>`;

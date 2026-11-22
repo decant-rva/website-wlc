@@ -178,6 +178,8 @@ test('the email keeps the subject and labels the inbox already expects', () => {
   assert.equal(text, 'Name: A <b>\nEmail: a@example.com\nReferral Source: Google\nEvent Date: 2027-05-01\nVenue: Dover Hall\nVision: Hi\nServices: Uplighting\nPhotos: 1');
   assert.ok(html.includes('A &lt;b&gt;') && !html.includes('A <b>'));
   assert.ok(html.includes(`cid:${cids[0]}`), 'the photo is shown in the body');
+  assert.ok(html.includes('border-top:6px solid #5E93FB'), 'a chosen lighting service carries the lights colour');
+  assert.ok(quoteEmail({ ...row, services: 'Drapes' }).html.includes('border-top:6px solid #D6249F'));
 });
 
 test('the email shows how far off the event is on the booking scale', () => {
