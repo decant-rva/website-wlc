@@ -16,6 +16,8 @@ for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css'))) {
     fontFace: true,
     keyframes: true,
     defaultExtractor: (content) => content.match(/[A-Za-z0-9_-]+/g) || [],
+    // Classes the server adds to the quote form when it sends it back with problems marked.
+    safelist: ['bad', 'qerr'],
   });
   fs.writeFileSync(file, out.css);
   console.log(`${name}: ${before} -> ${out.css.length} bytes`);

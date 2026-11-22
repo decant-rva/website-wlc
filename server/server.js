@@ -6,11 +6,14 @@
 //   STAGING_PASSWORD  required when STAGING=1
 //   MEDIA_DIR         directory of generated photo sizes (default .media/variants)
 //   BUILD_SHA         commit the image was built from, reported by /health
+//   DATABASE_URL      Postgres, for quote requests. See quote.js and lib/deliver.js for the rest
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
+import { registerQuote } from './quote.js';
+import { migrate, quoteStore } from './lib/store.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DIST = path.join(ROOT, 'dist');
@@ -40,7 +43,8 @@ const assets = new Set();
 
 const same = (a, b) => a.length === b.length && crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
-export function build() {
+// quote: { store, deliverOpts } lets tests pass an in-memory store and fake deliveries.
+export function build({ quote = {} } = {}) {
   const app = Fastify({ logger: process.env.NODE_ENV === 'production', trustProxy: true });
 
   app.addHook('onRequest', async (req, reply) => {
@@ -58,6 +62,8 @@ export function build() {
 
   app.register(fastifyStatic, { root: path.join(DIST, '_astro'), prefix: '/_astro/', immutable: true, maxAge: '1y', decorateReply: true });
   app.register(fastifyStatic, { root: MEDIA_DIR, prefix: '/media/', immutable: true, maxAge: '1y', decorateReply: false });
+
+  registerQuote(app, { dist: DIST, ...quote });
 
   app.get('/*', async (req, reply) => {
     const q = req.url.indexOf('?');
@@ -88,5 +94,12 @@ export function build() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  build().listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
+  let store;
+  if (process.env.DATABASE_URL) {
+    const { default: pg } = await import('pg');
+    const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 4 });
+    await migrate(pool);
+    store = quoteStore(pool);
+  }
+  build({ quote: { store } }).listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
 }

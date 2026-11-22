@@ -86,6 +86,22 @@ match the previous site exactly. `npm run check:inventory` compares the build
 with `docs/phase-1/inventory.json` and fails on any difference. CI runs it on
 every change.
 
+## Quote form
+
+`POST /api/quote` (`server/quote.js`) checks the request, saves it to Postgres, sends the visitor
+to `/quote-sent`, then posts the lead to GigFriend and emails the office (`server/lib/deliver.js`).
+A delivery that fails is retried with growing waits, and one email reports anything still
+undelivered after an hour. Uploaded files are kept in Postgres with the request.
+
+| Setting | For |
+|---|---|
+| `DATABASE_URL` | Postgres. Without it the form answers with the "call or email us" page |
+| `LEAD_INTAKE_URL`, `LEAD_INTAKE_SECRET` | GigFriend `/lead-intake` and its `X-Lead-Token` |
+| `POSTMARK_TOKEN`, `QUOTE_EMAIL_FROM`, `QUOTE_EMAIL_TO` | The notification email |
+| `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check (the form widget is not added yet) |
+
+`migrations/` is applied at start-up. Tests use an in-memory Postgres (`pg-mem`) and fake deliveries.
+
 ## Deploying
 
 ```bash
@@ -97,5 +113,5 @@ tools/deploy.sh production
 
 ## Not built yet
 
-See section 9 and 8a of the architecture document: quote form handler, subscribe
+See section 9 and 8a of the architecture document: subscribe
 form, photo storage in the bucket, the blog admin and AI drafting.
