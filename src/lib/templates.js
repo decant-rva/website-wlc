@@ -470,10 +470,89 @@ async function productList(entry, trail, h) {
   return { html: `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="prods">${cards.map(productCard).join('')}</ul>` };
 }
 
+// ---- get a quote: what to know on the left, the form on the right, then reviews, services, featured and FAQ
+// One line from each review on /reviews.
+const QUOTE_REVIEWS = [
+  ["Elaine Kwak", "Everyone was WOWed by the lights, including us, and let me tell you - if you're on the fence about lighting - it makes SUCH a difference in terms of ambience and in the photos."],
+  ["Katie Kitchen", "Dylan and his team did a wonderful job bringing my vision to life. They took a simple, basic building and made it look magical."],
+  ["Graham Copeland", "The first time I called to discuss my wedding, Dylan was ready with options for every version of my budget and an answer to every one of my questions."],
+  ["Carbone Photo Co LLC", "Their attention to detail is unmatched and the space was completely transformed thanks to them!"],
+  ["Karla Crisp", "They are extremely professional, quick to respond, give great ideas and listen to the vision. They excel at bringing that vision to life."],
+  ["Casey Watson Armstrong", "The lighting definitely changed the vibe of our event in the best possible way."],
+  ["Emma Martinez", "They were very quick and responsive to our emails, and made sure we understood every part of the process."],
+  ["Rainey Niklawski", "The string lights were magical, and Dylan and his team were very meticulous in the set-up and take-down."],
+  ["Rebecca Arrington", "They were so easy to work with and made our wedding look magical."],
+  ["Kristin Booth", "My students wanted the prom to look exactly like the end of the movie Tangled with all of the lanterns above them, and it looked exactly like that."],
+  ["Cameron Marshall", "Their team was professional, efficient, and delivered exactly what was promised."],
+  ["Alison Singer", "With their lighting, TWLC transformed my venue from an academic atrium to an elegant Fall Ball."],
+];
+// Photo shown for each service in the quote page slideshow. null alt = use the alt stored with the photo.
+const QUOTE_SERVICE_PHOTOS = {
+  "Chandeliers": ["a16fb7_f5720f59bdcb45868255dc0cb6facbd1~mv2.jpg", "pendant and rattan chandeliers Linden Row Inn tent"],
+  "Decor Lighting": ["a16fb7_d490453d98aa46218131390c7239bf2d~mv2.jpg", "A lamp post illuminates a bar for a wedding in Richmond virginia"],
+  "Drapes": ["a16fb7_69cad28947b6435c8d0de5e1fee5fb4c~mv2.jpg", "drape canopy overhead barns at mataponi springs"],
+  "Dance Floor Lighting": ["a16fb7_0b76397e4bd640b3a48cfc3b7d77e943~mv2.jpeg", "Disco ball and greenery for wedding"],
+  "Gobos": ["a16fb7_9b63d58ea4ee489cb2a599316d347c8a~mv2.jpg", "custom name monogram gobo john marshall ballrooms"],
+  "Silk Florals & Trees": ["a16fb7_39f6788216f541f190cc706c4a94b236~mv2.jpg", "Wisteria and Ivy silk florals combined with rattan wicker lighting for a beautiful garden"],
+  "Uplighting": ["a16fb7_97fb74ec43184eb4944d3e1fae6e2c70~mv2.jpg", "Cool blue uplighting around the dominion club ballroom"],
+  "LED Dance Floor": ["a16fb7_a1ca0c0c7df8454d878f4cbf85c943ea~mv2.jpeg", "LED Dance floor Neon event"],
+  "Decor": ["a16fb7_8771320b90fa4c3aad2ae4069d01454b~mv2.jpg", "hanging floral and lighting centerpiece over dance floor"],
+  "String Lighting": ["337130_0a2bdcd8f5c54caebe9f2a15d412e86d~mv2.jpg", null],
+  "Pin Spots": ["a16fb7_fbc7e4457f0f4e7dafefbeca1436f06f~mv2.jpg", "warm pin spots on tables john marshall balroom"],
+  "Special Effects": ["a16fb7_ccfdf0365a6c4c2aa959b6a0045734b1~mv2.jpg", "Epic Bridal photo with cold sparks Maymont Richmond Virginia wedding lighting decor trends"],
+  "Video": ["a16fb7_3a492250d9864a5bbe6d6d3e968e092f~mv2.jpg", "video projections for academy awards show"],
+};
+// "When to book" wording supplied by the owner, 22 November 2026. Third value: bars lit out of six.
+const BOOKING = [
+  ["12 months or more", "Certain", 6],
+  ["9 to 12 months", "Almost certain", 5],
+  ["6 to 9 months", "Likely", 4],
+  ["3 to 6 months", "No custom order, dates spotty", 3],
+  ["2 to 3 months", "Unlikely", 2],
+  ["< 1 Month", "Rarely available. Limited Options", 1],
+];
+// Service slideshow and review rotation. Both stop for reduced motion; reviews stop once the visitor touches them.
+const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
+async function quote(entry, trail, h) {
+  const entries = await allEntries();
+  const cards = serviceCards(blocks(entries.get('/services').body));
+  const info = `<dl class="qif"><div><dt>Order minimum</dt><dd>$1,500</dd></div><div><dt>Locations</dt><dd>${site.areasLine}</dd></div><div><dt>Deposit</dt><dd>Due at signing</dd></div></dl><h2>When to book</h2><p class="qis">Availability, by how long before your event you book</p><ol class="qib">${BOOKING.map(([t, a, n]) => `<li><span class="qt">${esc(t)}</span><span class="qm" aria-hidden="true">${[0, 1, 2, 3, 4, 5].map((k) => `<i${k < n ? ' class="on"' : ''}></i>`).join('')}</span><span class="qa">${esc(a)}</span></li>`).join('')}</ol>`;
+  const rate = `<p class="rating">${STARS}Based on 87+ <a href="/reviews">Reviews on Google</a></p>`;
+  const cont = `<p class="qc"><a href="tel:${site.phone}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a></p>`;
+  const tiles = cards.map((c) => `<label class="q5t"><input type="checkbox" name="services" value="${esc(c.name)}"><span class="q5b">${pic(c.img[1], { alt: '', sizes: '6rem' })}<span>${inline(c.name)}</span></span></label>`).join('');
+  const F = [
+    ['q-name', 'Full Name', '<input name="name" autocomplete="name" required>', true],
+    ['q-email', 'Email', '<input name="email" type="email" autocomplete="email" required>', true],
+    ['q-date', 'Event Date', '<input name="eventDate" type="date">', false],
+    ['q-venue', 'What is your venue?', '<input name="venue">', false],
+    ['q-vision', 'Tell us about yourself, your vision, and where you are in your event planning process.', '<textarea name="details" rows="5"></textarea>', false, 'w'],
+    ['q-ref', 'How did you find us?', '<input name="howDidYouFindUs">', false],
+    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/*,application/pdf">', false, 'w'],
+  ];
+  const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
+  // Hidden from people; a filled value marks the submission as spam.
+  const trap = '<p class="trap" aria-hidden="true"><label for="q-company">Company</label><input id="q-company" name="company" tabindex="-1" autocomplete="off"></p>';
+  const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f"><p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
+  const rvs = `<section class="rvs"><h2>GLOWING REVIEWS</h2><div class="rsl">${QUOTE_REVIEWS.map(([n, q], i) => `<figure class="rs rs${i + 1}"><blockquote><p>${esc(q)}</p></blockquote><figcaption>${STARS}<span>${esc(n)}</span></figcaption></figure>`).join('')}</div><div class="rvd">${QUOTE_REVIEWS.map((_, i) => `<input type="radio" name="rvs" id="rv${i + 1}" aria-label="Review ${i + 1} of ${QUOTE_REVIEWS.length}"${i === 0 ? ' checked' : ''}>`).join('')}<a href="/reviews">Reviews on Google</a></div></section>`;
+  const D = cards.filter((c) => QUOTE_SERVICE_PHOTOS[c.name] && photoUrl(QUOTE_SERVICE_PHOTOS[c.name][0])).map((c) => { const [id, alt] = QUOTE_SERVICE_PHOTOS[c.name]; return [photoUrl(id), alt ?? photos[id].alt ?? '', c.name, c.href]; });
+  const svs = D.length ? `<section class="svs" data-s="${esc(JSON.stringify(D))}"><h2>Services</h2><div class="svw"><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><p class="svn"><a href="${D[0][3]}">${esc(D[0][2])}</a></p></div></section>` : '';
+  // First eight questions from /faq, in two columns.
+  const fe = entries.get('/faq');
+  const fb = blocks(fe.body);
+  const hs = fb.map((b, i) => (b[0] === 'h' ? i : -1)).filter((i) => i >= 0);
+  const fq = hs.slice(1, 9).map((n, a) => `<details><summary><h3>${inline(fb[n][2])}</h3></summary>${prose(fb.slice(n + 1, hs[a + 2] ?? fb.length - 1))}</details>`);
+  const half = Math.ceil(fq.length / 2);
+  const faqBand = `<div class="faq bfq"><h2>FAQ</h2><div class="fqc"><div>${fq.slice(0, half).join('')}</div><div>${fq.slice(half).join('')}</div></div><p><a class="btn" href="/faq">FAQ</a></p></div>`;
+  const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
+  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}`;
+  return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
+}
+
 const BY_PATH = {
   '/': home,
   '/services': services,
   '/reviews': reviews,
+  '/get-a-quote': quote,
   '/catalog': catalog,
   '/chandelier-pendant-catalog': chandeliers,
   '/about-wedding-lighting-co': about,

@@ -2387,3 +2387,5 @@ main>.posts .cd,main>.posts .cs,.rel .posts .cd,.rel .posts .cs{color:var(--pale
 picture{display:contents}
 /* Without this each <source> would take a cell in a grid or flex row. */
 picture>source{display:none}
+/* spam trap field: off screen for people, still in the form for bots */
+.trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}

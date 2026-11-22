@@ -1,7 +1,6 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import QuoteForm from '../components/QuoteForm.astro';
 import { allEntries } from '../lib/entries.js';
 import { renderEntry } from '../lib/templates.js';
 import { pageHead } from '../lib/html.js';
@@ -28,7 +27,6 @@ const { Content } = page.bespoke ? {} : await render(entry);
         <Fragment set:html={pageHead(page.h.text, page.trail, { tag: page.h.tag })} />
         <article class="prose">
           <Content />
-          {d.path === '/get-a-quote' && <QuoteForm />}
         </article>
       </Fragment>
     )}
