@@ -27,13 +27,15 @@ const box = (k, v) => `<div style="padding:12px 14px 14px;border-bottom:2px soli
 function tiles(chosen) {
   const names = [...new Set([...ALL_SERVICES, ...chosen])];
   if (!names.length) return '';
+  // Four tiles to a row on a computer, three on a phone, each row filling the width:
+  // a quarter of the row wide, but never narrower than 100px.
   const cell = (n) => {
     const on = chosen.includes(n);
-    return `<span style="${F}display:inline-block;vertical-align:top;width:104px;margin:0 6px 6px 0;padding:14px 4px;text-align:center;font-size:12px;line-height:1.25;font-weight:bold;box-sizing:border-box;${on
+    return `<span style="display:inline-block;vertical-align:top;width:25%;min-width:100px"><span style="${F}display:block;margin:3px;padding:14px 4px;text-align:center;font-size:12px;line-height:1.25;font-weight:bold;${on
       ? `background:#ffffff;color:${NAVY};border:2px solid ${NAVY};border-top:6px solid ${AMBER}`
-      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${MIST}`}">${esc(n)}</span>`;
+      : `background:${MIST};color:#8A93AE;border:2px solid ${MIST};border-top:6px solid ${MIST}`}">${esc(n)}</span></span>`;
   };
-  return `<div style="padding:14px 8px 8px 14px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="padding-top:8px;font-size:0">${names.map(cell).join('')}</div></div>`;
+  return `<div style="padding:14px 14px 11px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="margin:5px -3px 0;font-size:0">${names.map(cell).join('')}</div></div>`;
 }
 
 /**
