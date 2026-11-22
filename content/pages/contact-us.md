@@ -13,12 +13,10 @@ og: {"og:title": "Contact Us | Wedding Lighting Co", "og:description": "Feel fre
 
 Are you looking for lighting, decor, special effects, or AV for your event? Let's chat. You can get in touch with us by filling out a quote request, messaging us on Instagram, sending us an email, or giving us a call. No matter how you contact us, we will get right back to you.
 
-Phone:
+Phone: [804-410-3605](tel:804-410-3605)
 
-[804-410-3605](tel:804-410-3605) Instagram:
+Instagram: @weddinglightingco
 
-@weddinglightingco Email:
+Email: [Info@weddinglightingco.com](mailto:Info@weddinglightingco.com)
 
-[Info@weddinglightingco.com](mailto:Info@weddinglightingco.com) Admin Office
-
-(No Appointments):1535 West Ave Richmond VA Suite 13
+Admin Office (No Appointments): 1535 West Ave Richmond VA Suite 13

@@ -40,7 +40,7 @@ const footerCols = [
 <link rel="preload" href="/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 {entry && schemaFor(entry, entries).map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
 </head>
-<body class={`th4 t-${d?.template ?? 'none'} ${bodyClass}`.trim()}>
+<body class={`th4 t-${d?.template ?? 'none'} p-${!path ? 'none' : path === '/' ? 'home' : path.slice(1).split('/')[0]} ${bodyClass}`.trim()}>
 <a class="skip" href="#main">Skip to Main Content</a>
 <header class="hd">
   <a class="logo" href="/"><img src="/img/wordmark.webp" alt="Wedding Lighting Co home" width="356" height="360"></a>

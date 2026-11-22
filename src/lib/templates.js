@@ -279,6 +279,8 @@ export function timeChart({ heading = 'What we spend our time doing', stats = tr
   const st = stats ? `<ul class="tms">${TIME_STATS.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join('')}</ul>` : '';
   return `<section class="tm tq tq2"><h2>${esc(heading)}</h2>${st}<div class="tq-pan">${panels}</div></section>`;
 }
+// Email sign-up, the same form as src/components/SubscribeForm.astro. Posts to /api/subscribe.
+const SUBSCRIBE = '<form class="quote subscribe" action="/api/subscribe" method="post"><p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p><p class="trap" aria-hidden="true"><label for="s-company">Company</label><input id="s-company" name="company" tabindex="-1" autocomplete="off"></p><p><button class="btn solid" type="submit">Subscribe</button></p></form>';
 // Discipline of each of the eight newest products, in page order.
 const NEWEST = ['de', 'li', 'li', 'li', 'de', 'de', 'de', 'li'];
 async function catalog(entry, trail, h) {
@@ -292,7 +294,7 @@ async function catalog(entry, trail, h) {
   }).join('');
   // Cut-out product photos live in public/img/newest, named after the photo ID.
   const newest = bl.filter((b) => b[0] === 'img').slice(0, 8).map((b, n) => `<span class="d-${NEWEST[n]}"><img src="/img/newest/${stem(b[1])}.webp" alt="${esc(b[2].startsWith('for a picture') ? '' : cleanAlt(b[2]))}" loading="lazy" decoding="async"></span>`).join('');
-  const html = `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="cats">${cards}</ul><section class="rel nw2"><h2>Newest Products</h2><div class="nwg">${newest}</div></section>${cta()}${timeChart()}`;
+  const html = `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="cats">${cards}</ul><section class="rel nw2"><h2>Newest Products</h2><div class="nwg">${newest}</div></section>${SUBSCRIBE}${cta()}${timeChart()}`;
   return { html, bodyClass: 'cx cx4 cxw', closing: false };
 }
 

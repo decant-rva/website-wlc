@@ -2392,3 +2392,13 @@ picture>source{display:none}
 /* quote form: problems found by the server */
 .qerr{margin:0 0 1rem;padding:1rem 1.25rem;border-left:.45rem solid var(--err);background:var(--white);color:var(--navy)}
 .qerr p{margin:0 0 .4rem;font-weight:500}.qerr ul{margin:0;padding-left:1.2rem}
+/* Captioned photo tiles: a Markdown list whose items each start with a photo (the portfolio page) */
+.tiles{list-style:none;max-width:var(--max);margin:1.5rem auto;padding:0!important;display:grid;gap:1.5rem 1rem;grid-template-columns:repeat(2,minmax(0,1fr));font:700 .9375rem/1.35 "League Spartan",system-ui,sans-serif;color:var(--navy)}
+.tiles li{margin:0}
+.tiles img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;margin-bottom:.6rem;clip-path:polygon(0 0,calc(100% - 1.6rem) 0,100% 1.6rem,100% 100%,0 100%)}
+@media(min-width:40rem){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:62rem){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.prose:has(.tiles){max-width:calc(var(--max) + 2 * var(--gut))}
+/* email sign-up */
+.subscribe{max-width:28rem;margin:1.5rem auto;padding:0 var(--gut)}
+.prose .subscribe{margin-left:0;padding:0}
