@@ -22,7 +22,9 @@ let cached;
 /** The SMTP connection, made once. Throws when the relay is not configured. */
 function relay() {
   const { SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_USER || !SMTP_PASS || !process.env.QUOTE_EMAIL_TO || !process.env.QUOTE_EMAIL_FROM) throw new Error('notification email is not configured');
+  // Name what is missing, so the saved error says exactly which setting to add.
+  const missing = ['SMTP_USER', 'SMTP_PASS', 'QUOTE_EMAIL_FROM', 'QUOTE_EMAIL_TO'].filter((k) => !String(process.env[k] || '').trim());
+  if (missing.length) throw new Error(`notification email is not configured: missing ${missing.join(', ')}`);
   cached ||= nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp-relay.gmail.com',
     port: Number(process.env.SMTP_PORT || 587),
@@ -36,7 +38,7 @@ function relay() {
 export async function postIntake(row, fetchFn = fetch) {
   const url = process.env.LEAD_INTAKE_URL;
   const secret = process.env.LEAD_INTAKE_SECRET;
-  if (!url || !secret) throw new Error('lead intake is not configured');
+  if (!url || !secret) throw new Error(`lead intake is not configured: missing ${[!url && 'LEAD_INTAKE_URL', !secret && 'LEAD_INTAKE_SECRET'].filter(Boolean).join(', ')}`);
   const res = await fetchFn(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'X-Lead-Token': secret },
@@ -99,6 +101,8 @@ export async function deliver(store, id, { intake = postIntake, email = sendEmai
   if (emailState !== 'sent') {
     try { await email(row, files); emailState = 'sent'; } catch (e) { emailState = 'failed'; errors.push(`email: ${e.message}`); }
   }
+  // Also in the app log, so `fly logs` shows why a delivery failed.
+  if (errors.length) console.error(`quote request ${id} not fully delivered: ${errors.join('; ')}`);
   await store.record(id, { intake: intakeState, email: emailState, error: errors.join('; '), nextTryAt: new Date(now().getTime() + backoff(row.attempts)) });
 }
 
