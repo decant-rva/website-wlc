@@ -68,7 +68,8 @@ Template photos are `<picture>` elements with AVIF, WebP and a JPEG fallback. Th
 `<img>` would.
 
 `node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
-against a running copy. It needs Playwright, which is not in `package.json` (`npm i -D playwright`).
+against a running copy. Playwright is a dev dependency; on a new machine also run
+`npx playwright install chromium` once for the browser it drives.
 
 ## Photo storage
 
