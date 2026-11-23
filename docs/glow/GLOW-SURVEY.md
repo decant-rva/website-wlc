@@ -22,7 +22,7 @@ Each fact carries one of these marks:
 - **Keeping the site online must not depend on Glow.** Glow runs on a PC that can be off or asleep. Alarms belong to fly.io's health check, an outside uptime monitor and scheduled GitHub Actions. Glow's job there is to read the results, explain them in plain words and draft the fix. None of those scheduled jobs exists yet. **Verified.**
 - **The curation backlog is sized:** 220 photos to describe on 87 pages, 48 thin pages, 64 pages with no meta description and 14 with no H1 (both frozen), 16 redirects awaiting approval, 179 venues with no photos. **Verified.**
 - **Pull requests #3 and #4 do not merge cleanly.** One conflict in `.dockerignore` and one failing test, because #4 moved the booking scale out of `templates.js`, where the vault sync looks for it. Both are small, and the fixes are written up in section 3. **Verified.**
-- **Questions for the owner.** Answered from the PC (section 13): where the Glow brain lives and what it reads, what Beam's "Bright mode" is, the hub's routes and machines, and which models are installed. Still the owner's to decide: D-001 (still only proposed) and D-003 (as written it forbids bulk generation, though the owner asked for the 220-photo run), a `Status/` folder, and an uptime monitor.
+- **Questions for the owner.** Answered from the PC (section 13): where the Glow brain lives and what it reads, what Beam's "Bright mode" is, the hub's routes and machines, and which models are installed. The owner decided the rest on 23 November: D-001 is accepted (curate through the Glow network and the vault, no admin screen), D-003 stays with one rule added (a batch of proposals runs only after the owner says yes to that run), and health notes go in a new `Status/` folder in the vault. Still open: which uptime monitor, and who it alerts (options in section 8).
 - **One correction from the probes:** the hub's port on the PC serves only Ollama's own format. The OpenAI-format URLs answer 404 there, so the shared client should speak Ollama's `/api/chat` and `/api/generate` (section 4). **Probed.**
 
 ## 2. Where everything is
@@ -260,12 +260,35 @@ Out of scope for Glow, by its rules: reviews and testimonials (verbatim, never e
 | Layer | Watches | Runs on | Exists? |
 |---|---|---|---|
 | fly.io health check | `GET /health` every 30 s; restarts a failing machine | fly.io | Yes (`fly.toml`) |
-| Outside uptime monitor | Home page, `/health`, and `/health/delivery` with `X-Status-Token`: alert when not 200 or `oldestPendingMinutes` passes 60 | A monitoring service | No. Needs `STATUS_TOKEN` set and a monitor chosen |
+| Outside uptime monitor | Home page, `/health`, and `/health/delivery` with `X-Status-Token`: alert when not 200 or `oldestPendingMinutes` passes 60 | A monitoring service | No. Needs `STATUS_TOKEN` set and a monitor chosen (options below) |
 | Daily undelivered summary | Quote requests still undelivered, emailed after 13:00 UTC | The app | Yes (#4) |
 | Scheduled GitHub Actions | Architecture section 11: weekly link check, dependency updates, nightly database and weekly media backup | GitHub | **None exist.** Only `ci.yml` and `media.yml` |
 | Glow | Reads the results above, explains them and drafts fixes | The owner's PC | Not built |
 
 Glow must not be the alarm. When the PC is asleep, Glow is silent, and a silent watcher looks like good news. Alarms come from the always-on layers; Glow turns their output into something the owner can act on in a minute.
+
+### Uptime monitor options
+
+The monitor has to check from outside, every few minutes, and must not run on fly.io or the owner's PC. It checks three things: the home page (200 and a phrase from the page), `/health` (200), and `/health/delivery` with the `X-Status-Token` header (200 and `oldestPendingMinutes` under 60). It alerts by phone push and email.
+
+One small server change would make any monitor work: have `/health/delivery` answer 503 when `oldestPendingMinutes` passes 60 or `failed` is above 0. The monitor then only has to send the header and check for 200, not read the reply. Today it answers 200 in that case, and only a monitor that reads JSON would notice.
+
+Free tiers as published in November 2026; check the plan page before relying on one.
+
+| Option | Free tier | Fits | Watch out for |
+|---|---|---|---|
+| **Better Stack** | 10 monitors and 10 heartbeats, every 3 minutes, email and Slack alerts, a phone app, one status page | Simplest pager for the home page and `/health`. Its heartbeats can also catch a scheduled job that stops running | Whether the free plan sends custom request headers was not confirmed. Without them, `/health/delivery` needs another monitor or a paid plan |
+| **UptimeRobot** | 50 monitors, every 5 minutes | Generous and familiar | Third-party write-ups say the free plan has been for personal, non-commercial use since December 2024, and UptimeRobot's own page calls it for hobby and non-profit projects. A business site likely needs the paid Solo plan (60-second checks) |
+| **Checkly** (Hobby) | About 10,000 API check runs a month, with assertions on status, body and headers | Sends the header and can check `oldestPendingMinutes` itself, so no server change is needed | 10,000 runs is about one check every 9 minutes for two endpoints. Set up as code, aimed at developers |
+| **Google Cloud uptime checks** | Reported as 1 million executions a month free per project | Custom headers, content checks, and email or SMS alerts | Needs a Google Cloud project with billing turned on. The most setup of the list |
+| **GitHub Actions on a schedule** | Free in a public repository | The deeper checks below (sitemap, redirects, running commit, certificate), opening an issue on failure | Not a pager: scheduled runs can start late, and GitHub turns schedules off after 60 days without activity in a public repository |
+| **Uptime Kuma** (self-hosted) | Free software | Full control | Needs an always-on machine that is neither fly.io nor the owner's PC |
+
+Suggested pairing:
+
+- **Better Stack's free plan as the pager** for the home page and `/health`.
+- **`/health/delivery`:** Better Stack too if its free plan sends headers, otherwise Checkly's free plan.
+- **A daily GitHub Action for the deeper checks**, which pings a Better Stack heartbeat when it finishes, so a schedule that silently stops is noticed. Missed scheduled jobs are the failure `gigfriend-server` already ran into (architecture section 11).
 
 ### Checks to run on a schedule, with no model involved
 
@@ -282,7 +305,7 @@ These belong in a scheduled GitHub Action (always on, and it can open an issue) 
 
 | Job | Engine | What it does |
 |---|---|---|
-| **Health note** | gpt-oss, reasoning `low` | Turns the check results into a short note: what is fine, what is not, what to do. Writes to `Status/` in the vault (a new folder, needs the owner's OK under CONVENTIONS) |
+| **Health note** | gpt-oss, reasoning `low` | Turns the check results into a short note: what is fine, what is not, what to do. Writes to `Status/` in the vault, which the owner approved on 23 November. Same pattern as Glow's daily "Vault health" note in another vault: rewritten on each run, never edited by hand |
 | **404 triage after launch** | gpt-oss | Groups 404s from the fly logs by likely cause (old Wix URL, typo, bot) and proposes redirects for the real ones. Redirect proposals still need the owner |
 | **Dead external link triage** | gpt-oss | For each dead link from the weekly check: moved (proposes the new URL), gone (proposes removing it) or temporary |
 | **Dependency update review** | Qwen 3.6 coder | Reads the changelog and diff of an automated update and writes a risk note on the pull request's proposal. CI still decides whether it passes |
@@ -339,6 +362,7 @@ test/glow/        each module against a fake hub, as test/glow-alt-text.test.js 
 Design points:
 
 - **One engine interface,** as architecture section 9a asks: a job names a role, never a model. Changing an engine is a one-line edit in `engines.json`, and Claude's API could be a backend for the same roles.
+- **Ask before a batch (D-003).** A job that would write more than one proposal first shows what it will do (how many items, which engine, roughly how long) and waits for the owner's yes. The run's summary note records who said yes and when.
 - **Every step can be re-run.** Work folders hold JSONL that grows as items finish, as the alt text job does. A machine that goes to sleep halfway costs nothing.
 - **Pre-flight before each run:** the hub answers (`/api/health`), the model is installed on the machine (`/api/tags`), `GET /api/bright` reports `mode: off`, and `/api/referee` shows no other project using a model the job would push out of Beam's memory. A long run reserves Beam with `POST /api/referee/reserve`. On a Bright mode 503, send the job to Shine (`mac36`) if it has the model, or wait. Stop with a plain message, not 220 timeouts.
 - **This repository is public.** Prompts, code and the engine config can live here. The vault's contents, proposals and anything internal stay in the vault, and the vault's own Git repository, if it gets one, stays private.
@@ -414,10 +438,13 @@ To test against the real engines, the next session must run on the PC: the Claud
 Decisions:
 
 1. **D-001** (curate through the vault, not an admin screen) is marked "Proposed". The suite is built on it. Accept it?
-   *Found on the PC:* Glow's notes record nothing about the website's D-001. The copy in the vault's `DECISIONS.md` still says "Proposed". Glow numbers its own decisions `dec-0001` onwards, and its `dec-0001` and `dec-0003` concern other matters, not these. **Still the owner's decision.** **Glow notes**
+   *Found on the PC:* Glow's notes record nothing about the website's D-001. The copy in the vault's `DECISIONS.md` still says "Proposed". Glow numbers its own decisions `dec-0001` onwards, and its `dec-0001` and `dec-0003` concern other matters, not these. **Glow notes**
+   *Owner, 23 November 2026:* accepted, "we would do it through the glow network". Curation goes through Glow and the vault, and no admin screen is planned. The vault's `DECISIONS.md` should now mark D-001 Accepted, with this as its source.
 2. **D-003** says "one draft per request; no scheduled or bulk generation". Batch jobs that fill known gaps (alt text, thin pages, held meta descriptions) produce many proposals at once, though nothing publishes without approval. Amend it to allow batch proposals for existing gaps while keeping new blog posts one per request and nothing scheduled to publish?
-   *Found on the PC:* the vault's copy says "Accepted", unchanged. Glow's notes do record that the owner asked for the alt text job to run on every photo that lacked alt text, and that it ran as one batch on 22 and 23 November. It produced proposals only: nothing was applied, committed or pushed. Practice has therefore already gone past the decision's wording, and the amendment proposed above would make the two agree. **Still the owner's decision.** **Glow notes**
+   *Found on the PC:* the vault's copy says "Accepted", unchanged. Glow's notes do record that the owner asked for the alt text job to run on every photo that lacked alt text, and that it ran as one batch on 22 and 23 November. It produced proposals only: nothing was applied, committed or pushed. Practice has therefore already gone past the decision's wording, and the amendment proposed above would make the two agree. **Glow notes**
+   *Owner, 23 November 2026:* keep D-003, and ask first. A batch of proposals runs only after the owner says yes to that run, as the alt text run did. New blog posts stay one per request, and nothing is scheduled to publish. For the suite: see "Ask before a batch" in section 10. The vault's `DECISIONS.md` should add this to D-003.
 3. A `Status/` folder in the vault for health notes, or should those go somewhere else?
+   *Owner, 23 November 2026:* yes, `Status/`. The vault's `CONVENTIONS.md` folder map needs a row for it: written by the suite's watch job, rewritten on each run, never edited by hand.
 4. Run the alt text job on the full 220 photos now, before launch?
    *Overtaken:* it ran on 22 and 23 November. Muse Glimmer described all 220 photos in 61 minutes, about 17 s a photo. gpt-oss:120b, not Mistral Medium 3.5, drafted all 220 in 17 minutes, because Mistral would have pushed the 120b out of memory while another job was using it. There were no failures, and the run wrote 79 proposal notes. Claude's review found the drafts it checked accurate, with two problems: the prompt wrongly treated logos and text graphics as decorative (fixed in `dd68758` on #3), and a few drafts named lighting that came from the page text, not the photo. gpt-oss:120b rated 219 of 220 drafts "high" confidence, so that field tells nothing. **Glow notes.** When those notes were written, the proposals were waiting for Claude's photo-by-photo check and the owner's ticks. Since then #3 has gained `--redo-page` and an `apply --decisions` step for decisions made on a review page, and alt text jobs were running again on the hub during these probes. Where the review stands now is for that work's own session to report. **Probed**
 
@@ -430,6 +457,7 @@ Facts only the owner has (answered from the PC):
 7. Which gpt-oss size runs (20b or 120b), and whether an embedding model is installed.
    *Answer:* both are installed on Beam: `gpt-oss:20b` and `gpt-oss:120b`. The 120b wrote the first run's alt text, and Shine and Beacon have the 20b only. The embedding model is `nomic-embed-text` (768 dimensions), on Beam and on two other machines; `qwen3-embedding` is not installed. **Probed**
 8. Which outside uptime monitor to use, and who it alerts.
+   *Options and a suggested pairing are in section 8. Still the owner's choice.*
 
 ## 14. Build order
 
@@ -465,3 +493,8 @@ Public (looked up 23 November 2026):
 - Ollama OpenAI compatibility: https://docs.ollama.com/API/openai-compatibility
 - gpt-oss structured output issues on Ollama (third party): https://www.glukhov.org/post/2025/10/ollama-gpt-oss-structured-output-issues/
 - Local embedding models compared (third party): https://www.morphllm.com/ollama-embedding-models
+- Better Stack check frequency: https://betterstack.com/docs/uptime/check-frequency/
+- UptimeRobot pricing: https://uptimerobot.com/pricing/
+- UptimeRobot free plan and commercial use (third party): https://dev.to/velprove/uptimerobot-commercial-use-free-alternatives-for-business-sites-in-2026-5d75
+- Checkly pricing: https://checklyhq.com/pricing.md
+- Google Cloud Observability pricing: https://cloud.google.com/monitoring/pricing
