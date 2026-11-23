@@ -36,7 +36,12 @@ test('share and structured-data images are our own photo files', () => {
     }
     for (const s of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
       const block = JSON.parse(s[1]);
-      if (block.image) assert.ok(ours.has(String(block.image).split('/media/')[1]), `${f}: ${block.image}`);
+      if (!block.image) continue;
+      const url = String(block.image);
+      // A generated photo size, or a file the build itself serves (the logo).
+      const ok = url.startsWith('https://www.weddinglightingco.com/') && (ours.has(url.split('/media/')[1])
+        || (url.includes('/img/') && fs.existsSync(path.join(DIST, url.replace('https://www.weddinglightingco.com/', '')))));
+      assert.ok(ok, `${f}: ${url}`);
     }
   }
   assert.ok(og > 200, `only ${og} pages have a share image`);

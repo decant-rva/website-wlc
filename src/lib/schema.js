@@ -8,6 +8,8 @@ const business = () => ({
   '@id': `${site.url}/#business`,
   name: site.name,
   url: site.url,
+  // The live site's image was its logo on the previous host; this is our own copy.
+  image: `${site.url}/img/logo.png`,
   telephone: site.phone,
   email: site.email,
   address: {
@@ -57,6 +59,9 @@ function faq(entry) {
 /** JSON-LD blocks for one page. */
 export function schemaFor(entry, entries) {
   const out = [business()];
+  // The site name Google shows comes from this block, which the live home page has.
+  // No SearchAction: /search on this site does not take a query.
+  if (entry.data.path === '/') out.push({ '@context': 'https://schema.org', '@type': 'WebSite', name: site.shortName, url: site.url });
   const crumbs = breadcrumbs(entry, entries);
   if (crumbs) out.push(crumbs);
   const questions = faq(entry);
