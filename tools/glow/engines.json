@@ -1,0 +1,18 @@
+{
+  "_about": "Which machine and model does each kind of Glow work. Jobs name a role, never a model, so changing an engine is a one-line edit here. Machines are the hub's ids (docs/glow/GLOW-SURVEY.md, section 4). budget and retryBudget are output tokens; timeout is seconds a request. format: schema = a JSON schema may be sent; prompt = describe the format in the prompt only (a schema skews photo answers).",
+  "hub": "http://127.0.0.1:8790",
+  "machines": {
+    "mac": { "name": "Beam", "capacityGiB": 110 },
+    "mac36": { "name": "Shine" },
+    "studio": { "name": "Arc" },
+    "rtx": { "name": "Beacon", "note": "Glow's own upkeep; keep website jobs off it" }
+  },
+  "roles": {
+    "vision": { "machine": "mac", "model": "muse-glimmer:30b", "think": false, "budget": 1500, "retryBudget": 3000, "temperature": 0, "timeout": 300, "format": "prompt" },
+    "write": { "machine": "mac", "model": "mistral-medium-3.5:latest", "think": false, "budget": 6000, "retryBudget": 12000, "temperature": 0.2, "timeout": 300, "format": "schema" },
+    "review": { "machine": "mac", "model": "gpt-oss:120b", "think": "high", "budget": 16000, "retryBudget": 24000, "temperature": 0.2, "timeout": 600, "format": "prompt" },
+    "code": { "machine": "mac", "model": "qwen3.6:35b-a3b-coding-mtp-q4_K_M", "fallback": "mac36", "think": false, "budget": 6000, "retryBudget": 12000, "temperature": 0.2, "timeout": 300, "format": "schema" },
+    "label": { "machine": "mac", "model": "gpt-oss:20b", "fallback": "mac36", "think": "low", "budget": 6000, "retryBudget": 12000, "temperature": 0.2, "timeout": 120, "format": "schema" },
+    "embed": { "machine": "mac", "model": "nomic-embed-text:latest", "timeout": 60 }
+  }
+}

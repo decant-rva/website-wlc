@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readEntries, cleanAlt, safeName, noteBase, FOLDER } from './vault-sync.js';
+import { createClient, MACHINES } from './glow/client.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readText = (f) => fs.readFileSync(f, 'utf8').replace(/\r\n/g, '\n');
@@ -237,6 +238,14 @@ export function check(j, draft, venuesIn) {
   return { alt: alt.replace(/\.$/, ''), flags };
 }
 
+/** { origin, machine } when `url` is a Glow hub chat route, such as http://127.0.0.1:8790/ollama/mac/api/chat; else null. */
+export function hubRoute(url) {
+  let u;
+  try { u = new URL(url); } catch { return null; }
+  const m = u.pathname.match(/^\/ollama\/([^/]+)\/api\/chat\/?$/);
+  return m && MACHINES.has(m[1]) ? { origin: u.origin, machine: m[1] } : null;
+}
+
 export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/chat', model = 'mistral-medium-3.5', headers = {}, limit = Infinity, timeout = 300, redo = [], redoPages = [], fetchImpl = fetch, log = console.log } = {}) {
   const { jobs } = readJson(path.join(work, 'jobs.json'), { jobs: [] });
   const descriptions = readDescriptions(work);
@@ -251,6 +260,10 @@ export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/
     fs.writeFileSync(outFile, keep.length ? `${keep.join('\n')}\n` : '');
   }
   const done = new Set(fs.existsSync(outFile) ? readText(outFile).split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l).id; } catch { return null; } }) : []);
+  const hub = hubRoute(url);
+  // A hub URL (/ollama/<machine>/api/chat) goes through the shared Glow client. Any other URL (the OpenAI format, or
+  // Ollama called directly) keeps the call below, as before the client existed.
+  const client = hub && createClient({ hub: hub.origin, fetchImpl, headers, timeout });
   const openai = /\/chat\/completions\/?$/.test(url);
   let n = 0;
   const report = { drafted: 0, skipped: 0, noDescription: 0, failed: 0 };
@@ -263,7 +276,18 @@ export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/
     const prompt = promptFor(j, description);
     let reply = null;
     let raw = '';
-    for (const budget of [6000, 12000]) {
+    if (client) {
+      // The same request as before: 6,000 tokens, then once more at 12,000 with nothing else changed (retryThink: null),
+      // and no num_ctx (numCtx: false), so the hub sizes it as it always has.
+      const r = await client.chat({
+        machine: hub.machine, model, budget: 6000, retryBudget: 12000, retryThink: null, numCtx: false, temperature: 0.2,
+        task: `alt text: ${j.file}`, parse: parseReply,
+        messages: [{ role: 'system', content: 'Answer immediately, minimal reasoning. Output only the JSON object. No preamble.' }, { role: 'user', content: prompt }],
+      });
+      reply = r.ok ? r.json : null;
+      raw = r.ok ? '' : r.error && !/^(empty|unparseable) reply$/.test(r.error) ? `error: ${r.error}` : r.text;
+    }
+    for (const budget of client ? [] : [6000, 12000]) {
       const body = openai
         ? { model, stream: false, max_tokens: budget, temperature: 0.2, messages: [{ role: 'system', content: 'Answer immediately, minimal reasoning. Output only the JSON object. No preamble.' }, { role: 'user', content: prompt }] }
         : { model, stream: false, options: { num_predict: budget, temperature: 0.2 }, messages: [{ role: 'system', content: 'Answer immediately, minimal reasoning. Output only the JSON object. No preamble.' }, { role: 'user', content: prompt }] };
