@@ -151,6 +151,11 @@ tools/deploy.sh production
 
 `/health` reports the commit that is running.
 
+## The vault
+
+`npm run vault -- "A:\Website-WLC"` writes the site into the Obsidian vault used to curate it, and
+builds the knowledge export the Glow brain reads. See `vault/README.md`.
+
 ## Not built yet
 
 See section 9 and 8a of the architecture document: subscribe
