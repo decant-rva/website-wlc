@@ -10,7 +10,12 @@ import fs from 'node:fs';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const axe = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
-const base = process.argv[2] || 'http://localhost:8080';
+// Staging asks for a password on every request: pass --password <pw>, or set STAGING_PASSWORD.
+const args = process.argv.slice(2);
+const pwAt = args.indexOf('--password');
+const password = pwAt >= 0 ? args.splice(pwAt, 2)[1] : process.env.STAGING_PASSWORD;
+const credentials = password ? { httpCredentials: { username: 'staging', password } } : {};
+const base = args[0] || 'http://localhost:8080';
 
 // One page per template, plus the 404 page.
 const PAGES = ['/', '/services', '/uplighting', '/catalog', '/chandelier-pendant-catalog', '/catalog/silk-florals-catalog',
@@ -38,7 +43,7 @@ const browser = await chromium.launch();
 let failing = 0;
 let accepted = 0;
 for (const [label, viewport] of WIDTHS) {
-  const context = await browser.newContext({ viewport });
+  const context = await browser.newContext({ viewport, ...credentials });
   const page = await context.newPage();
   for (const url of PAGES) {
     await page.goto(base + url, { waitUntil: 'load' });

@@ -11,7 +11,12 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { chromium, devices } = require('playwright');
-const base = (process.argv[2] || 'http://localhost:8080').replace(/\/$/, '');
+// Staging asks for a password on every request: pass --password <pw>, or set STAGING_PASSWORD.
+const args = process.argv.slice(2);
+const pwAt = args.indexOf('--password');
+const password = pwAt >= 0 ? args.splice(pwAt, 2)[1] : process.env.STAGING_PASSWORD;
+const credentials = password ? { httpCredentials: { username: 'staging', password } } : {};
+const base = (args[0] || 'http://localhost:8080').replace(/\/$/, '');
 
 const PAGES = [
   ['home', '/'],
@@ -35,7 +40,7 @@ const NETWORK = { offline: false, latency: 150, downloadThroughput: (1.6 * 1024 
 const browser = await chromium.launch();
 const rows = [];
 for (const [name, path] of PAGES) {
-  const context = await browser.newContext({ ...devices['iPhone 13'] });
+  const context = await browser.newContext({ ...devices['iPhone 13'], ...credentials });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
   await cdp.send('Network.enable');
