@@ -71,6 +71,12 @@ Template photos are `<picture>` elements with AVIF, WebP and a JPEG fallback. Th
 against a running copy. Playwright is a dev dependency; on a new machine also run
 `npx playwright install chromium` once for the browser it drives.
 
+`npm run check:perf -- http://localhost:8080` loads one page per template on an emulated
+iPhone 13 over a slow connection (150 ms round trip, 1.6 Mbps, CPU 4x slower) and fails if any
+page's LCP is over 2.5 s or its CLS over 0.1. It also prints requests and kilobytes before
+scrolling against the 10 to 20 request target, without failing on them. Run it against a copy
+that has its photos (`npm run media` first); CI has none, so it is not part of CI.
+
 ## Photo storage
 
 In production `/media` is served from a Tigris bucket (`server/lib/bucket.js`). Create it once per
