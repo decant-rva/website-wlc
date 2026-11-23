@@ -171,5 +171,29 @@ export function quoteStore(db) {
     async releaseDailySummary(day) {
       await db.query('DELETE FROM quote_daily_summary WHERE day = $1', [day]);
     },
+    /**
+     * Retention. Only requests delivered both ways are touched; anything still owed is kept.
+     * photoDays: drop the stored photos and the visitor's IP address once a request is that old.
+     * keepDays: delete the request entirely once it is that old.
+     * Returns how many requests each step changed.
+     */
+    async prune({ photoDays, keepDays }, now = new Date()) {
+      const before = (days) => new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+      const delivered = "intake_state = 'sent' AND email_state = 'sent' AND created_at < $1";
+      const out = { photos: 0, deleted: 0 };
+      if (photoDays > 0) {
+        const { rows } = await db.query(`SELECT id FROM quote_submissions WHERE ${delivered} AND (ip <> '' OR id IN (SELECT submission_id FROM quote_files))`, [before(photoDays)]);
+        for (const { id } of rows) {
+          await db.query('DELETE FROM quote_files WHERE submission_id = $1', [id]);
+          await db.query("UPDATE quote_submissions SET ip = '' WHERE id = $1", [id]);
+        }
+        out.photos = rows.length;
+      }
+      if (keepDays > 0) {
+        const { rows } = await db.query(`DELETE FROM quote_submissions WHERE ${delivered} RETURNING id`, [before(keepDays)]);
+        out.deleted = rows.length;
+      }
+      return out;
+    },
   };
 }

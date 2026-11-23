@@ -137,6 +137,24 @@ export async function retryPass(store, opts = {}) {
     try { await (opts.alert || sendAlert)(stuck); await store.markAlerted(stuck.map((s) => s.id)); } catch { /* tried again on the next pass */ }
   }
   await dailySummary(store, now, opts);
+  await prune(store, now, opts);
+}
+
+/**
+ * Retention, off unless set. QUOTE_PHOTO_DAYS: days after which a delivered request's photos and
+ * IP address are deleted (the photos are in the office's email by then). QUOTE_KEEP_DAYS: days
+ * after which a delivered request is deleted entirely. Requests still owed are never touched.
+ */
+export async function prune(store, now, opts = {}) {
+  const photoDays = Number(opts.photoDays ?? process.env.QUOTE_PHOTO_DAYS ?? 0);
+  const keepDays = Number(opts.keepDays ?? process.env.QUOTE_KEEP_DAYS ?? 0);
+  if (!store.prune || !(photoDays > 0 || keepDays > 0)) return;
+  try {
+    const n = await store.prune({ photoDays, keepDays }, now);
+    if (n.photos || n.deleted) console.log(`retention: photos and IP removed from ${n.photos} requests, ${n.deleted} requests deleted`);
+  } catch (e) {
+    console.error('retention pass failed:', e.message);
+  }
 }
 
 /** Hour (UTC) after which the day's summary goes out: 13:00 UTC is 8 or 9 in the morning in New York. */

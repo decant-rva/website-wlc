@@ -125,6 +125,7 @@ kept in Postgres with the request and shown in the body of the notification emai
 | `CANONICAL_HOST` | Set in the fly files. Requests to the app's `fly.dev` address are redirected to this host |
 | `STATUS_TOKEN` | Optional secret for `GET /health/delivery` (see "Watching deliveries"). Unset, that endpoint is a 404 |
 | `RETRY_EVERY_MS` | How often the retry worker looks for undelivered requests. Default 10 minutes, so the Neon database can scale to zero |
+| `QUOTE_PHOTO_DAYS`, `QUOTE_KEEP_DAYS` | Retention, off until set. After `QUOTE_PHOTO_DAYS` days a delivered request's photos and IP address are deleted (the photos are in the office's email); after `QUOTE_KEEP_DAYS` days the delivered request itself is deleted. Requests still owed are never touched |
 
 Email is sent through `smtp.gmail.com` (set as `SMTP_HOST` in the fly settings files), signed in
 as the Workspace user in `SMTP_USER`. That user needs 2-Step Verification on and an app password

@@ -434,3 +434,28 @@ test('every morning, the requests still undelivered are listed in one email, onc
   await retryPass(store, { ...opts, now: at('2030-01-08T13:00:00Z') });
   assert.equal(summaries.length, 2);
 });
+
+test('retention removes photos and old requests only once they are delivered', async () => {
+  const { store, pool } = await setup();
+  const day = 24 * 60 * 60 * 1000;
+  const add = async (name, ageDays, state) => {
+    const { rows } = await pool.query(
+      `INSERT INTO quote_submissions (submitted_on, name, email, ip, intake_state, email_state, created_at, next_try_at)
+       VALUES ('2026-01-01', $1, 'r@example.com', '203.0.113.9', $2, $2, $3, $4) RETURNING id`,
+      [name, state, new Date(Date.now() - ageDays * day), new Date(Date.now() + day)]); // not due for a retry during the test
+    await pool.query("INSERT INTO quote_files (submission_id, filename, mime, bytes) VALUES ($1, 'photo-1.jpg', 'image/jpeg', $2)", [rows[0].id, Buffer.from('x')]);
+  };
+  await add('old delivered', 400, 'sent');
+  await add('month delivered', 40, 'sent');
+  await add('new delivered', 5, 'sent');
+  await add('old undelivered', 400, 'failed');
+  // Off by default.
+  await retryPass(store, { intake: async () => {}, email: async () => {}, alert: async () => {} });
+  assert.equal((await pool.query('SELECT * FROM quote_files')).rows.length, 4);
+  await retryPass(store, { intake: async () => { throw new Error('down'); }, email: async () => { throw new Error('down'); }, alert: async () => {}, photoDays: 30, keepDays: 365 });
+  const rows = (await pool.query('SELECT name, ip FROM quote_submissions ORDER BY id')).rows;
+  assert.deepEqual(rows.map((r) => r.name), ['month delivered', 'new delivered', 'old undelivered']);
+  assert.deepEqual(rows.map((r) => r.ip), ['', '203.0.113.9', '203.0.113.9']);
+  const files = (await pool.query('SELECT s.name FROM quote_files f JOIN quote_submissions s ON s.id = f.submission_id ORDER BY s.id')).rows.map((r) => r.name);
+  assert.deepEqual(files, ['new delivered', 'old undelivered']);
+});
