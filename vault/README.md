@@ -36,6 +36,10 @@ Everything else in the vault, including `Curation/Proposals/`, is never touched.
 
 Glow writes proposals in `Curation/Proposals/`, Claude checks them, the owner approves, and Claude applies approved ones here as pull requests, where CI runs the launch freeze check. Glow has no path to this repository. The full flow is in `vault/seed/Curation/Curation Guide.md`; Glow's rules are in `vault/seed/GLOW.md`.
 
+## Alt text with Glow
+
+`tools/glow-alt-text.js` runs the alt text job: it finds the photos with no alt text and their context, Glow describes each photo and drafts the words, and it writes one proposal per page with a tick box per photo. `apply` puts the ticked lines of approved proposals into the content files. The steps are in `vault/seed/Curation/Alt Text with Glow.md`.
+
 ## Editing the seed notes
 
 The seed notes are a starting point. Once a vault exists, its copies are the live ones and are edited there. Change a seed here only to change what a new vault starts with.

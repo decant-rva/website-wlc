@@ -27,7 +27,7 @@ const CHUNK = 1800;
 const SKIP_DIRS = new Set(['.obsidian', '.trash', '.git', '_glow', 'Templates', 'node_modules']);
 
 // Folder for each content template, inside Site/.
-const FOLDER = {
+export const FOLDER = {
   home: 'Pages', page: 'Pages', legal: 'Pages', profile: 'Pages',
   catalog: 'Catalog Pages', 'store-category': 'Catalog Pages',
   'blog-index': 'Blog Listings', 'blog-category': 'Blog Listings', 'blog-tag': 'Blog Listings',
@@ -80,7 +80,7 @@ export function parseEntry(text) {
   return { data, body: end < 0 ? '' : t.slice(end + 5) };
 }
 
-function readEntries(root) {
+export function readEntries(root) {
   const out = [];
   for (const collection of ['pages', 'posts', 'products']) {
     const dir = path.join(root, 'content', collection);
@@ -170,7 +170,7 @@ function blocks(body) {
   return out;
 }
 
-const cleanAlt = (a) => {
+export const cleanAlt = (a) => {
   const s = String(a || '').replace(/\\_/g, '_').replace(/\s+/g, ' ').trim();
   return /\.(jpe?g|png|webp)$/i.test(s) ? '' : s;
 };
@@ -184,13 +184,13 @@ const q = (s) => JSON.stringify(String(s ?? ''));
 const wl = (id, text, table = false) => `[[${id}${text ? `${table ? '\\|' : '|'}${linkText(text)}` : ''}]]`;
 
 /** File-name-safe on Windows and in Obsidian links, from a URL path. */
-function safeName(s) {
+export function safeName(s) {
   let n = s.replace(/[<>:"/\\|?*#^[\]]/g, '-').replace(/[. ]+$/, '').replace(/^\.+/, '') || 'page';
   if (/^(con|prn|aux|nul|com\d|lpt\d)$/i.test(n)) n += '-page';
   return n;
 }
 
-function noteBase(p) {
+export function noteBase(p) {
   if (p === '/') return 'home';
   return safeName(p.replace(/^\/(post|product-page)\//, '').replace(/^\//, '').replace(/\//g, '-'));
 }

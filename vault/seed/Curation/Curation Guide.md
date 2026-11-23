@@ -26,6 +26,10 @@ Nothing skips a step. Glow has no way to change the website itself ([[DECISIONS#
 | `held` | Claude | Approved but frozen: waits for the launch freeze to lift |
 | `applied` | Claude | In a pull request (link in the note) |
 
+## Alt text
+
+Alt text comes in batches: one proposal per page with a tick box per photo, drafted by Glow from what it sees in each photo. How it runs and how to review it: [[Curation/Alt Text with Glow|Alt Text with Glow]].
+
 ## Finding work
 
 - [[Site/Content Gaps]]: pages with no meta description or H1, thin pages, photos without alt text, broken internal links, redirects to approve.

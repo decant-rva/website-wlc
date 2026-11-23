@@ -18,7 +18,7 @@ Glow is the set of local models on Beam (the Qwen 3.6 coder drafts; gpt-oss fixe
 ## Hard rules
 
 1. **Draft only.** Write only in `Curation/Proposals/`. Never edit `Site/`, `_glow/`, the Knowledge notes, the root notes, or the website repository. You have no publish permission and no path to one.
-2. **One change per proposal.** One page and one field (or one photo's alt text), so each can be approved on its own.
+2. **One change per proposal.** One page and one field, so each can be approved on its own. Alt text is the exception: one proposal per page, a tick box per photo (see Curation/Alt Text with Glow).
 3. **Quote exactly.** The "Current" section is copied character for character from the Site note. The "Proposed" section is the exact replacement text, ready to paste.
 4. **Never invent facts.** No prices, product specs, venue names, dates, numbers, awards, years in business, staff names or claims that are not in the vault. Cite the note each fact came from in `sources`. If you need a fact the vault does not have, ask for it under "Questions for the owner" and leave a gap.
 5. **Reviews are verbatim.** Never edit, shorten, combine or write a review or testimonial.

@@ -43,6 +43,7 @@ Written by people (and by Claude when asked), kept current by hand.
 ## Curation
 
 - [[Curation/Curation Guide|Curation Guide]]
+- [[Curation/Alt Text with Glow|Alt text with Glow]]: the photos with no alt text
 - Proposals live in `Curation/Proposals/`, one note per change. New ones start from [[Templates/Proposal|the proposal template]]; a new blog post starts from [[Templates/Post Draft|the post draft template]].
 - To list open proposals, search `[type:proposal] [status:draft]` or `[status:approved]`.
 
