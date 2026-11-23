@@ -11,6 +11,7 @@ COPY tools ./tools
 COPY server ./server
 COPY migrations ./migrations
 COPY test ./test
+COPY vault/seed ./vault/seed
 COPY docs/phase-1/inventory.json ./docs/phase-1/inventory.json
 ARG PUBLIC_STAGING=0
 ENV PUBLIC_STAGING=$PUBLIC_STAGING
