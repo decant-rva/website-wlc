@@ -19,6 +19,14 @@ jobs:
       - run: npm run build
       - run: npm run check:inventory
       - run: node --test
+      # Automated WCAG 2.2 A/AA rules on one page per template, at phone and desktop width.
+      # Only the owner's accepted palette contrast is allowed (see tools/a11y.js).
+      - run: npx playwright install --with-deps chromium
+      - name: Accessibility check
+        run: |
+          node server/server.js &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/health >/dev/null && break; sleep 1; done
+          node tools/a11y.js http://127.0.0.1:8080
   # Builds the production image the way fly.io does, so a broken Dockerfile shows up on the pull
   # request instead of at deploy time. Its build stage runs the freeze check and the tests on
   # Node 24 Alpine. Nothing is pushed anywhere.
