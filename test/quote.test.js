@@ -13,6 +13,7 @@ import { deliver, retryPass, backoff, quoteMessage, sendEmail } from '../server/
 import { LEASE_MS } from '../server/lib/store.js';
 import { quoteEmail, daysUntil } from '../server/lib/quote-email.js';
 import { validate, newYorkDate, formWithErrors, TRAP_FIELD } from '../server/quote.js';
+import { capDensity } from '../src/lib/photos.js';
 
 async function setup({ intakeFails = false, emailFails = false, fetchFn } = {}) {
   const { Pool } = newDb().adapters.createPg();
@@ -468,6 +469,15 @@ test('the quote page checks photos before sending and sends once', () => {
   assert.match(html, /x\.length>5/);
   assert.match(html, /y\.size>8388608/);
   assert.match(html, /b\.disabled=true/);
+});
+
+test('3x screens get photos sized for 2x', () => {
+  assert.equal(capDensity('(min-width: 62rem) 24rem, 100vw'), '(min-width: 62rem) 24rem, (min-resolution: 2.5dppx) 67vw, 100vw');
+  assert.equal(capDensity('(min-width: 62rem) 25vw, 50vw'), '(min-width: 62rem) 25vw, (min-resolution: 2.5dppx) 33vw, 50vw');
+  assert.equal(capDensity('8rem'), '(min-resolution: 2.5dppx) 5.33rem, 8rem');
+  assert.equal(capDensity('calc(100vw - 2rem)'), 'calc(100vw - 2rem)', 'anything else is left alone');
+  const html = fs.readFileSync(new URL('../dist/blog.html', import.meta.url), 'utf8');
+  assert.match(html, /sizes="[^"]*\(min-resolution: 2\.5dppx\)/);
 });
 
 test('every icon link on /services has an accessible name', () => {
