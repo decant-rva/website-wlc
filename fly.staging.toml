@@ -6,6 +6,8 @@ primary_region = "iad"
   PORT = "8080"
   NODE_ENV = "production"
   TZ = "America/New_York"
+  # Sender of the quote notification. An alias on the Workspace user the site signs in as (SMTP_USER, set as a secret).
+  QUOTE_EMAIL_FROM = "quotes@weddinglightingco.com"
   STAGING = "1"
 
 [http_service]
