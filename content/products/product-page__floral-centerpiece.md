@@ -1,0 +1,17 @@
+---
+path: "/product-page/floral-centerpiece"
+template: "product"
+title: "Floral Centerpiece | Wedding Lighting Co"
+description: ""
+canonical: "https://www.weddinglightingco.com/product-page/floral-centerpiece"
+robots: "index"
+h1: ["Floral Centerpiece"]
+og: {"og:title": "Floral Centerpiece | Wedding Lighting Co", "og:description": "A curated collection of floral centerpieces designed to complement a wide range of event styles. Choose from an assortment of arrangements featuring silk florals, greenery, and modern design accents suited for weddings, galas, and corporate celebrations. Each piece is crafted for visual impact and built for event durability, ensuring every table looks beautiful from the first guest to the last. From classic and romantic to bold and contemporary, these centerpiece options provide flexibility for any theme or color palette. Designs can be styled on their own or paired with candles, vases, and table décor for a cohesive look. For custom floral designs or large-scale installations, a 60-day lead time is required to allow for design, sourcing, and production. Early planning ensures every detail is tailored to the event vision and delivered with exceptional quality.", "og:image": "https://static.wixstatic.com/media/a16fb7_adcc3532ab3a48f0accd958e2469a777~mv2.png/v1/fit/w_500,h_500,q_90/file.png", "og:image:width": "600", "og:image:height": "600", "og:url": "https://www.weddinglightingco.com/product-page/floral-centerpiece", "og:site_name": "Wedding Lighting Co", "og:type": "product", "og:availability": "InStock"}
+schema: {"@type": "Product", "name": "Floral Centerpiece", "description": "A curated collection of floral centerpieces designed to complement a wide range of event styles. Choose from an assortment of arrangements featuring silk florals, greenery, and modern design accents suited for weddings, galas, and corporate celebrations. Each piece is crafted for visual impact and built for event durability, ensuring every table looks beautiful from the first guest to the last. From classic and romantic to bold and contemporary, these centerpiece options provide flexibility for any theme or color palette. Designs can be styled on their own or paired with candles, vases, and table décor for a cohesive look. For custom floral designs or large-scale installations, a 60-day lead time is required to allow for design, sourcing, and production. Early planning ensures every detail is tailored to the event vision and delivered with exceptional quality."}
+---
+
+![Floral Centerpiece](wix:a16fb7_adcc3532ab3a48f0accd958e2469a777~mv2.png)
+
+# Floral Centerpiece
+
+A curated collection of floral centerpieces designed to complement a wide range of event styles. Choose from an assortment of arrangements featuring silk florals, greenery, and modern design accents suited for weddings, galas, and corporate celebrations. Each piece is crafted for visual impact and built for event durability, ensuring every table looks beautiful from the first guest to the last. From classic and romantic to bold and contemporary, these centerpiece options provide flexibility for any theme or color palette. Designs can be styled on their own or paired with candles, vases, and table décor for a cohesive look. For custom floral designs or large-scale installations, a 60-day lead time is required to allow for design, sourcing, and production. Early planning ensures every detail is tailored to the event vision and delivered with exceptional quality.

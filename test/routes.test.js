@@ -1,0 +1,93 @@
+// Run after `npm run build`:  node --test
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { build } from '../server/server.js';
+
+const inventory = JSON.parse(fs.readFileSync(new URL('../docs/phase-1/inventory.json', import.meta.url), 'utf8'));
+const redirects = JSON.parse(fs.readFileSync(new URL('../content/redirects.json', import.meta.url), 'utf8'));
+const app = build();
+const get = (url) => app.inject({ method: 'GET', url });
+
+test('every inventoried URL returns 200', async () => {
+  for (const url of Object.keys(inventory)) {
+    const res = await get(encodeURI(url));
+    assert.equal(res.statusCode, 200, url);
+  }
+});
+
+test('trailing slash redirects once to the bare path', async () => {
+  const res = await get('/uplighting/');
+  assert.equal(res.statusCode, 301);
+  assert.equal(res.headers.location, '/uplighting');
+  assert.equal((await get('/uplighting')).statusCode, 200);
+});
+
+test('served redirects are single hop and never land on the home page', async () => {
+  for (const r of redirects.filter((x) => x.status !== 'proposed')) {
+    const res = await get(r.from + '/');
+    assert.equal(res.statusCode, 301, r.from);
+    assert.equal(res.headers.location, r.to);
+    assert.notEqual(r.to, '/');
+    assert.equal((await get(r.to)).statusCode, 200, `${r.to} must be a live page`);
+  }
+});
+
+test('proposed redirects are not served in production mode', async () => {
+  for (const r of redirects.filter((x) => x.status === 'proposed')) {
+    assert.equal((await get(r.from)).statusCode, 404, r.from);
+  }
+});
+
+test('every redirect target exists', () => {
+  for (const r of redirects) assert.ok(inventory[r.to], `${r.from} points to ${r.to}`);
+});
+
+test('unknown paths return a real 404', async () => {
+  const res = await get('/no-such-page');
+  assert.equal(res.statusCode, 404);
+  assert.match(res.body, /Page not found/);
+});
+
+test('sitemap lists only indexable pages', async () => {
+  const res = await get('/sitemap.xml');
+  assert.equal(res.statusCode, 200);
+  const locs = [...res.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const indexable = Object.values(inventory).filter((p) => !/noindex/i.test(p.robots)).length;
+  // The only pages added since the inventory are the per-venue photo pages.
+  const venuePages = locs.filter((l) => /\/venue\/[^/]+$/.test(l));
+  assert.ok(venuePages.length > 0);
+  assert.equal(locs.length - venuePages.length, indexable);
+  for (const l of venuePages) assert.equal((await get(new URL(l).pathname)).statusCode, 200, l);
+  assert.ok(!locs.some((l) => l.includes('/blog/tags/')));
+});
+
+test('fonts and logo are served', async () => {
+  for (const url of ['/fonts/league-spartan-800.woff2', '/img/wordmark.webp', '/favicon.png', '/robots.txt']) {
+    assert.equal((await get(url)).statusCode, 200, url);
+  }
+});
+
+test('photos are served from the bucket when one is set', async () => {
+  const asked = [];
+  const media = { async get(key) { asked.push(key); return key === 'variants/photo-800.webp' ? { body: Buffer.from('webpbytes'), length: 9, etag: '"abc"' } : null; } };
+  const withBucket = build({ media });
+  const ok = await withBucket.inject({ method: 'GET', url: '/media/photo-800.webp' });
+  assert.equal(ok.statusCode, 200);
+  assert.equal(ok.headers['content-type'], 'image/webp');
+  assert.match(ok.headers['cache-control'], /max-age=31536000, immutable/);
+  assert.equal(ok.body, 'webpbytes');
+  assert.equal((await withBucket.inject({ method: 'GET', url: '/media/missing.jpg' })).statusCode, 404);
+  // Names that could reach outside the photo folder, or types that are not photos, never reach the bucket.
+  for (const url of ['/media/..%2Fsecrets.jpg', '/media/notes.txt', '/media/a%2Fb.jpg']) {
+    assert.equal((await withBucket.inject({ method: 'GET', url })).statusCode, 404, url);
+  }
+  assert.deepEqual(asked, ['variants/photo-800.webp', 'variants/missing.jpg']);
+});
+
+test('/index is not a second copy of the home page', async () => {
+  const res = await get('/index?x=1');
+  assert.equal(res.statusCode, 301);
+  assert.equal(res.headers.location, '/?x=1');
+  assert.equal((await get('/')).statusCode, 200);
+});

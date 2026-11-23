@@ -1,0 +1,35 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SubscribeForm from '../components/SubscribeForm.astro';
+import { allEntries } from '../lib/entries.js';
+import { renderEntry } from '../lib/templates.js';
+import { pageHead } from '../lib/html.js';
+
+export async function getStaticPaths() {
+  const entries = await allEntries();
+  return [...entries.values()].map((entry) => ({
+    params: { slug: entry.data.path === '/' ? undefined : entry.data.path.slice(1) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const page = await renderEntry(entry);
+// Pages without their own template: navy header, then the Markdown as prose.
+const { Content } = page.bespoke ? {} : await render(entry);
+---
+<Base entry={entry} bodyClass={page.bodyClass} closing={page.closing ?? true} quoteBar={page.quoteBar ?? true}>
+  {page.bespoke
+    ? <Fragment set:html={page.html} />
+    : (
+      <Fragment>
+        <Fragment set:html={pageHead(page.h.text, page.trail, { tag: page.h.tag })} />
+        <article class="prose">
+          <Content />
+          {d.path === '/subscribe' && <SubscribeForm />}
+        </article>
+      </Fragment>
+    )}
+</Base>

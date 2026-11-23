@@ -1,0 +1,110 @@
+[
+ {
+  "from": "/drape-walls-backdrops",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "existing",
+  "note": "Redirect already served by the previous site"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/string-lighting-catalog",
+  "to": "/catalog/string-lighting-catalog",
+  "status": "existing",
+  "note": "Redirect already served by the previous site"
+ },
+ {
+  "from": "/velvet-stretch-drape-walls-backdrops-rental",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/drape-canopies",
+  "to": "/drape-walls-backdrops-canopies",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/chandelier-pendant-catalog",
+  "to": "/chandelier-pendant-catalog",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/lighting-decor-drape-catalog/hanging-decor",
+  "to": "/hanging-decor",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/quote",
+  "to": "/get-a-quote",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/uplighting-2",
+  "to": "/uplighting",
+  "status": "proposed",
+  "note": "Broken on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/silk-florals-catalog",
+  "to": "/catalog/silk-florals-catalog",
+  "status": "proposed",
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/special-effects",
+  "to": "/catalog/special-effects",
+  "status": "proposed",
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/standing-lighting-decor",
+  "to": "/catalog/standing-lighting-decor",
+  "status": "proposed",
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/table-lighting-decor-catalog",
+  "to": "/catalog/table-lighting-decor-catalog",
+  "status": "proposed",
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/event-wedding-band-video",
+  "to": "/catalog/event-wedding-band-video",
+  "status": "proposed",
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/home",
+  "to": "/",
+  "status": "proposed",
+  "note": "Served the home page with 200 on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/2",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/3",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/4",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/5",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ }
+]

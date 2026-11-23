@@ -1,0 +1,17 @@
+---
+import { picture as sourcesFor, photos } from '../lib/photos.js';
+
+// alt defaults to the text stored with the photo.
+const { id, sizes, eager = false, alt } = Astro.props;
+const p = sourcesFor(id, sizes);
+const text = alt ?? photos[id]?.alt ?? '';
+---
+{p && (p.single
+  ? <img src={p.single} alt={text} width={p.width} height={p.height} loading={eager ? 'eager' : 'lazy'} decoding="async">
+  : (
+    <picture>
+      <source type="image/avif" srcset={p.avif} sizes={p.sizes}>
+      <source type="image/webp" srcset={p.webp} sizes={p.sizes}>
+      <img src={p.fallback} alt={text} width={p.width} height={p.height} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined}>
+    </picture>
+  ))}
