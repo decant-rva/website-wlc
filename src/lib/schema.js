@@ -1,5 +1,6 @@
 import site from '../data/site.json';
 import { trail } from './entries.js';
+import { shareImage } from './share.js';
 
 const business = () => ({
   '@context': 'https://schema.org',
@@ -61,12 +62,14 @@ export function schemaFor(entry, entries) {
   const questions = faq(entry);
   if (questions) out.push(questions);
   const s = entry.data.schema;
+  // Our own copy of the page's share photo; left out when we do not hold it.
+  const image = shareImage(entry.data.og?.['og:image'])?.url;
   if (s && s['@type'] === 'BlogPosting') {
     out.push({ '@context': 'https://schema.org', ...s, mainEntityOfPage: entry.data.canonical,
-      image: entry.data.og['og:image'], publisher: { '@id': `${site.url}/#business` } });
+      ...(image ? { image } : {}), publisher: { '@id': `${site.url}/#business` } });
   }
   if (s && s['@type'] === 'Product') {
-    out.push({ '@context': 'https://schema.org', ...s, url: entry.data.canonical, image: entry.data.og['og:image'] });
+    out.push({ '@context': 'https://schema.org', ...s, url: entry.data.canonical, ...(image ? { image } : {}) });
   }
   return out;
 }

@@ -3,6 +3,7 @@ import '../styles/site.css';
 import site from '../data/site.json';
 import { allEntries, trail } from '../lib/entries.js';
 import { schemaFor } from '../lib/schema.js';
+import { ogTags } from '../lib/share.js';
 import { cta } from '../lib/html.js';
 
 // bodyClass: template classes the stylesheet keys on.
@@ -34,7 +35,7 @@ const footerCols = [
 {(d?.description ?? description) && <meta name="description" content={d?.description ?? description}>}
 {(d?.canonical ?? canonical) && <link rel="canonical" href={d?.canonical ?? canonical}>}
 {robots && <meta name="robots" content={robots}>}
-{d && Object.entries(d.og).map(([property, content]) => <meta property={property} content={content}>)}
+{d && Object.entries(ogTags(d.og)).map(([property, content]) => <meta property={property} content={content}>)}
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preload" href="/fonts/league-spartan-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
