@@ -277,18 +277,27 @@ Free tiers as published in November 2026; check the plan page before relying on 
 
 | Option | Free tier | Fits | Watch out for |
 |---|---|---|---|
-| **Better Stack** | 10 monitors and 10 heartbeats, every 3 minutes, email and Slack alerts, a phone app, one status page | Simplest pager for the home page and `/health`. Its heartbeats can also catch a scheduled job that stops running | Whether the free plan sends custom request headers was not confirmed. Without them, `/health/delivery` needs another monitor or a paid plan |
-| **UptimeRobot** | 50 monitors, every 5 minutes | Generous and familiar | Third-party write-ups say the free plan has been for personal, non-commercial use since December 2024, and UptimeRobot's own page calls it for hobby and non-profit projects. A business site likely needs the paid Solo plan (60-second checks) |
+| **Better Stack** | 10 monitors and 10 heartbeats, every 3 minutes, email and Slack alerts, a phone app, one status page | Simplest pager for the home page and `/health`. Its heartbeats can also catch a scheduled job that stops running | Its HTTP monitors can send request headers (its docs cover them), but whether the free plan includes that was not confirmed |
+| **UptimeRobot** | 50 monitors, every 5 minutes | Generous and familiar | The free plan was personal use only from December 2024. Several write-ups quoting the current terms say business use has been allowed again since mid-2026; confirm on the terms page. Custom request headers are a paid feature |
 | **Checkly** (Hobby) | About 10,000 API check runs a month, with assertions on status, body and headers | Sends the header and can check `oldestPendingMinutes` itself, so no server change is needed | 10,000 runs is about one check every 9 minutes for two endpoints. Set up as code, aimed at developers |
 | **Google Cloud uptime checks** | Reported as 1 million executions a month free per project | Custom headers, content checks, and email or SMS alerts | Needs a Google Cloud project with billing turned on. The most setup of the list |
 | **GitHub Actions on a schedule** | Free in a public repository | The deeper checks below (sitemap, redirects, running commit, certificate), opening an issue on failure | Not a pager: scheduled runs can start late, and GitHub turns schedules off after 60 days without activity in a public repository |
 | **Uptime Kuma** (self-hosted) | Free software | Full control | Needs an always-on machine that is neither fly.io nor the owner's PC |
 
-Suggested pairing:
+Paid options, for faster checks and stronger alerts. Prices are as listed in November 2026, mostly from the vendors' pages and partly from third-party listings, so confirm before buying:
 
-- **Better Stack's free plan as the pager** for the home page and `/health`.
-- **`/health/delivery`:** Better Stack too if its free plan sends headers, otherwise Checkly's free plan.
-- **A daily GitHub Action for the deeper checks**, which pings a Better Stack heartbeat when it finishes, so a schedule that silently stops is noticed. Missed scheduled jobs are the failure `gigfriend-server` already ran into (architecture section 11).
+| Option | Price | Over the free tiers | Fit |
+|---|---|---|---|
+| **UptimeRobot Solo** | About $7 a month billed yearly, $8 monthly (some listings show up to $12) | 60-second checks, certificate expiry checks, custom request headers (a paid feature; confirm Solo includes it) | **Best value.** Covers all three checks, with the `/health/delivery` server change above |
+| **Better Stack Responder** | $29 a month billed yearly, $34 monthly, per person | 30-second checks, phone call and SMS alerts, on-call scheduling, heartbeats, status page | **The premium choice**, if an alert should ring a phone at night. It costs more than the site's hosting: the Phase 1 report puts the whole stack at $15 to $25 a month |
+| **Hyperping Essentials** | From about $24 a month billed yearly | 30-second checks, status pages, reports | Same tier as Better Stack's paid plan |
+| **updown.io** | Pay per check, in prepaid credit packs | Checks every 15 seconds to 1 hour, text match | Very cheap for three checks; custom headers not confirmed |
+
+Suggested setup:
+
+- **The pager:** UptimeRobot Solo for the home page, `/health` and `/health/delivery`. Choose Better Stack Responder instead if phone calls are wanted. The free fallback is Better Stack's free plan plus Checkly's.
+- **`/health/delivery` answers 503 once a delivery has waited 60 minutes** (the server change above), so the monitor only needs the header and a status check.
+- **A daily GitHub Action for the deeper checks**, which pings a heartbeat monitor when it finishes, so a schedule that silently stops is noticed. Missed scheduled jobs are the failure `gigfriend-server` already ran into (architecture section 11).
 
 ### Checks to run on a schedule, with no model involved
 
@@ -496,5 +505,11 @@ Public (looked up 23 November 2026):
 - Better Stack check frequency: https://betterstack.com/docs/uptime/check-frequency/
 - UptimeRobot pricing: https://uptimerobot.com/pricing/
 - UptimeRobot free plan and commercial use (third party): https://dev.to/velprove/uptimerobot-commercial-use-free-alternatives-for-business-sites-in-2026-5d75
+- UptimeRobot free plan and commercial use, current terms quoted (third party): https://realuptime.io/blog/uptimerobot-free-plan-limits
+- UptimeRobot custom HTTP headers on paid plans: https://uptimerobot.com/blog/new-feature-custom-http-headers-for-the-pro-plan
+- Better Stack request headers: https://betterstack.com/docs/uptime/request-parameters-headers-and-http-authentication/
+- Better Stack pricing: https://betterstack.com/pricing
+- Hyperping pricing: https://hyperping.com/pricing
+- updown.io: https://updown.io/
 - Checkly pricing: https://checklyhq.com/pricing.md
 - Google Cloud Observability pricing: https://cloud.google.com/monitoring/pricing
