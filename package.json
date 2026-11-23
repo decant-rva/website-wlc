@@ -14,7 +14,9 @@
     "check:a11y": "node tools/a11y.js",
     "check:db": "node --env-file-if-exists=.env.local tools/db-check.js",
     "check:perf": "node tools/perf.js",
-    "check:smoke": "node tools/smoke.js"
+    "check:smoke": "node tools/smoke.js",
+    "vault": "node tools/vault-sync.js",
+    "alt-text": "node tools/glow-alt-text.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1175.0",

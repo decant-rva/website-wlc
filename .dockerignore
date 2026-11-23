@@ -10,3 +10,4 @@ dist
 # The build stage needs the inventory (freeze check) and test/ (tests); nothing else under docs/.
 docs
 !docs/phase-1/inventory.json
+vault

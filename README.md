@@ -239,6 +239,11 @@ caching, `Disallow: /`), one existing redirect, that `//example.org/` stays on t
 the trailing-slash rule, security headers, the stylesheet's cache and name, one photo, and that the
 app's fly.dev address redirects to the real host. Exits 1 if anything fails.
 
+## The vault
+
+`npm run vault -- "A:\Website-WLC"` writes the site into the Obsidian vault used to curate it, and
+builds the knowledge export the Glow brain reads. See `vault/README.md`.
+
 ## Not built yet
 
 See section 9 and 8a of the architecture document: the subscribe

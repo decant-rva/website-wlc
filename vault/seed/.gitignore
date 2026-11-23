@@ -1,0 +1,15 @@
+# Per-device Obsidian layout files
+.obsidian/graph.json
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/cache
+
+# Community plugin binaries and local plugin state
+.obsidian/plugins/
+
+# Trash and operating-system files
+.trash/
+.DS_Store
+Thumbs.db
+desktop.ini
