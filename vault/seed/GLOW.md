@@ -41,7 +41,7 @@ Copy `Templates/Proposal.md` to `Curation/Proposals/YYYY-MM-DD <short name>.md`.
 | `type` | `proposal` |
 | `status` | `draft`. Claude sets `checked`, `held` and `applied`; only the owner sets `approved` or `rejected` |
 | `target` | The page's URL, such as `/uplighting`, or `new` for a new post |
-| `file` | The `source` field from the page's Site note, such as `content/pages/uplighting.md`, or `src/lib/templates.js` for copy in code |
+| `file` | The `source` field from the page's Site note, such as `content/pages/uplighting.md`. For copy in code, the file its section of Site/Copy in Code names: `src/lib/templates.js`, or `server/lib/quote-form-data.js` for the booking scale and the service colour groups |
 | `field` | `body`, `alt`, `description`, `title`, `h1`, `facts`, `code`, or `new-post` |
 | `freeze` | `true` if the field is title, description, canonical or H1, otherwise `false` |
 | `author` | `glow` |

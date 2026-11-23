@@ -41,7 +41,13 @@ const NAMES = {
   'Pages': 'Pages', 'Catalog Pages': 'Catalog pages', 'Blog Listings': 'Blog listings', 'Posts': 'Blog posts', 'Products': 'Products',
 };
 
-// Copy that lives in src/lib/templates.js rather than in a content file, and where it shows.
+// Copy set in code rather than in a content file: where it shows, and the table's columns.
+// Most of it is a plain literal of the same name in src/lib/templates.js. The third value is for
+// copy that lives elsewhere: the file and constant it is read from, the fields that make the
+// table's columns (for a list of objects), and what the note should say about it.
+const TEMPLATES = 'src/lib/templates.js';
+const QUOTE_DATA = 'server/lib/quote-form-data.js';
+const numberWord = (n) => ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
 const CODE_COPY = {
   HERO: ['Home page hero slideshow', ['Photo', 'Alt text', 'CSS class']],
   INTRO: ['Home page intro columns', ['Heading', 'Text', 'Link label', 'Link']],
@@ -49,12 +55,29 @@ const CODE_COPY = {
   FEATURED: ['"Featured" press logos (home and quote pages)', ['Publication', 'Width', 'Height']],
   FACTS: ['/services, "What do I need to know about event lighting?"', ['Fact', 'Link', 'Link label']],
   SERVICE_BAND: ['/services photo band: one photo per service', ['Service', 'Photo and alt']],
-  DISCIPLINE: ['Colour group of each service (li lights, de decor, av AV, dr drapes; default li)', ['Service', 'Group']],
+  DISCIPLINE: ['Colour group of each service (li lights, de decor, av AV, dr drapes; default li)', ['Service', 'Group'], {
+    file: QUOTE_DATA,
+    constant: 'SERVICE_GROUP',
+    note: () => 'The home page\'s service tiles and the notification email\'s service tiles both read it. The email\'s colour for each group is `GROUP_COLOUR` in the same file.',
+  }],
   TIME: ['/catalog time chart: share of crew hours by job. Placeholder figures until the owner supplies real ones', ['Job', 'Group', 'Percent']],
   TIME_STATS: ['/catalog headline numbers (owner, 22 November 2026)', ['Number', 'What']],
   QUOTE_REVIEWS: ['/get-a-quote review rotation: one line from each review on /reviews. Verbatim, never edited', ['Reviewer', 'Quote']],
   QUOTE_SERVICE_PHOTOS: ['/get-a-quote service slideshow', ['Service', 'Photo and alt']],
-  BOOKING: ['/get-a-quote and the notification email, "When to book" scale (owner, 22 November 2026)', ['Lead time', 'Availability', 'Bars of 6']],
+  BOOKING: ['/get-a-quote and the notification email, "When to book" scale (owner, 22 November 2026)', ['Lead time', 'Availability', 'Bars of 6'], {
+    file: QUOTE_DATA,
+    constant: 'BOOKING_SCALE',
+    fields: ['label', 'outlook', 'bars'],
+    note: (scale) => {
+      const differ = scale.filter((r) => r.emailLabel && r.emailLabel !== r.label);
+      const rows = differ.map((r) => `"${oneLine(r.label)}" (email: "${oneLine(r.emailLabel)}")`);
+      return [
+        'The quote page and the notification email both read it, so a change there alters both the /get-a-quote page and the notification email.',
+        differ.length ? `${numberWord(differ.length)} ${differ.length === 1 ? 'row carries' : 'rows carry'} a separate \`emailLabel\`, the wording the email uses instead of \`label\`: ${rows.join(' and ')}. A proposal to reword ${differ.length === 1 ? 'that row' : 'one of them'} says whether it changes the page (\`label\`), the email (\`emailLabel\`), or both.` : '',
+        'Each row also has `months` (not shown), the lower bound the email uses to place a request on the scale; a change of wording leaves it alone.',
+      ].filter(Boolean).join(' ');
+    },
+  }],
 };
 
 // ---------------------------------------------------------------- reading the repository
@@ -131,6 +154,28 @@ export function codeConstants(src, names) {
     const lit = m && literalAt(src, m.index + m[0].length);
     if (!lit) continue;
     try { out[name] = JSON.parse(JSON.stringify(vm.runInContext(`(${lit})`, vm.createContext({}), { timeout: 100 }))); } catch { /* not a plain literal */ }
+  }
+  return out;
+}
+
+/** Where each CODE_COPY section is read from: the file and the constant's name there. */
+const codeSource = (name) => {
+  const from = CODE_COPY[name]?.[2] || {};
+  return { file: from.file || TEMPLATES, constant: from.constant || name };
+};
+
+/** The current value of each CODE_COPY section, read from the file it lives in. */
+function readCodeCopy(root) {
+  const sources = new Map();
+  const out = {};
+  for (const name of Object.keys(CODE_COPY)) {
+    const { file, constant } = codeSource(name);
+    if (!sources.has(file)) {
+      const abs = path.join(root, file);
+      sources.set(file, fs.existsSync(abs) ? readText(abs) : '');
+    }
+    const v = codeConstants(sources.get(file), [constant])[constant];
+    if (v !== undefined) out[name] = v;
   }
   return out;
 }
@@ -234,9 +279,9 @@ export function sync({ root = REPO, vault, glowDir = null, media = 'wix', dryRun
   const photos = readJson(root, 'content/photos.json', {});
   const unavailable = readJson(root, 'content/photos-unavailable.json', { photos: {} }).photos || {};
   const inventory = readJson(root, 'docs/phase-1/inventory.json', {});
-  const tplFile = path.join(root, 'src/lib/templates.js');
+  const tplFile = path.join(root, TEMPLATES);
   const tplSrc = fs.existsSync(tplFile) ? readText(tplFile) : '';
-  const code = codeConstants(tplSrc, Object.keys(CODE_COPY));
+  const code = readCodeCopy(root);
   const byPath = byPathTable(tplSrc);
   const repo = {
     branch: git(root, ['rev-parse', '--abbrev-ref', 'HEAD']) || 'unknown',
@@ -541,18 +586,29 @@ ${proposed.map((r) => `- \`${r.from}\` to \`${r.to}\`: ${oneLine(r.note)}`).join
 
 Listed on /venue without a page of their own. Tagged \`#wlc/gap/no-photos\`.`);
 
-  const codeBody = Object.entries(CODE_COPY).map(([name, [where, cols]]) => {
-    const v = code[name];
-    if (v === undefined) return `## ${name}\n\n${where}. Not found as a plain literal in \`src/lib/templates.js\`.`;
+  const codeBody = Object.entries(CODE_COPY).map(([name, [where, cols, from]]) => {
+    const { file, constant } = codeSource(name);
+    const raw = code[name];
+    if (raw === undefined) return `## ${name}\n\n${where}. Not found as a plain literal: \`${constant}\` in \`${file}\`.`;
+    // Copy kept outside templates.js: say which file a proposal targets, and what else reads it.
+    const intro = from ? `${where}.\n\nSet as \`${constant}\` in \`${file}\`, the file a proposal must target (\`file: ${file}\`), not \`${TEMPLATES}\`. ${from.note ? from.note(raw) : ''}`.trim() : `${where}.`;
+    const v = from?.fields && Array.isArray(raw) ? raw.map((r) => from.fields.map((f) => r?.[f])) : raw;
     let rows;
     if (Array.isArray(v) && v.every(Array.isArray)) rows = v.map((r) => r.map((x) => (typeof x === 'string' && photos[x] ? `\`${x}\`` : cell(x ?? ''))));
     else if (v && typeof v === 'object' && !Array.isArray(v)) rows = Object.entries(v).map(([k, x]) => [cell(k), cell(Array.isArray(x) ? x.filter((y) => y != null).join(': ') : x)]);
-    if (!rows) return `## ${name}\n\n${where}.\n\n\`\`\`json\n${JSON.stringify(v, null, 1)}\n\`\`\``;
+    if (!rows) return `## ${name}\n\n${intro}\n\n\`\`\`json\n${JSON.stringify(v, null, 1)}\n\`\`\``;
     const n = Math.max(cols.length, ...rows.map((r) => r.length));
     const head = Array.from({ length: n }, (_, i) => cols[i] || '');
-    return `## ${name}\n\n${where}.\n\n| ${head.join(' | ')} |\n|${head.map(() => '---').join('|')}|\n${rows.map((r) => `| ${Array.from({ length: n }, (_, i) => r[i] ?? '').join(' | ')} |`).join('\n')}`;
+    return `## ${name}\n\n${intro}\n\n| ${head.join(' | ')} |\n|${head.map(() => '---').join('|')}|\n${rows.map((r) => `| ${Array.from({ length: n }, (_, i) => r[i] ?? '').join(' | ')} |`).join('\n')}`;
   });
-  hub('Copy in Code', 'Copy in code', `Some words and photos on the site are set in \`src/lib/templates.js\`, not in a content file. A change to any of these is a code change: the proposal names the constant, and Claude edits it. Each section is the constant's current value.\n\nOther fixed text in the templates: the home page tagline \`lighting·decor·drapes·av\` and the "Based on 87+ Reviews on Google" line (\`home\`), and the service area line, which comes from \`areasLine\` in [[Site/Business Facts|Business Facts]].\n\n${codeBody.join('\n\n')}`, 'src/lib/templates.js');
+  const elsewhere = Object.keys(CODE_COPY).filter((name) => codeSource(name).file !== TEMPLATES);
+  const codeFiles = [TEMPLATES, ...new Set(elsewhere.map((name) => codeSource(name).file))];
+  const inFile = codeFiles.slice(1).map((f) => {
+    const names = elsewhere.filter((name) => codeSource(name).file === f);
+    return `${names.join(' and ')} ${names.length === 1 ? 'is' : 'are'} in \`${f}\``;
+  });
+  const exceptions = inFile.length ? `, except where a section names another file (${inFile.join('; ')})` : '';
+  hub('Copy in Code', 'Copy in code', `Some words and photos on the site are set in code, not in a content file: in \`${TEMPLATES}\`${exceptions}. A change to any of these is a code change: the proposal's \`file\` is that file, the proposal names the constant, and Claude edits it. Each section is the constant's current value.\n\nOther fixed text in the templates: the home page tagline \`lighting·decor·drapes·av\` and the "Based on 87+ Reviews on Google" line (\`home\`), and the service area line, which comes from \`areasLine\` in [[Site/Business Facts|Business Facts]].\n\n${codeBody.join('\n\n')}`, codeFiles.length > 1 ? codeFiles.map((f) => `\`${f}\``).join(' and ') : TEMPLATES);
 
   const navList = (items, depth = 0) => (items || []).map((n) => {
     const r = resolve(n.href);

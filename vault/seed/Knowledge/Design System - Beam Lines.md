@@ -33,7 +33,7 @@ Each service belongs to a group with its own colour, used on service tiles, the 
 | AV | `av` | `#F0564A` red | Video, live audio, special effects |
 | Drapes | `dr` | `#D6249F` magenta | Drapes |
 
-The mapping is `DISCIPLINE` in [[Site/Copy in Code#DISCIPLINE|Copy in Code]]; a service not listed there is lighting.
+The mapping is `SERVICE_GROUP` in `server/lib/quote-form-data.js`, shown under DISCIPLINE in [[Site/Copy in Code#DISCIPLINE|Copy in Code]]; a service not listed there is lighting.
 
 ## Type
 

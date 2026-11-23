@@ -38,7 +38,16 @@ test('writes one generated note per content file, the hubs, the seeds and the Gl
     }
     assert.ok(fs.statSync(path.join(vault, 'Curation', 'Proposals')).isDirectory());
     assert.match(read(vault, 'Site/Pages/uplighting.md'), /source: "content\/pages\/uplighting\.md"/);
-    assert.match(read(vault, 'Site/Copy in Code.md'), /## BOOKING[\s\S]*12 months or more/);
+    const copy = read(vault, 'Site/Copy in Code.md');
+    assert.match(copy, /## BOOKING[\s\S]*12 months or more/);
+    // Every constant is found, wherever it lives; the booking scale is read from the data the quote page and email share.
+    assert.doesNotMatch(copy, /Not found as a plain literal/);
+    const booking = copy.slice(copy.indexOf('## BOOKING'));
+    assert.match(booking, /`BOOKING_SCALE` in `server\/lib\/quote-form-data\.js`, the file a proposal must target/);
+    assert.match(booking, /both the \/get-a-quote page and the notification email/);
+    assert.match(booking, /Two rows carry a separate `emailLabel`[^\n]*"2 to 3 months" \(email: "1 to 3 months"\)/);
+    assert.match(booking, /\| Lead time \| Availability \| Bars of 6 \|\n\|---\|---\|---\|\n\| 12 months or more \| Certain \| 6 \|/);
+    assert.match(copy, /## DISCIPLINE[\s\S]*`SERVICE_GROUP` in `server\/lib\/quote-form-data\.js`[\s\S]*\| LED Dance Floor \| de \|/);
   } finally {
     fs.rmSync(vault, { recursive: true, force: true });
   }

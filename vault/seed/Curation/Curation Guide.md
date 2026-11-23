@@ -50,7 +50,7 @@ Obsidian search:
 - "Current" copied exactly from the Site note; "Proposed" ready to paste.
 - Every fact backed by a note in `sources`.
 - In the owner's voice ([[Knowledge/Brand Voice]]).
-- Says plainly when it touches a frozen field (`freeze: true`), copy in code (`file: src/lib/templates.js`), the layout, or the quote form's labels (which GigFriend reads).
+- Says plainly when it touches a frozen field (`freeze: true`), copy in code (`file: src/lib/templates.js`, or `server/lib/quote-form-data.js` for the booking scale), the layout, or the quote form's labels (which GigFriend reads).
 
 ## Kinds of change
 
@@ -58,7 +58,8 @@ Obsidian search:
 |---|---|---|
 | Body copy, fact tiles, internal links | The page's `content/...` file | Yes |
 | Alt text | The page's `content/...` file, or `content/venues.json` for a venue photo | Yes |
-| Copy in code (home hero, banners, booking scale, review lines) | `src/lib/templates.js` | Yes, as a code change. Review lines are never edited |
+| Copy in code (home hero, banners, review lines) | `src/lib/templates.js` | Yes, as a code change. Review lines are never edited |
+| The "When to book" scale, service colour groups | `server/lib/quote-form-data.js` | Yes, as a code change. It changes the quote page and the notification email together |
 | Business facts, menus | `src/data/site.json` | Yes, with care: name, address and phone must match the Google Business Profile |
 | Title, meta description, canonical, H1 of an existing page | The page's `content/...` file | No: held for the launch freeze |
 | A new blog post | A new file in `content/posts/` | Yes, once the owner approves the URL |

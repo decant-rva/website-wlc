@@ -51,7 +51,8 @@ Layouts read the Markdown in set patterns. The `/services` page, for example, is
 | What | Where | Note |
 |---|---|---|
 | Name, address, phone, email, service areas, menus, footer, social links | `src/data/site.json` | [[Site/Business Facts]]. Must match the Google Business Profile |
-| Home hero, intro columns, banners; "Featured" logos; the services page facts; review lines on the quote page; "When to book" scale; catalog time chart and figures | Constants in `src/lib/templates.js` | [[Site/Copy in Code]]. A change is a code change |
+| Home hero, intro columns, banners; "Featured" logos; the services page facts; review lines on the quote page; catalog time chart and figures | Constants in `src/lib/templates.js` | [[Site/Copy in Code]]. A change is a code change |
+| "When to book" scale; colour group of each service | Constants in `server/lib/quote-form-data.js`, read by the quote page and the notification email | [[Site/Copy in Code]]. A change is a code change and alters both |
 | Venues: name, city, region, district, photos, meta description of each venue page | `content/venues.json` | [[Site/Venues]] |
 | Chandelier sorting by tier and style | `content/chandeliers.json` | Sorted by the owner. See [[Site/Catalog]] |
 | Package looks and prices | `content/pages/wedding-decor-package-cost.md`, photo and price pairs | [[DECISIONS#D-011 — Package prices|D-011]] |

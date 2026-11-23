@@ -56,6 +56,7 @@ Deploy: `tools/deploy.sh staging` or `tools/deploy.sh production`. `/health` sho
 | `src/layouts/Base.astro` | Header, footer, closing band |
 | `src/styles/site.css` | The Beam Lines stylesheet ([[Knowledge/Design System - Beam Lines|Design System]]) |
 | `server/` | The Fastify app and the quote route |
+| `server/lib/quote-form-data.js` | What the quote page and the notification email share: the "When to book" scale and the service colour groups ([[Site/Copy in Code|Copy in Code]]) |
 | `tools/` | Importer, photo processing, inventory check, accessibility check, deploy, and `vault-sync.js`, which writes this vault's `Site/` and `_glow/` |
 | `test/` | Route tests, quote tests, vault sync tests |
 | `vault/seed/` | The starting copy of this vault's hand-written notes |
