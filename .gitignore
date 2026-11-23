@@ -4,3 +4,5 @@ dist/
 .media/
 .env
 content/.import-report.json
+.neon
+.env.local

@@ -7,7 +7,8 @@
 //   MEDIA_DIR         directory of generated photo sizes (default .media/variants), used when no bucket is set
 //   BUCKET_NAME       photo bucket. When set (with the AWS_* settings fly adds), /media is served from it
 //   BUILD_SHA         commit the image was built from, reported by /health
-//   DATABASE_URL      Postgres, for quote requests. See quote.js and lib/deliver.js for the rest
+//   DATABASE_URL      Postgres (Neon, pooled address), for quote requests. See quote.js and lib/deliver.js for the rest
+//   DATABASE_URL_UNPOOLED  Neon's direct address, used only to apply migrations at start-up
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -115,9 +116,27 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   let store;
   if (process.env.DATABASE_URL) {
     const { default: pg } = await import('pg');
+    // The site must come up even when the database is unreachable: pages are static, and the
+    // quote form falls back to "call or email us" until the database answers.
     const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 4 });
-    await migrate(pool);
+    pool.on('error', (e) => console.error('database connection lost:', e.message));
     store = quoteStore(pool);
+    // Neon gives two addresses for the same database. Schema changes go over the direct one;
+    // the site's own queries go through the pooled one (DATABASE_URL). Retried until it works.
+    const applySchema = async () => {
+      const direct = new pg.Client({ connectionString: process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL, connectionTimeoutMillis: 10000 });
+      try {
+        await direct.connect();
+        await migrate(direct);
+        console.log('database ready');
+      } catch (e) {
+        console.error('database not ready, trying again in 30 seconds:', e.message);
+        setTimeout(applySchema, 30000).unref();
+      } finally {
+        await direct.end().catch(() => {});
+      }
+    };
+    applySchema();
   }
   build({ quote: { store }, media: bucketConfigured() ? bucket() : undefined }).listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
 }

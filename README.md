@@ -113,7 +113,8 @@ kept in Postgres with the request and shown in the body of the notification emai
 
 | Setting | For |
 |---|---|
-| `DATABASE_URL` | Postgres. Without it the form answers with the "call or email us" page |
+| `DATABASE_URL` | Neon Postgres, the pooled address. Without it the form answers with the "call or email us" page |
+| `DATABASE_URL_UNPOOLED` | Neon's direct address for the same database, used only to apply migrations at start-up |
 | `LEAD_INTAKE_URL`, `LEAD_INTAKE_SECRET` | GigFriend `/lead-intake` and its `X-Lead-Token` |
 | `SMTP_USER`, `SMTP_PASS` | Google Workspace address the site signs in to the SMTP relay as, and its app password |
 | `QUOTE_EMAIL_FROM`, `QUOTE_EMAIL_TO` | Sender (the Workspace user or one of its aliases) and the inbox that receives the notification |
@@ -127,6 +128,15 @@ To turn on the Workspace relay (a Workspace admin does this once):
 2. Pick or create the sending user (for example `quotes@`), turn on 2-Step Verification for it and
    create an app password. Those are `SMTP_USER` and `SMTP_PASS`.
 3. Set that user's profile photo to the round logo. Gmail shows it beside the sender name.
+
+The database is Neon project `wlc-site` (`neon.ts` and `.neon` link this checkout to it). The server
+uses `pg`, as Neon recommends for a long-running Node server. `neon env pull` writes both addresses
+to `.env.local`, which `npm start` reads and Git ignores. If the database cannot be reached the site
+still starts, the form shows the "call or email us" page, and the connection is retried every 30
+seconds.
+
+`npm run check:db` saves, reads back and removes a test request in the real database, and posts the
+form through the app. Add `-- --http` where only web traffic is allowed.
 
 `migrations/` is applied at start-up. Tests use an in-memory Postgres (`pg-mem`) and fake deliveries.
 
