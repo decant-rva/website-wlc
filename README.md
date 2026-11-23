@@ -205,8 +205,11 @@ delivered a second time.
 - `GET /health/delivery` reports `{ db, pending, failed, oldestPendingMinutes }` for an outside
   monitor. It answers only when the `X-Status-Token` header matches the `STATUS_TOKEN` secret
   (`fly secrets set STATUS_TOKEN=<random value>`); without the secret it is a 404. It answers 503
-  when the database does not respond within 3 seconds. Point an uptime monitor at it and alert
-  when it is not 200, or when `oldestPendingMinutes` passes 60.
+  when the database does not respond within 3 seconds, or when a request has waited an hour or
+  more without being delivered (`oldestPendingMinutes` of 60 or more: the same hour after which
+  the office is emailed about it). A failed attempt counts in `failed` but is not late until that
+  hour has passed, because it is retried. Point an uptime monitor at it and alert when it is not
+  200; the monitor needs to send the header, but does not need to read the reply.
 - Every day after 13:00 UTC (8 or 9 a.m. in New York) the first retry pass emails a list of every
   request still undelivered, not only new ones. At most once a day, even with a restart or two
   machines (`quote_daily_summary` records the day). Nothing is sent when everything was delivered.
