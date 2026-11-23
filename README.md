@@ -118,16 +118,18 @@ kept in Postgres with the request and shown in the body of the notification emai
 | `LEAD_INTAKE_URL`, `LEAD_INTAKE_SECRET` | GigFriend `/lead-intake` and its `X-Lead-Token` |
 | `SMTP_USER`, `SMTP_PASS` | Google Workspace address the site signs in to the SMTP relay as, and its app password |
 | `QUOTE_EMAIL_FROM`, `QUOTE_EMAIL_TO` | Sender (the Workspace user or one of its aliases) and the inbox that receives the notification |
-| `SMTP_HOST`, `SMTP_PORT` | Optional. Default `smtp-relay.gmail.com` and `587` |
+| `SMTP_HOST`, `SMTP_PORT` | Mail server and port. The fly settings files set `smtp.gmail.com`; the port defaults to `587` |
 | `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check (the form widget is not added yet) |
 
-To turn on the Workspace relay (a Workspace admin does this once):
+Email is sent through `smtp.gmail.com` (set as `SMTP_HOST` in the fly settings files), signed in
+as the Workspace user in `SMTP_USER`. That user needs 2-Step Verification on and an app password
+(myaccount.google.com/apppasswords), which is `SMTP_PASS`. The sender is an alias on that user. A
+copy of each notification appears in that user's Sent folder.
 
-1. Admin console, Apps, Google Workspace, Gmail, Routing, SMTP relay service: add a rule that allows
-   only addresses in your domain, requires SMTP authentication and requires TLS.
-2. Pick or create the sending user (for example `quotes@`), turn on 2-Step Verification for it and
-   create an app password. Those are `SMTP_USER` and `SMTP_PASS`.
-3. Set that user's profile photo to the round logo. Gmail shows it beside the sender name.
+The Workspace SMTP relay service (`smtp-relay.gmail.com`) was tried first and closed every
+connection from fly.io with `421 4.7.0` at EHLO. To use it instead, add a relay rule in the Admin
+console (Apps, Google Workspace, Gmail, Routing, SMTP relay service: only addresses in your
+domain, require SMTP authentication, require TLS) and set `SMTP_HOST` to it.
 
 The database is Neon project `wlc-site` (`neon.ts` and `.neon` link this checkout to it). The server
 uses `pg`, as Neon recommends for a long-running Node server. `neon env pull` writes both addresses

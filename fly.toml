@@ -8,6 +8,9 @@ primary_region = "iad"
   TZ = "America/New_York"
   # Sender of the quote notification. An alias on the Workspace user the site signs in as (SMTP_USER, set as a secret).
   QUOTE_EMAIL_FROM = "quotes@weddinglightingco.com"
+  # Gmail's own sending server, signed in as the Workspace user in SMTP_USER. The SMTP relay service
+  # (smtp-relay.gmail.com) refused connections from fly.io with 421 4.7.0 at EHLO.
+  SMTP_HOST = "smtp.gmail.com"
   # Inbox that receives each quote request.
   QUOTE_EMAIL_TO = "info@weddinglightingco.com"
 

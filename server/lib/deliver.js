@@ -1,8 +1,9 @@
 // The two things that happen to a saved quote request: it is posted to the
 // GigFriend lead intake, and a notification email goes to the office inbox.
 //
-// The email goes out through the Google Workspace SMTP relay, signed in as a
-// Workspace user with an app password.
+// The email goes out through Google's mail servers, signed in as a Workspace user with an
+// app password. SMTP_HOST picks which: smtp.gmail.com (what the fly.io apps use) or the
+// SMTP relay service, smtp-relay.gmail.com, which also needs a relay rule in the Admin console.
 //
 // Environment:
 //   LEAD_INTAKE_URL      full URL of gigfriend-server's /lead-intake
