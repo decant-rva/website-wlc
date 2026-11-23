@@ -6,3 +6,4 @@ dist/
 content/.import-report.json
 .neon
 .env.local
+.env.*

@@ -1,11 +1,19 @@
 # Production. Same region and timezone as gigfriend-server.
 app = "wlc-site"
 primary_region = "iad"
+# fly.io stops a machine with SIGINT. The server finishes requests and deliveries under way;
+# give it the time to (the default is 5 seconds, shorter than a phone uploading photos).
+kill_signal = "SIGINT"
+kill_timeout = 30
+# Headroom for a large photo being cleaned while pages are served (no swap by default).
+swap_size_mb = 512
 
 [env]
   PORT = "8080"
   NODE_ENV = "production"
   TZ = "America/New_York"
+  # A request to the app's fly.dev address is redirected here.
+  CANONICAL_HOST = "www.weddinglightingco.com"
   # Sender of the quote notification. An alias on the Workspace user the site signs in as (SMTP_USER, set as a secret).
   QUOTE_EMAIL_FROM = "quotes@weddinglightingco.com"
   # Gmail's own sending server, signed in as the Workspace user in SMTP_USER. The SMTP relay service
@@ -20,6 +28,12 @@ primary_region = "iad"
   auto_stop_machines = "off"
   auto_start_machines = true
   min_machines_running = 1
+
+  # Counted in requests, not connections, with room for slow uploads.
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 100
+    hard_limit = 200
 
   [[http_service.checks]]
     interval = "30s"
