@@ -24,7 +24,10 @@ const business = () => ({
 });
 
 function breadcrumbs(entry, entries) {
-  const crumbs = trail(entry, entries, site.nav);
+  return breadcrumbList(trail(entry, entries, site.nav));
+}
+
+function breadcrumbList(crumbs) {
   if (!crumbs.length) return null;
   return {
     '@context': 'https://schema.org',
@@ -77,4 +80,15 @@ export function schemaFor(entry, entries) {
     out.push({ '@context': 'https://schema.org', ...s, url: entry.data.canonical, ...(image ? { image } : {}) });
   }
   return out;
+}
+
+/**
+ * JSON-LD for a /venue/<slug> page, which has no content entry of its own: the business, and the
+ * same breadcrumb trail the page shows (Home, Pictures, the venue). venues.json holds only the
+ * venue's town, not its address, so no Place is described.
+ */
+export function venueSchema(venue, entries) {
+  const listing = entries.get('/venue');
+  const crumbs = listing ? trail(listing, entries, site.nav) : [{ name: 'Home', path: '/' }];
+  return [business(), breadcrumbList([...crumbs, { name: venue.name, path: `/venue/${venue.slug}` }])];
 }
