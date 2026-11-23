@@ -94,7 +94,8 @@ export function build({ quote = {}, media } = {}) {
   });
   app.setNotFoundHandler((req, reply) => (req.url.startsWith('/api/') ? sendPage(reply, 404, 'quote-problem') : sendPage(reply, 404, '404')));
 
-  app.get('/health', async () => ({ ok: true, sha: process.env.BUILD_SHA || 'dev', staging: STAGING }));
+  // Fly checks this every 30 seconds; those requests are not logged.
+  app.get('/health', { logLevel: 'silent' }, async () => ({ ok: true, sha: process.env.BUILD_SHA || 'dev', staging: STAGING }));
 
   app.register(fastifyStatic, { root: path.join(DIST, '_astro'), prefix: '/_astro/', immutable: true, maxAge: '1y', decorateReply: true });
   if (media) {
@@ -136,6 +137,8 @@ export function build({ quote = {}, media } = {}) {
       const stable = bare.startsWith('/fonts/');
       return reply.sendFile(bare.slice(1), DIST, { maxAge: stable ? '1y' : '1h', immutable: stable });
     }
+    // The home page's file is index.html, but /index is not a page of its own.
+    if (bare === '/index') return reply.redirect('/' + query, 301);
     const page = bare === '/' ? '/index' : bare;
     if (page !== '/404' && pages.has(page)) {
       return reply.header('Cache-Control', 'public, max-age=300').type('text/html; charset=utf-8')
