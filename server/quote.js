@@ -119,7 +119,7 @@ export function turnstileRule({ secret, required, pageHasWidget }) {
 }
 
 // uploadBudget: bytes of uploads held in memory at once (tests pass a small one).
-export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date(), uploadBudget = 128 * 1024 * 1024 }) {
+export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date(), uploadBudget = 96 * 1024 * 1024 }) {
   // The pages the route answers with never change while the server runs.
   const pages = new Map();
   const page = (name) => {
@@ -166,6 +166,10 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   // finished (or the connection closes), which covers decoding and saving too.
   const budget = uploadBudget;
   let held = 0;
+  // No address may hold more than one full request's worth (5 x 8 MB), so one place cannot take
+  // the whole budget and keep everyone else's photos out.
+  const PER_ADDRESS_BYTES = MAX_FILES * MAX_FILE_BYTES;
+  const heldBy = new Map();
   // A looser per-address count, taken before anything is read, keeps one address from sending
   // endless requests that fail validation and so never reach the main rate limit. A post refused
   // here is not counted, so a refused address recovers as the window moves on.
@@ -199,7 +203,22 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   });
   app.register(multipart, { limits: { fileSize: MAX_FILE_BYTES, files: MAX_FILES, fields: 40, fieldSize: 20000 } });
 
+  // The bytes a request holds are given back only when its handler has finished (photos decoded
+  // and saved, or refused), not when the visitor hangs up: the handler keeps the photos in memory
+  // until then. A handler always finishes: an abandoned upload makes reading the body throw, and
+  // a stalled one is cut off by the server's request timeout.
   app.post('/api/quote', async (req, reply) => {
+    const acct = { from: clientIp(req), mine: 0 };
+    try {
+      return await handleQuote(req, reply, acct);
+    } finally {
+      held -= acct.mine;
+      const left = (heldBy.get(acct.from) || 0) - acct.mine;
+      if (left > 0) heldBy.set(acct.from, left); else heldBy.delete(acct.from);
+    }
+  });
+
+  async function handleQuote(req, reply, acct) {
     const html = (code, body) => reply.code(code).header('Cache-Control', 'no-store').type('text/html; charset=utf-8').send(body);
     const fields = {};
     const uploads = [];
@@ -210,10 +229,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     // sending that header to the fly.dev address.)
     const from = clientIp(req);
     if (tooManyPosts(from)) return html(429, page('quote-problem'));
-    let mine = 0;
-    let released = false;
-    const release = () => { if (!released) { released = true; held -= mine; } };
-    reply.raw.once('close', release);
+    const take = (n) => { held += n; acct.mine += n; heldBy.set(from, (heldBy.get(from) || 0) + n); };
     try {
       if (req.isMultipart()) {
         for await (const part of req.parts()) {
@@ -225,17 +241,17 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
             let size = 0;
             for await (const c of part.file) {
               if (busy) continue;
-              if (held + c.length > budget) { busy = true; held -= size; mine -= size; size = 0; chunks.length = 0; continue; }
-              held += c.length; mine += c.length; size += c.length; chunks.push(c);
+              if (held + c.length > budget || (heldBy.get(from) || 0) + c.length > PER_ADDRESS_BYTES) { busy = true; take(-size); size = 0; chunks.length = 0; continue; }
+              take(c.length); size += c.length; chunks.push(c);
             }
-            if (part.file.truncated) { tooBig = true; held -= size; mine -= size; continue; }
+            if (part.file.truncated) { tooBig = true; take(-size); continue; }
             if (size) uploads.push(Buffer.concat(chunks, size));
           } else if (part.fieldname === 'services') (fields.services ||= []).push(part.value);
           else fields[part.fieldname] = part.value;
         }
       } else Object.assign(fields, req.body || {});
     } catch (e) {
-      if (e.code === 'FST_REQ_FILE_TOO_LARGE' || e.code === 'FST_FILES_LIMIT') tooBig = true; else { release(); throw e; }
+      if (e.code === 'FST_REQ_FILE_TOO_LARGE' || e.code === 'FST_FILES_LIMIT') tooBig = true; else throw e;
     }
 
     // A filled trap field is a bot. It gets the same confirmation and nothing is kept. The log
@@ -306,7 +322,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     } finally {
       inFlight.delete(key);
     }
-  });
+  }
 
   async function saveAndConfirm(req, reply, s, uploads, ip, html) {
     // Never trust the name or type the browser sent. Each file is decoded and rewritten as a
