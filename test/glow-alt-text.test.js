@@ -5,9 +5,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
-import { collect, prepare, draft, proposals, apply, approved, parseReply, check, promptFor, readDescriptions, readDecisions, applyDecisions } from '../tools/glow-alt-text.js';
+import { fileURLToPath } from 'node:url';
+import { collect, prepare, draft, proposals, apply, approved, parseReply, check, promptFor, readDescriptions, readDecisions, applyDecisions, hubRoute } from '../tools/glow-alt-text.js';
 
-const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// fileURLToPath, not URL.pathname, so a Windows drive letter resolves (pathname gives C:\A:\... there).
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'wlc-alt-'));
 const jobsAll = collect(REPO);
 
@@ -149,6 +151,33 @@ test('draft speaks the OpenAI format too, and retries an empty reply with a bigg
   } finally {
     await chat.close();
   }
+});
+
+test('through the shared client the hub request is unchanged: same body, only the budget grows on a retry', async () => {
+  const { work } = await prepared(1);
+  let n = 0;
+  const chat = await fakeChat(() => (n++ === 0 ? 'no json yet' : '{"alt": "Bistro lights strung over a tent"}'));
+  try {
+    const r = await draft(work, { url: chat.url, model: 'gpt-oss:120b', log: () => {} });
+    assert.equal(r.drafted, 1);
+    assert.equal(chat.calls.length, 2, 'no /api/ps or other extra calls');
+    const [a, b] = chat.calls.map((c) => c.body);
+    assert.deepEqual(Object.keys(a).sort(), ['messages', 'model', 'options', 'stream']);
+    assert.deepEqual(a.options, { num_predict: 6000, temperature: 0.2 });
+    assert.deepEqual(b.options, { num_predict: 12000, temperature: 0.2 });
+    assert.deepEqual({ ...b, options: null }, { ...a, options: null });
+    assert.equal(a.messages[0].content, 'Answer immediately, minimal reasoning. Output only the JSON object. No preamble.');
+  } finally {
+    await chat.close();
+  }
+});
+
+test('hubRoute tells a hub chat URL from any other', () => {
+  assert.deepEqual(hubRoute('http://127.0.0.1:8790/ollama/mac/api/chat'), { origin: 'http://127.0.0.1:8790', machine: 'mac' });
+  assert.equal(hubRoute('http://127.0.0.1:8790/ollama/nope/api/chat'), null);
+  assert.equal(hubRoute('http://127.0.0.1:11434/api/chat'), null);
+  assert.equal(hubRoute('http://127.0.0.1:8790/v1/chat/completions'), null);
+  assert.equal(hubRoute('not a url'), null);
 });
 
 test('proposals: one note per fully drafted page, ticked when clean, and apply puts ticked lines into the content', async () => {
