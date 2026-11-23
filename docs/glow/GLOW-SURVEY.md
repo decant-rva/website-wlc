@@ -27,18 +27,19 @@ Each fact carries one of these marks:
 
 ## 2. Where everything is
 
-The site is a stack of draft pull requests. `main` still holds only the README.
+**Everything is on `main` since 23 November.** The pull requests below were merged in this order: #4 and #3 into `beam-lines-build` through decant-rva/website-wlc#6, then decant-rva/website-wlc#7, then #2 into `phase-3/foundation`, then #1 into `main`, then this survey (#5). The table shows what each one brought.
 
-| Branch | Pull request | What it holds |
+| Branch | Pull request | What it brought |
 |---|---|---|
-| `main` | | README and ignore rules |
 | `phase-3/foundation` | decant-rva/website-wlc#1, into `main` | Content import (272 URLs), static build, first design |
 | `beam-lines-build` | decant-rva/website-wlc#2, into `phase-3/foundation` | The finished site: Beam Lines design, every template, quote form route, venue pages, photo bucket |
 | `claude/quirky-edison-eas76b` | decant-rva/website-wlc#3, into `beam-lines-build` | **All the Glow work:** `tools/vault-sync.js`, `tools/glow-alt-text.js`, `vault/seed/` (including `GLOW.md`), their tests |
 | `claude/kind-allen-bhqyfu` | decant-rva/website-wlc#4, into `beam-lines-build` | Launch blocker fixes, `/health/delivery`, retention, five more proposed redirects |
-| `claude/eager-hawking-jbpfwn` | | This report |
+| `claude/amazing-lovelace-osxt3h` | decant-rva/website-wlc#6, into `beam-lines-build` | #3 and #4 together, with the fixes in section 3 |
+| `claude/health-delivery-503` | decant-rva/website-wlc#7, into `beam-lines-build` | `/health/delivery` answers 503 once a quote request is an hour late |
+| `claude/eager-hawking-jbpfwn` | decant-rva/website-wlc#5, into `main` | This report |
 
-Since 23 November, #3 and #4 are both merged into `beam-lines-build` through decant-rva/website-wlc#6, so every file below is on that branch. Files to read first:
+Every file below is on `main`. Files to read first:
 
 | File | Why |
 |---|---|
