@@ -4,7 +4,8 @@
 //   PORT              default 8080
 //   STAGING           "1" serves proposed redirects, adds noindex, requires the password
 //   STAGING_PASSWORD  required when STAGING=1
-//   MEDIA_DIR         directory of generated photo sizes (default .media/variants)
+//   MEDIA_DIR         directory of generated photo sizes (default .media/variants), used when no bucket is set
+//   BUCKET_NAME       photo bucket. When set (with the AWS_* settings fly adds), /media is served from it
 //   BUILD_SHA         commit the image was built from, reported by /health
 //   DATABASE_URL      Postgres, for quote requests. See quote.js and lib/deliver.js for the rest
 import fs from 'node:fs';
@@ -14,6 +15,7 @@ import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { registerQuote } from './quote.js';
 import { migrate, quoteStore } from './lib/store.js';
+import { bucket, bucketConfigured, TYPES, VARIANTS } from './lib/bucket.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DIST = path.join(ROOT, 'dist');
@@ -44,7 +46,8 @@ const assets = new Set();
 const same = (a, b) => a.length === b.length && crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
 // quote: { store, deliverOpts } lets tests pass an in-memory store and fake deliveries.
-export function build({ quote = {} } = {}) {
+// media: an object with get(key), to serve /media from a bucket (tests pass a fake).
+export function build({ quote = {}, media } = {}) {
   const app = Fastify({ logger: process.env.NODE_ENV === 'production', trustProxy: true });
 
   app.addHook('onRequest', async (req, reply) => {
@@ -61,7 +64,22 @@ export function build({ quote = {} } = {}) {
   app.get('/health', async () => ({ ok: true, sha: process.env.BUILD_SHA || 'dev', staging: STAGING }));
 
   app.register(fastifyStatic, { root: path.join(DIST, '_astro'), prefix: '/_astro/', immutable: true, maxAge: '1y', decorateReply: true });
-  app.register(fastifyStatic, { root: MEDIA_DIR, prefix: '/media/', immutable: true, maxAge: '1y', decorateReply: false });
+  if (media) {
+    // Photo file names are fixed for a given photo and size, so they can be cached for a year.
+    app.get('/media/:file', async (req, reply) => {
+      const file = req.params.file;
+      const ext = file.split('.').pop().toLowerCase();
+      if (!/^[A-Za-z0-9._-]+$/.test(file) || !TYPES[ext]) return reply.code(404).send('Not found');
+      const obj = await media.get(VARIANTS + file);
+      if (!obj) return reply.code(404).send('Not found');
+      reply.header('Cache-Control', 'public, max-age=31536000, immutable').type(TYPES[ext]);
+      if (obj.length) reply.header('Content-Length', obj.length);
+      if (obj.etag) reply.header('ETag', obj.etag);
+      return reply.send(obj.body);
+    });
+  } else {
+    app.register(fastifyStatic, { root: MEDIA_DIR, prefix: '/media/', immutable: true, maxAge: '1y', decorateReply: false });
+  }
 
   registerQuote(app, { dist: DIST, ...quote });
 
@@ -101,5 +119,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     await migrate(pool);
     store = quoteStore(pool);
   }
-  build({ quote: { store } }).listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
+  build({ quote: { store }, media: bucketConfigured() ? bucket() : undefined }).listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
 }

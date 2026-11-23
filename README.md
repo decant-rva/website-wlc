@@ -70,6 +70,19 @@ Template photos are `<picture>` elements with AVIF, WebP and a JPEG fallback. Th
 `node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
 against a running copy.
 
+## Photo storage
+
+In production `/media` is served from a Tigris bucket (`server/lib/bucket.js`). Create it once per
+app with `fly storage create --app <app>`; that sets `BUCKET_NAME` and the `AWS_*` secrets. Without
+them the server reads `.media/variants` from disk, which is how it runs locally.
+
+To fill the bucket, add the same five values as repository secrets and run the `media` workflow from
+the Actions tab, or run `node tools/media.js --rebuild --upload` with them in the environment.
+
+`content/photos-unavailable.json` lists photos the content refers to that could not be downloaded
+from the previous host (HTTP 403). They are left out of the manifest, so pages skip them. To bring
+one back, put the original in `.media/originals/` under its ID and run `npm run media`.
+
 ## Editing content
 
 Edit the Markdown file for the page and deploy. The path in the front matter is

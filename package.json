@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.10",
+    "@aws-sdk/client-s3": "^3.1175.0",
     "@fastify/multipart": "^10.1.9",
     "@fastify/static": "^10.1.12",
     "astro": "^7.4.13",

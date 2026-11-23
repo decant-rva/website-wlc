@@ -67,3 +67,20 @@ test('fonts and logo are served', async () => {
     assert.equal((await get(url)).statusCode, 200, url);
   }
 });
+
+test('photos are served from the bucket when one is set', async () => {
+  const asked = [];
+  const media = { async get(key) { asked.push(key); return key === 'variants/photo-800.webp' ? { body: Buffer.from('webpbytes'), length: 9, etag: '"abc"' } : null; } };
+  const withBucket = build({ media });
+  const ok = await withBucket.inject({ method: 'GET', url: '/media/photo-800.webp' });
+  assert.equal(ok.statusCode, 200);
+  assert.equal(ok.headers['content-type'], 'image/webp');
+  assert.match(ok.headers['cache-control'], /max-age=31536000, immutable/);
+  assert.equal(ok.body, 'webpbytes');
+  assert.equal((await withBucket.inject({ method: 'GET', url: '/media/missing.jpg' })).statusCode, 404);
+  // Names that could reach outside the photo folder, or types that are not photos, never reach the bucket.
+  for (const url of ['/media/..%2Fsecrets.jpg', '/media/notes.txt', '/media/a%2Fb.jpg']) {
+    assert.equal((await withBucket.inject({ method: 'GET', url })).statusCode, 404, url);
+  }
+  assert.deepEqual(asked, ['variants/photo-800.webp', 'variants/missing.jpg']);
+});

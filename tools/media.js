@@ -2,10 +2,12 @@
 // the responsive sizes. Originals and generated files live in .media/ (not in
 // Git). The manifest, content/photos.json, is committed.
 //
-//   node tools/media.js            process everything that is missing
+//   node tools/media.js            process photos that are not in the manifest yet
+//   node tools/media.js --rebuild  also regenerate any photo whose files are not on this disk
+//   node tools/media.js --upload   then copy originals and generated sizes to the bucket
 //
-// Until the storage bucket exists this runs against the local disk. The
-// manifest format is the same either way.
+// --rebuild is for a fresh checkout: the manifest is in Git but the files are not.
+// --upload needs the bucket settings (see server/lib/bucket.js); it skips files already there.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -84,7 +86,10 @@ await fs.mkdir(ORIG, { recursive: true });
 await fs.mkdir(OUT, { recursive: true });
 const ids = await referenced();
 const manifest = (await exists(MANIFEST)) ? JSON.parse(await fs.readFile(MANIFEST, 'utf8')) : {};
-const todo = [...ids].filter(([id]) => !manifest[id]);
+const rebuild = process.argv.includes('--rebuild');
+const onDisk = new Set(await fs.readdir(OUT));
+const filesOf = (e) => (e.file ? [e.file] : [...e.avif, ...e.webp].map((x) => x[1]).concat(e.fallback));
+const todo = [...ids].filter(([id]) => !manifest[id] || (rebuild && filesOf(manifest[id]).some((f) => !onDisk.has(f))));
 let done = 0;
 const failed = [];
 const queue = [...todo];
@@ -101,3 +106,22 @@ const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.
 await fs.writeFile(MANIFEST, JSON.stringify(sorted, null, 1) + '\n');
 console.log(`${Object.keys(sorted).length} photos in manifest, ${failed.length} failed`);
 for (const f of failed) console.log('  failed', f.join(' '));
+
+if (process.argv.includes('--upload')) {
+  const { bucket, bucketConfigured, TYPES, VARIANTS, ORIGINALS } = await import('../server/lib/bucket.js');
+  if (!bucketConfigured()) { console.error('The bucket settings are missing: BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY.'); process.exit(1); }
+  const b = bucket();
+  let sent = 0;
+  for (const [dir, prefix] of [[OUT, VARIANTS], [ORIG, ORIGINALS]]) {
+    const have = await b.list(prefix);
+    const jobs = (await fs.readdir(dir)).filter((f) => !have.has(prefix + f));
+    await Promise.all(Array.from({ length: 8 }, async () => {
+      for (let f = jobs.shift(); f; f = jobs.shift()) {
+        const ext = f.split('.').pop().toLowerCase();
+        await b.put(prefix + f, await fs.readFile(path.join(dir, f)), TYPES[ext] || 'application/octet-stream');
+        if (++sent % 200 === 0) console.log(`uploaded ${sent}`);
+      }
+    }));
+  }
+  console.log(`${sent} files uploaded to the bucket`);
+}
