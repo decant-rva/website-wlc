@@ -181,8 +181,8 @@ in front:
 3. Use SSL mode Full (strict); the app redirects plain HTTP, so Flexible would loop.
 
 Without step 1 and 2 every visitor coming through Cloudflare shares Cloudflare's addresses, and the
-limit of five requests in ten minutes applies to all of them together. The same goes for the other per-address
-limits: at most two quote requests being uploaded at once and twenty posts in ten minutes. The
+limit of five requests in ten minutes applies to all of them together. The same goes for the looser per-address
+limit of twenty posts in ten minutes. The
 server logs a warning (at most once a minute) when it sees `CF-Connecting-IP` without the proof.
 
 ### Delivery guarantees
