@@ -3,12 +3,15 @@ on:
   pull_request:
   push:
     branches: [main]
+# Nothing here needs more than to read the repository. No secrets are used.
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
@@ -16,3 +19,25 @@ jobs:
       - run: npm run build
       - run: npm run check:inventory
       - run: node --test
+      # Automated WCAG 2.2 A/AA rules on one page per template, at phone and desktop width.
+      # Only the owner's accepted palette contrast is allowed (see tools/a11y.js).
+      - run: npx playwright install --with-deps chromium
+      - name: Accessibility check
+        run: |
+          node server/server.js &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/health >/dev/null && break; sleep 1; done
+          node tools/a11y.js http://127.0.0.1:8080
+  # Builds the production image the way fly.io does, so a broken Dockerfile shows up on the pull
+  # request instead of at deploy time. Its build stage runs the freeze check and the tests on
+  # Node 24 Alpine. Nothing is pushed anywhere.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - run: docker build --build-arg BUILD_SHA=${{ github.sha }} -t wlc-site:ci .
+      - name: The image starts and serves a page
+        run: |
+          docker run -d --name wlc -p 8080:8080 wlc-site:ci
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/health && break; sleep 1; done
+          curl -fsS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/uplighting
+          docker rm -f wlc

@@ -1,5 +1,6 @@
 import site from '../data/site.json';
 import { trail } from './entries.js';
+import { shareImage } from './share.js';
 
 const business = () => ({
   '@context': 'https://schema.org',
@@ -7,6 +8,8 @@ const business = () => ({
   '@id': `${site.url}/#business`,
   name: site.name,
   url: site.url,
+  // The live site's image was its logo on the previous host; this is our own copy.
+  image: `${site.url}/img/logo.png`,
   telephone: site.phone,
   email: site.email,
   address: {
@@ -21,7 +24,10 @@ const business = () => ({
 });
 
 function breadcrumbs(entry, entries) {
-  const crumbs = trail(entry, entries, site.nav);
+  return breadcrumbList(trail(entry, entries, site.nav));
+}
+
+function breadcrumbList(crumbs) {
   if (!crumbs.length) return null;
   return {
     '@context': 'https://schema.org',
@@ -56,17 +62,33 @@ function faq(entry) {
 /** JSON-LD blocks for one page. */
 export function schemaFor(entry, entries) {
   const out = [business()];
+  // The site name Google shows comes from this block, which the live home page has.
+  // No SearchAction: /search on this site does not take a query.
+  if (entry.data.path === '/') out.push({ '@context': 'https://schema.org', '@type': 'WebSite', name: site.shortName, url: site.url });
   const crumbs = breadcrumbs(entry, entries);
   if (crumbs) out.push(crumbs);
   const questions = faq(entry);
   if (questions) out.push(questions);
   const s = entry.data.schema;
+  // Our own copy of the page's share photo; left out when we do not hold it.
+  const image = shareImage(entry.data.og?.['og:image'])?.url;
   if (s && s['@type'] === 'BlogPosting') {
     out.push({ '@context': 'https://schema.org', ...s, mainEntityOfPage: entry.data.canonical,
-      image: entry.data.og['og:image'], publisher: { '@id': `${site.url}/#business` } });
+      ...(image ? { image } : {}), publisher: { '@id': `${site.url}/#business` } });
   }
   if (s && s['@type'] === 'Product') {
-    out.push({ '@context': 'https://schema.org', ...s, url: entry.data.canonical, image: entry.data.og['og:image'] });
+    out.push({ '@context': 'https://schema.org', ...s, url: entry.data.canonical, ...(image ? { image } : {}) });
   }
   return out;
+}
+
+/**
+ * JSON-LD for a /venue/<slug> page, which has no content entry of its own: the business, and the
+ * same breadcrumb trail the page shows (Home, Pictures, the venue). venues.json holds only the
+ * venue's town, not its address, so no Place is described.
+ */
+export function venueSchema(venue, entries) {
+  const listing = entries.get('/venue');
+  const crumbs = listing ? trail(listing, entries, site.nav) : [{ name: 'Home', path: '/' }];
+  return [business(), breadcrumbList([...crumbs, { name: venue.name, path: `/venue/${venue.slug}` }])];
 }

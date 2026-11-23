@@ -62,7 +62,7 @@ A drapery backdrop serves as an elegant focal point for a wedding ceremony, swee
 
 Kimie James Photography
 
-## [Drapery Canopies](/drape-canopies)
+## [Drapery Canopies](/drape-walls-backdrops-canopies)
 
 A canopy of drape transforms a wedding space into a breathtakingly intimate setting by adorning the ceiling with soft, flowing fabric. Suspended from the center of the room or stretched across the entire venue, drapery canopies add depth and dimension while creating a luxurious, dreamy ambiance. They can be arranged in symmetrical swags, gathered elegantly at the center, or layered with twinkling lights for an enchanting effect.
 

@@ -49,32 +49,62 @@
  },
  {
   "from": "/silk-florals-catalog",
-  "to": "/silk-florals",
+  "to": "/catalog/silk-florals-catalog",
   "status": "proposed",
-  "note": "Broken on the previous site. Awaiting owner approval"
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
  },
  {
   "from": "/special-effects",
-  "to": "/services",
+  "to": "/catalog/special-effects",
   "status": "proposed",
-  "note": "Broken on the previous site. Awaiting owner approval"
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
  },
  {
   "from": "/standing-lighting-decor",
-  "to": "/catalog",
+  "to": "/catalog/standing-lighting-decor",
   "status": "proposed",
-  "note": "Broken on the previous site. Awaiting owner approval"
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
  },
  {
   "from": "/table-lighting-decor-catalog",
-  "to": "/catalog",
+  "to": "/catalog/table-lighting-decor-catalog",
   "status": "proposed",
-  "note": "Broken on the previous site. Awaiting owner approval"
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
  },
  {
   "from": "/event-wedding-band-video",
-  "to": "/services",
+  "to": "/catalog/event-wedding-band-video",
   "status": "proposed",
-  "note": "Broken on the previous site. Awaiting owner approval"
+  "note": "Soft 404 (\"404 Error Page\") on the previous site. Points at the catalog page with the same name. Awaiting owner approval"
+ },
+ {
+  "from": "/home",
+  "to": "/",
+  "status": "proposed",
+  "note": "Served the home page with 200 on the previous site. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/2",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/3",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/4",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
+ },
+ {
+  "from": "/blog/page/5",
+  "to": "/blog",
+  "status": "proposed",
+  "note": "Blog listing page on the previous site; the new blog lists every post on one page. Awaiting owner approval"
  }
 ]

@@ -54,12 +54,40 @@ test('sitemap lists only indexable pages', async () => {
   assert.equal(res.statusCode, 200);
   const locs = [...res.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const indexable = Object.values(inventory).filter((p) => !/noindex/i.test(p.robots)).length;
-  assert.equal(locs.length, indexable);
+  // The only pages added since the inventory are the per-venue photo pages.
+  const venuePages = locs.filter((l) => /\/venue\/[^/]+$/.test(l));
+  assert.ok(venuePages.length > 0);
+  assert.equal(locs.length - venuePages.length, indexable);
+  for (const l of venuePages) assert.equal((await get(new URL(l).pathname)).statusCode, 200, l);
   assert.ok(!locs.some((l) => l.includes('/blog/tags/')));
 });
 
-test('fonts, logo and menu script are served', async () => {
-  for (const url of ['/fonts/poppins-900.woff2', '/img/logo.png', '/js/menu.js', '/favicon.png', '/robots.txt']) {
+test('fonts and logo are served', async () => {
+  for (const url of ['/fonts/league-spartan-800.woff2', '/img/wordmark.webp', '/favicon.png', '/robots.txt']) {
     assert.equal((await get(url)).statusCode, 200, url);
   }
+});
+
+test('photos are served from the bucket when one is set', async () => {
+  const asked = [];
+  const media = { async get(key) { asked.push(key); return key === 'variants/photo-800.webp' ? { body: Buffer.from('webpbytes'), length: 9, etag: '"abc"' } : null; } };
+  const withBucket = build({ media });
+  const ok = await withBucket.inject({ method: 'GET', url: '/media/photo-800.webp' });
+  assert.equal(ok.statusCode, 200);
+  assert.equal(ok.headers['content-type'], 'image/webp');
+  assert.match(ok.headers['cache-control'], /max-age=31536000, immutable/);
+  assert.equal(ok.body, 'webpbytes');
+  assert.equal((await withBucket.inject({ method: 'GET', url: '/media/missing.jpg' })).statusCode, 404);
+  // Names that could reach outside the photo folder, or types that are not photos, never reach the bucket.
+  for (const url of ['/media/..%2Fsecrets.jpg', '/media/notes.txt', '/media/a%2Fb.jpg']) {
+    assert.equal((await withBucket.inject({ method: 'GET', url })).statusCode, 404, url);
+  }
+  assert.deepEqual(asked, ['variants/photo-800.webp', 'variants/missing.jpg']);
+});
+
+test('/index is not a second copy of the home page', async () => {
+  const res = await get('/index?x=1');
+  assert.equal(res.statusCode, 301);
+  assert.equal(res.headers.location, '/?x=1');
+  assert.equal((await get('/')).statusCode, 200);
 });

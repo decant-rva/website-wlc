@@ -104,7 +104,7 @@ The best thing about this design is that it will be in every reception photo. Th
 
 No tent, no room, no support? Trees work, too! We call this look Spanish Moss Lighting, as it resembles Spanish Moss in the way that it hangs. This design is a little more complicated than it looks. Power cables must be run to points in the trees where the lights hang. The skill comes in managing these power cables without damaging the tree and keeping them from taking away from the look.
 
-Lighting isn't the only thing that can be hung from trees. Most of our [hanging decor](/lighting-decor-drape-catalog/hanging-decor)options and [chandelier options](/lighting-decor-drape-catalog/chandelier-pendant-catalog) can be supported by trees.
+Lighting isn't the only thing that can be hung from trees. Most of our [hanging decor](/hanging-decor)options and [chandelier options](/chandelier-pendant-catalog) can be supported by trees.
 
 ![A bride walks amongst thick white draping, wind is present for this wedding shoot](wix:a16fb7_109e6c286f5947c499320fffd8beb3ef~mv2.png)
 

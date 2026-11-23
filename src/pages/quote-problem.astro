@@ -1,0 +1,12 @@
+---
+// Shown when a quote request cannot be saved, so the visitor still has a way to reach the office.
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+<Base title="Request not sent | Wedding Lighting Co" noindex closing={false} quoteBar={false} section="/get-a-quote">
+  <header class="ph nf">
+    <h1>Your request did not go through</h1>
+    <p class="lede">Nothing was sent. Please call or email us and we will get right back to you.</p>
+    <div class="actions"><a class="btn solid" href={`tel:${site.phone}`}>{site.phone}</a><a class="btn" href={site.emailHref}>{site.email}</a><a class="btn" href="/get-a-quote">Try again</a></div>
+  </header>
+</Base>
