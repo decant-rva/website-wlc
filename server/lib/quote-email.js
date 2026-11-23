@@ -19,9 +19,12 @@ let ALL_SERVICES = [];
 export const setServiceList = (list) => { ALL_SERVICES = list; };
 
 const label = (t) => `<span style="${F}display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:bold;color:${SLATE}">${esc(t)}</span>`;
-const cell = (k, v, right) => `<td width="50%" style="width:50%;vertical-align:top;padding:12px 14px 14px;border-bottom:2px solid ${LINE};${right ? `border-left:1px solid ${LINE};` : ''}">${label(k)}<span style="${F}display:block;padding-top:6px;font-size:16px;line-height:1.5;color:${NAVY};word-break:break-word">${esc(v) || '&nbsp;'}</span></td>`;
+// html: ready-made markup for the value, used where the plain text needs its own link styling.
+const cell = (k, v, right, html) => `<td width="50%" style="width:50%;vertical-align:top;padding:12px 14px 14px;border-bottom:2px solid ${LINE};${right ? `border-left:1px solid ${LINE};` : ''}">${label(k)}<span style="${F}display:block;padding-top:6px;font-size:16px;line-height:1.5;color:${NAVY};word-break:break-word">${html || esc(v) || '&nbsp;'}</span></td>`;
 // Two answers side by side. The pair stays side by side on a phone; long values wrap.
-const pair = (a, b) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tr>${cell(a[0], a[1])}${cell(b[0], b[1], true)}</tr></table>`;
+const pair = (a, b) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tr>${cell(a[0], a[1], false, a[2])}${cell(b[0], b[1], true, b[2])}</tr></table>`;
+// Mail apps turn a bare address into a blue link. Giving it our own link keeps it navy like the other answers.
+const addressLink = (email) => `<a href="mailto:${esc(email)}" style="color:${NAVY};text-decoration:none">${esc(email)}</a>`;
 const box = (k, v) => `<div style="padding:12px 14px 14px;border-bottom:2px solid ${LINE}">${label(k)}<span style="${F}display:block;padding-top:6px;font-size:16px;line-height:1.5;color:${NAVY};white-space:pre-wrap">${esc(v) || '&nbsp;'}</span></div>`;
 
 // Each service belongs to a group with its own colour, the same ones the website uses:
@@ -95,7 +98,7 @@ export function quoteEmail(row, files = [], inline = true) {
     + tracker(row)
     + `<div style="padding:16px 14px 14px;border-bottom:2px solid ${LINE}"><span style="${F}display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:bold;color:${SLATE}">Quote request</span><span style="${F}display:block;padding-top:4px;font-size:26px;line-height:1.15;font-weight:bold;color:${NAVY}">${esc(row.name)}</span><span style="display:block;width:56px;height:5px;margin-top:10px;background:${AMBER};font-size:0;line-height:0">&nbsp;</span></div>`
     + tiles(chosen)
-    + pair(['Name', row.name], ['Email', row.email]) + pair(['Event Date', row.event_date], ['Venue', row.venue]) + box('Vision', row.details) + box('Referral Source', row.referral)
+    + pair(['Name', row.name], ['Email', row.email, addressLink(row.email)]) + pair(['Event Date', row.event_date], ['Venue', row.venue]) + box('Vision', row.details) + box('Referral Source', row.referral)
     + photos
     + `<div style="padding:16px 14px 18px;background:${MIST}"><a href="mailto:${esc(row.email)}" style="${F}display:inline-block;padding:13px 24px;background:${AMBER};color:${NAVY};font-size:15px;font-weight:bold;text-decoration:none">Reply to ${esc(String(row.name).split(' ')[0])}</a></div>`
     + '</td></tr></table>';
