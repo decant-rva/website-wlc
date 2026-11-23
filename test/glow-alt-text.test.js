@@ -252,6 +252,8 @@ test('--redo drafts chosen photos again, and --only --force rewrites just those 
     const r = await draft(work, { url: chat.url, redo: [linden.file], log: () => {} });
     assert.equal(r.drafted, 1);
     assert.equal(chat.calls.length, calls + 1);
+    const covers = jobsAll.filter((j) => !j.skip && j.uses.some((u) => u.path === '/venue')).length;
+    assert.equal((await draft(work, { url: chat.url, redoPages: ['/venue'], log: () => {} })).drafted, covers);
     const before = fs.readFileSync(path.join(dir, '2026-11-23 Alt text - UPLIGHTING.md'), 'utf8');
     const p = proposals(work, vault, { root: REPO, now: new Date('2026-11-23T12:00:00Z'), force: true, only: ['/venue', '/venue/linden-row-inn', '/venue/mount-ida-event-barn'] });
     assert.ok(p.removed.includes('2026-11-23 Alt text - Mount Ida Event Barn (venue).md'));

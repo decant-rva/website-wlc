@@ -9,7 +9,7 @@
 //
 // draft options: --url <chat endpoint> (default the hub's http://127.0.0.1:8790/ollama/mac/api/chat), --model
 // (default mistral-medium-3.5), --header "Name: value" (repeatable), --limit <n>, --timeout <seconds>,
-// --redo <id or file,...> to draft those photos again. proposals --only <page path> --force rewrites just those pages' notes.
+// --redo <id or file,...> or --redo-page <page path> to draft those photos again. proposals --only <page path> --force rewrites just those pages' notes.
 // The endpoint may speak Ollama's /api/chat or the OpenAI /v1/chat/completions format.
 //
 // Every step can be re-run: done work is kept and skipped. Nothing reaches the website until the owner sets a
@@ -236,11 +236,13 @@ export function check(j, draft, venuesIn) {
   return { alt: alt.replace(/\.$/, ''), flags };
 }
 
-export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/chat', model = 'mistral-medium-3.5', headers = {}, limit = Infinity, timeout = 300, redo = [], fetchImpl = fetch, log = console.log } = {}) {
+export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/chat', model = 'mistral-medium-3.5', headers = {}, limit = Infinity, timeout = 300, redo = [], redoPages = [], fetchImpl = fetch, log = console.log } = {}) {
   const { jobs } = readJson(path.join(work, 'jobs.json'), { jobs: [] });
   const descriptions = readDescriptions(work);
   const outFile = path.join(work, 'drafts.jsonl');
   // --redo: forget these photos' drafts (by ID or file name) so they are drafted again.
+  // --redo-page: every photo used on those pages.
+  redo = [...redo, ...jobs.filter((j) => j.uses.some((u) => redoPages.includes(u.path))).map((j) => j.id)];
   if (redo.length && fs.existsSync(outFile)) {
     const drop = new Set(redo);
     const fileOf = new Map(jobs.map((j) => [j.id, j.file]));
@@ -507,6 +509,7 @@ async function main(argv) {
     else if (a === '--force') opts.force = true;
     else if (a === '--redo') opts.redo = [...(opts.redo || []), ...rest[++i].split(',').map((x) => x.trim()).filter(Boolean)];
     else if (a === '--only') opts.only = [...(opts.only || []), rest[++i]];
+    else if (a === '--redo-page') opts.redoPages = [...(opts.redoPages || []), rest[++i]];
     else if (a === '--mark-applied') opts.markApplied = true;
     else pos.push(a);
   }
@@ -526,7 +529,7 @@ async function main(argv) {
     const r = apply(path.resolve(pos[0]), { markApplied: opts.markApplied });
     console.log(`Approved notes ${r.notes}; alt text added to ${r.applied} photos; ${r.alreadyHadAlt} already had alt text and were left alone.${r.notFound.length ? `\nNot found:\n${r.notFound.join('\n')}` : ''}`);
   } else {
-    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s] [--redo id,id]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force] [--only /page/path ...]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]');
+    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s] [--redo id,id] [--redo-page /page/path]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force] [--only /page/path ...]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]');
     process.exit(cmd ? 1 : 0);
   }
 }
