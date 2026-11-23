@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import site from '../data/site.json';
 import { allEntries, firstPhoto, latestPosts, trail as trailFor } from './entries.js';
-import { photos } from './photos.js';
+import { photos, capDensity } from './photos.js';
 import { blocks, cleanAlt, crumbs, cta, esc, fmtDate, friends, inline, pageHead, pic, prose } from './html.js';
 import { BOOKING_SCALE, SUBSCRIBE_FORM, serviceGroup } from '../../server/lib/quote-form-data.js';
 
@@ -162,6 +162,14 @@ function contact(entry, trail, h) {
 // ---- shared pieces for the home, services and catalog pages
 const STARS = '<span class="stars" role="img" aria-label="5 Star Google reviews">★★★★★</span>';
 const photoUrl = (id) => (photos[id] ? `/media/${photos[id].fallback || photos[id].file}` : '');
+// The first slide of a slideshow that opens the page is its largest paint, so it gets a srcset of
+// WebP sizes (every current browser reads WebP) instead of the single 1200 px JPEG. The slideshow
+// script drops the srcset before it shows the next slide, which comes from the plain src.
+const heroSrcset = (id, sizes) => {
+  const p = photos[id];
+  if (!p?.webp?.length) return '';
+  return ` srcset="${p.webp.map(([w, f]) => `/media/${f} ${w}w`).join(', ')}" sizes="${capDensity(sizes)}"`;
+};
 const stem = (id) => id.replace(/~mv2/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
 
 const FEATURED = [['Brides', 263, 64], ['Virginia Weddings', 263, 102], ['Carats & Cake', 230, 86], ['MunaLuchi Bride', 253, 88],
@@ -419,7 +427,7 @@ const GLYPH = {
 };
 const glyph = (slug) => (GLYPH[slug] ? `<svg class="gl" aria-hidden="true" viewBox="0 0 24 24"><use href="#g-${slug}"/></svg>` : '');
 // Clicking a style tile ticks the matching filter. The slideshow stops for reduced motion or when paused.
-const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
+const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.removeAttribute('srcset');f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
 async function chandeliers(entry, trail, h) {
   const entries = await allEntries();
   const sb = blocks(entries.get('/chandeliers-pendants').body);
@@ -435,7 +443,7 @@ async function chandeliers(entry, trail, h) {
   const show = [0, 1, 6, 9].map((k) => ph[k]).filter(Boolean);
   const D = show.map((x) => [photoUrl(x[1]), cleanAlt(x[2]), cleanAlt(x[2])]);
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" fetchpriority="high"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
+  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}"${heroSrcset(show[0][1], '(min-width: 62rem) 61vw, 100vw')} alt="${esc(D[0][1])}" fetchpriority="high"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
   // 2 style row
   const row = styles.map((s) => `<li><a href="#items" data-s="${slug(s)}"><span class="chs-i"><img src="/img/styles/${slug(s)}.jpg" alt="" loading="lazy" decoding="async"></span><span class="chs-n">${glyph(slug(s))}${esc(s)}</span><span class="chs-c">${count[s]}</span></a></li>`).join('');
   const srow = `<section class="chs" aria-label="Chandelier styles"><ul>${row}</ul></section>`;
