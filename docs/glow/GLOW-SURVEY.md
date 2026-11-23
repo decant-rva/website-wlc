@@ -273,7 +273,7 @@ Glow must not be the alarm. When the PC is asleep, Glow is silent, and a silent 
 
 The monitor has to check from outside, every few minutes, and must not run on fly.io or the owner's PC. It checks three things: the home page (200 and a phrase from the page), `/health` (200), and `/health/delivery` with the `X-Status-Token` header (200 and `oldestPendingMinutes` under 60). It alerts by phone push and email.
 
-One small server change would make any monitor work: have `/health/delivery` answer 503 when `oldestPendingMinutes` passes 60 or `failed` is above 0. The monitor then only has to send the header and check for 200, not read the reply. Today it answers 200 in that case, and only a monitor that reads JSON would notice.
+`/health/delivery` used to answer 200 however long a request had gone undelivered, so only a monitor that read the JSON would notice. decant-rva/website-wlc#7 makes it answer 503 once the oldest undelivered request has waited an hour, the same hour after which the office is emailed about it. A monitor then only has to send the header and check for 200. A failed attempt alone stays 200 (it counts in `failed`), because the retry worker tries again: alerting on `failed` above 0 would page on a short GigFriend or mail blip.
 
 Free tiers as published in November 2026; check the plan page before relying on one.
 
@@ -305,7 +305,7 @@ Suggested setup:
 - **`/health/delivery` is not checked,** because custom headers are a paid feature. The app's daily email of undelivered quote requests covers it until the upgrade.
 - **Until launch,** the home page monitor watches the Wix site; at cutover the same URL starts watching the new one.
 - **Business use:** confirm on UptimeRobot's terms page at sign-up that the free plan allows it.
-- **`/health/delivery` answers 503 once a delivery has waited 60 minutes** (the server change above), so the monitor only needs the header and a status check.
+- **`/health/delivery` answers 503 once a request has waited an hour** (decant-rva/website-wlc#7), so the monitor only needs the header and a status check.
 - **A daily GitHub Action for the deeper checks**, which pings a heartbeat monitor when it finishes, so a schedule that silently stops is noticed. Missed scheduled jobs are the failure `gigfriend-server` already ran into (architecture section 11).
 
 ### Checks to run on a schedule, with no model involved
