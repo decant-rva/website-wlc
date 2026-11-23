@@ -107,6 +107,8 @@ test('draft calls the chat route once per described photo, and a re-run does onl
     assert.equal(chat.calls[0].body.stream, false);
     assert.ok(chat.calls[0].body.options.num_predict >= 6000);
     assert.equal(chat.calls[0].headers['x-requester'], 'Glow alt text');
+    assert.equal(chat.calls[0].headers['x-llm-project'], 'Website WLC');
+    assert.match(chat.calls[0].headers['x-llm-task'], /^alt text: .+\.jpg$/);
     const again = await draft(work, { url: chat.url, log: () => {} });
     assert.equal(again.drafted, 2);
     assert.equal(chat.calls.length, 4);

@@ -244,7 +244,9 @@ export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/
         : { model, stream: false, options: { num_predict: budget, temperature: 0.2 }, messages: [{ role: 'system', content: 'Answer immediately, minimal reasoning. Output only the JSON object. No preamble.' }, { role: 'user', content: prompt }] };
       try {
         const ctrl = AbortSignal.timeout(timeout * 1000);
-        const res = await fetchImpl(url, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body), signal: ctrl });
+        // The hub labels each job on Beam's card from these, as describe-photo.js does.
+        const hubHeaders = { 'X-LLM-Requester': 'claude', 'X-LLM-Project': 'Website WLC', 'X-LLM-Task': `alt text: ${j.file}` };
+        const res = await fetchImpl(url, { method: 'POST', headers: { 'content-type': 'application/json', ...hubHeaders, ...headers }, body: JSON.stringify(body), signal: ctrl });
         if (!res.ok) throw new Error(`HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
         const data = await res.json();
         raw = openai ? data.choices?.[0]?.message?.content ?? '' : data.message?.content ?? data.response ?? '';
