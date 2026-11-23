@@ -574,7 +574,9 @@ function venues(entry, trail, h) {
     const ph = venuePhotos(v);
     return `<li class="vg-t"><a href="/venue/${v.slug}">${pic(ph[0].id, { alt: ph[0].alt, sizes: '(min-width: 62rem) 24rem, 50vw', eager: k < 2 })}<span class="vg-n">${esc(v.name)}</span><span class="vg-c">${ph.length}</span></a></li>`;
   }).join('');
-  const html = `${pageHead(h.text, trail, { tag: h.tag })}<div class="vg-split"><nav class="vg-side" aria-label="Venues by area">${side}</nav><ul class="vg-grid vg-big">${wall}</ul></div>`;
+  // /portfolio ("Venue Gallery") is the same gallery under its own heading and intro.
+  const lede = entry.data.path === '/portfolio' ? blocks(entry.body).find((b) => b[0] === 'p')?.[1] : '';
+  const html = `${pageHead(h.text, trail, { tag: h.tag, lede })}<div class="vg-split"><nav class="vg-side" aria-label="Venues by area">${side}</nav><ul class="vg-grid vg-big">${wall}</ul></div>`;
   return { html, bodyClass: 'vgp vg9' };
 }
 /** Markup for one venue's page. */
@@ -589,6 +591,8 @@ const BY_PATH = {
   '/services': services,
   '/reviews': reviews,
   '/venue': venues,
+  // The old page listed 36 venues by a cover photo each; the previous host no longer serves 31 of those.
+  '/portfolio': venues,
   '/get-a-quote': quote,
   '/catalog': catalog,
   '/chandelier-pendant-catalog': chandeliers,
