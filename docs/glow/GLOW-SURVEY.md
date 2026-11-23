@@ -120,7 +120,7 @@ The OpenAI format above is not served by the hub's port on the PC: its URLs answ
 
 Lessons already learned, which the shared client should build in:
 
-1. **Output budget of 6,000 tokens or more.** If a reply is empty or unparseable, retry once at 12,000, never smaller. (`GLOW.md`, `draft()`.)
+1. **Output budget of 6,000 tokens or more.** If a reply is empty or unparseable, retry once at 12,000 with `think` dropped to `"low"`, never with a smaller budget. (`GLOW.md`, `draft()`; the probes found that empty replies come from a schema with `think: "high"`, section 11, items 5 and 6.)
 2. **Terse system prompt:** "Answer immediately, minimal reasoning. Output only the JSON object. No preamble."
 3. **Strip end tokens** (`<|eot|>`, `<|eot_id|>`, `<|endoftext|>`, `<|im_end|>`, `<|end|>`) and code fences, then parse the first `{` to the last `}`.
 4. **Normalise characters:** non-breaking hyphens to `-`, non-breaking spaces to plain spaces.
@@ -219,7 +219,7 @@ A starting point, to be confirmed by a small bake-off (section 10): the same 20 
 
 | Kind of work | First choice | Second opinion | Why |
 |---|---|---|---|
-| Seeing a photo | Muse Glimmer 30B | None | The only vision lane known to work through the hub |
+| Seeing a photo | Muse Glimmer 30B | None | The proven photo lane: it described all 220 website photos with no errors. Mistral Medium 3.5 and the Qwen 3.6 coder also take images (next row) |
 | Seeing a photo and writing its alt text in one call | Mistral Medium 3.5 or the Qwen 3.6 coder, both of which take images through the hub (**Probed**) | Checks, then Claude | Would remove a step and a 20 s description per photo. Tried on one photo only, where both were accurate; the 20-photo comparison is still to run |
 | Short rule-bound copy (alt text, meta descriptions, headings) | gpt-oss or Mistral Medium 3.5 | Checks, then Claude | Alt text drafts from the first run were accurate |
 | Longer copy in the owner's voice (thin page expansions, post drafts) | Mistral Medium 3.5 or Qwen 3.6 | gpt-oss, reasoning `high`, asked to list every claim and its source | Drafting and checking by different models catches inventions before Claude sees them |
@@ -320,8 +320,10 @@ A recommendation, not a decision. It extends what #3 already does rather than re
 
 ```
 tools/glow/
-  client.js       hub client: both formats, X-LLM headers, budget retry, timeout, think level, JSON schema
-                  with tolerant fallback parse, character cleanup; records model, route, time and tokens
+  client.js       hub client: Ollama's format only (the hub serves no other), X-LLM headers, budget retry, timeout,
+                  think level, JSON schema with tolerant fallback parse (length limits checked in code, not in the
+                  schema), the loaded model's num_ctx from /api/ps, character cleanup; records model, machine, time
+                  and tokens; calls only the hub routes it needs
   engines.json    role -> { route, model, format, think, budget, timeout }; roles: vision, write, review, code, label, embed
   probe.js        what the hub and each engine can do; writes capabilities.json (section 11)
   retrieve.js     embeds _glow/index.jsonl through /api/embed, caches by chunk hash, cosine search; keyword fallback
@@ -338,7 +340,7 @@ Design points:
 
 - **One engine interface,** as architecture section 9a asks: a job names a role, never a model. Changing an engine is a one-line edit in `engines.json`, and Claude's API could be a backend for the same roles.
 - **Every step can be re-run.** Work folders hold JSONL that grows as items finish, as the alt text job does. A machine that goes to sleep halfway costs nothing.
-- **Pre-flight before each run:** the hub answers, the model is installed (`/api/tags`), Beam is in the right mode. Stop with a plain message, not 220 timeouts.
+- **Pre-flight before each run:** the hub answers (`/api/health`), the model is installed on the machine (`/api/tags`), `GET /api/bright` reports `mode: off`, and `/api/referee` shows no other project using a model the job would push out of Beam's memory. A long run reserves Beam with `POST /api/referee/reserve`. On a Bright mode 503, send the job to Shine (`mac36`) if it has the model, or wait. Stop with a plain message, not 220 timeouts.
 - **This repository is public.** Prompts, code and the engine config can live here. The vault's contents, proposals and anything internal stay in the vault, and the vault's own Git repository, if it gets one, stays private.
 - **Testing.** Cloud sessions cannot reach the hub or `A:\`, so every module takes a `fetchImpl` and a folder, and the tests use a fake hub. Real runs happen on the PC.
 
