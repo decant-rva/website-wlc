@@ -8,6 +8,8 @@ primary_region = "iad"
   TZ = "America/New_York"
   # Sender of the quote notification. An alias on the Workspace user the site signs in as (SMTP_USER, set as a secret).
   QUOTE_EMAIL_FROM = "quotes@weddinglightingco.com"
+  # Inbox that receives each quote request.
+  QUOTE_EMAIL_TO = "info@weddinglightingco.com"
 
 [http_service]
   internal_port = 8080
