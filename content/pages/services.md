@@ -69,7 +69,7 @@ Crucial for most indoor receptions, and beautiful outside, uplighting is the bes
 
 [ABOUT UPLIGHTING](/uplighting)
 
-[![LED dance floor icon.png](wix:a16fb7_dfb4ed3bd3f34c8b9f3bb29e031ecb8e~mv2.png)](/catalog/special-effects)
+[![LED dance floor icon.png](wix:a16fb7_dfb4ed3bd3f34c8b9f3bb29e031ecb8e~mv2.png)](/led-dance-floor)
 
 ### LED Dance Floor
 
@@ -109,7 +109,7 @@ If you're going big, the special effects experts you need are right here. Conffe
 
 [ABOUT SPECIAL EFFECTS](/post/special-effects-weddings-events-richmond)
 
-[![Video Icon.png](wix:a16fb7_6ff289c5b87447138e70baf8f59a8d41~mv2.png)](/catalog/special-effects)
+[![Video Icon.png](wix:a16fb7_6ff289c5b87447138e70baf8f59a8d41~mv2.png)](/catalog/event-wedding-band-video)
 
 ### Video
 
@@ -117,7 +117,7 @@ High-definition displays bring visuals to life with clarity and impact. Options 
 
 [ABOUT VIDEO](/catalog/event-wedding-band-video)
 
-[![Live Audio Icon.png](wix:a16fb7_3c97666b404740afa81740a2a44aba8f~mv2.png)](/catalog/special-effects)
+[![Live Audio Icon.png](wix:a16fb7_3c97666b404740afa81740a2a44aba8f~mv2.png)](/live-audio)
 
 ### Live Audio
 
