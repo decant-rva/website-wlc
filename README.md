@@ -208,6 +208,21 @@ tools/deploy.sh production
 
 `/health` reports the commit that is running.
 
+After each deploy, run the smoke test against what was deployed. It only sends GET requests and
+never posts the quote form (a real post creates a real lead and emails the office):
+
+```bash
+npm run check:smoke -- https://www.weddinglightingco.com
+npm run check:smoke -- https://staging.weddinglightingco.com --staging --password <staging password>
+```
+
+It checks `/health` and the commit, the robots signals (production: titles and robots tags of a
+sample of pages match the previous site, robots.txt allows crawling, the sitemap count matches the
+local build; staging: `X-Robots-Tag: noindex` on every kind of response, the password, no shared
+caching, `Disallow: /`), one existing redirect, that `//example.org/` stays on the site, the 404 page,
+the trailing-slash rule, security headers, the stylesheet's cache and name, one photo, and that the
+app's fly.dev address redirects to the real host. Exits 1 if anything fails.
+
 ## Not built yet
 
 See section 9 and 8a of the architecture document: the subscribe
