@@ -25,6 +25,7 @@ async function setup({ intakeFails = false, emailFails = false, fetchFn } = {}) 
     alert: async (stuck) => { sent.alert.push(stuck); },
   };
   const app = build({ quote: { store, deliverOpts, ...(fetchFn ? { fetchFn } : {}) } });
+  apps.add(app);
   return { app, store, pool, sent, deliverOpts };
 }
 const form = (o) => new URLSearchParams(o).toString();
@@ -32,7 +33,9 @@ const post = (app, body, ip = '10.0.0.1', headers = {}) => app.inject({
   method: 'POST', url: '/api/quote', payload: form(body), remoteAddress: ip,
   headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers },
 });
-const settle = () => new Promise((r) => setTimeout(r, 50));
+// Waits for every app made by setup() to finish its background deliveries.
+const apps = new Set();
+const settle = async () => { for (const a of apps) await a.quoteDeliveriesSettled(); await new Promise((r) => setImmediate(r)); };
 const good = { name: 'Test Person', email: 'test@example.com', eventDate: '2027-05-01', venue: 'Dover Hall', howDidYouFindUs: 'Google', details: 'String lights over the patio.' };
 
 test('a valid request is saved, confirmed, posted to the intake and emailed', async () => {

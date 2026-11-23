@@ -113,6 +113,9 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   };
   // First deliveries still running, so a shutdown can wait for them.
   const running = new Set();
+  // Resolves once no first delivery is running. Shutdown uses the same set; tests use this to
+  // wait for the background delivery instead of guessing how long it takes.
+  app.decorate('quoteDeliveriesSettled', async () => { while (running.size) await Promise.allSettled([...running]); });
   // Requests being saved right now, by content, so a double click's second request is not saved
   // twice before the first one reaches the database. The value resolves to true once saved.
   const inFlight = new Map();
