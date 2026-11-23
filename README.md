@@ -199,6 +199,8 @@ delivered a second time.
 
 ## Deploying
 
+Launch-day steps, owner decisions and rollback: `docs/CUTOVER.md`.
+
 ```bash
 tools/deploy.sh staging
 tools/deploy.sh production
