@@ -36,16 +36,28 @@ function relay() {
     secure: false,
     requireTLS: true,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    // nodemailer's defaults wait up to 2 minutes to connect and 10 minutes on a silent
+    // connection. A delivery must finish well inside the lease in store.js.
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 60000,
   });
   return cached;
 }
 
+/** Every email from staging says so in its subject. */
+const stagingTag = () => (process.env.STAGING === '1' ? '[STAGING] ' : '');
+
 export async function postIntake(row, fetchFn = fetch) {
   const url = process.env.LEAD_INTAKE_URL;
   const secret = process.env.LEAD_INTAKE_SECRET;
+  // Staging is meant to run without GigFriend (its test requests must never become real leads).
+  // There an unset intake counts as done, so test requests are not retried and reported forever.
+  if (!url && process.env.STAGING === '1') return;
   if (!url || !secret) throw new Error(`lead intake is not configured: missing ${[!url && 'LEAD_INTAKE_URL', !secret && 'LEAD_INTAKE_SECRET'].filter(Boolean).join(', ')}`);
   const res = await fetchFn(url, {
     method: 'POST',
+    signal: AbortSignal.timeout(20000),
     headers: { 'content-type': 'application/json', 'X-Lead-Token': secret },
     // The field names gigfriend-server already accepts.
     body: JSON.stringify({
@@ -75,7 +87,10 @@ export function quoteMessage(row, files, { from, to }) {
 
 export async function sendEmail(row, files, transport) {
   const t = transport || relay();
-  await t.sendMail(quoteMessage(row, files, { from: process.env.QUOTE_EMAIL_FROM, to: process.env.QUOTE_EMAIL_TO }));
+  const message = quoteMessage(row, files, { from: process.env.QUOTE_EMAIL_FROM, to: process.env.QUOTE_EMAIL_TO });
+  // Staging sends real mail, so its notifications say where they came from.
+  if (process.env.STAGING === '1') message.subject = `[STAGING] ${message.subject}`;
+  await t.sendMail(message);
 }
 
 export async function sendAlert(stuck, transport) {
@@ -84,7 +99,7 @@ export async function sendAlert(stuck, transport) {
   await t.sendMail({
     from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
     to: process.env.QUOTE_EMAIL_TO,
-    subject: `Website quote requests not delivered: ${stuck.length}`,
+    subject: `${stagingTag()}Website quote requests not delivered: ${stuck.length}`,
     text: `These quote requests are saved on the website but have not reached GigFriend or the inbox after an hour.\n\n${lines}\n\nThey are still being retried.`,
   });
 }
@@ -92,7 +107,12 @@ export async function sendAlert(stuck, transport) {
 // Wait before try n: 1, 2, 4, 8 ... minutes, capped at an hour.
 export const backoff = (attempts) => Math.min(60, 2 ** attempts) * 60 * 1000;
 
-/** Runs whatever is still owed for one submission and records the outcome. */
+/**
+ * Runs whatever is still owed for one submission. Each step is recorded the moment it succeeds,
+ * so a crash or timeout part way never causes a step that went through to be repeated.
+ * The caller must hold the lease: save() gives it to the request's own first delivery,
+ * claim() to the retry worker.
+ */
 export async function deliver(store, id, { intake = postIntake, email = sendEmail, now = () => new Date() } = {}) {
   const found = await store.load(id);
   if (!found) return;
@@ -101,22 +121,78 @@ export async function deliver(store, id, { intake = postIntake, email = sendEmai
   let emailState = row.email_state;
   const errors = [];
   if (intakeState !== 'sent') {
-    try { await intake(row); intakeState = 'sent'; } catch (e) { intakeState = 'failed'; errors.push(`intake: ${e.message}`); }
+    try { await intake(row); intakeState = 'sent'; await store.markSent(id, 'intake'); } catch (e) { if (intakeState !== 'sent') intakeState = 'failed'; errors.push(`intake: ${e.message}`); }
   }
   if (emailState !== 'sent') {
-    try { await email(row, files); emailState = 'sent'; } catch (e) { emailState = 'failed'; errors.push(`email: ${e.message}`); }
+    try { await email(row, files); emailState = 'sent'; await store.markSent(id, 'email'); } catch (e) { if (emailState !== 'sent') emailState = 'failed'; errors.push(`email: ${e.message}`); }
   }
+  if (!errors.length) return store.recordSuccess(id);
   // Also in the app log, so `fly logs` shows why a delivery failed.
-  if (errors.length) console.error(`quote request ${id} not fully delivered: ${errors.join('; ')}`);
-  await store.record(id, { intake: intakeState, email: emailState, error: errors.join('; '), nextTryAt: new Date(now().getTime() + backoff(row.attempts)) });
+  console.error(`quote request ${id} not fully delivered: ${errors.join('; ')}`);
+  await store.recordFailure(id, { intake: intakeState, email: emailState, error: errors.join('; '), nextTryAt: new Date(now().getTime() + backoff(row.attempts)) });
 }
 
-/** One pass of the retry worker. */
+/** One pass of the retry worker. Only submissions this pass manages to claim are delivered. */
 export async function retryPass(store, opts = {}) {
   const now = (opts.now || (() => new Date()))();
-  for (const id of await store.due(now)) await deliver(store, id, opts);
+  for (const id of await store.due(now)) {
+    // A fresh time for each claim: a slow pass must not hand out a lease that has already run out.
+    if (await store.claim(id, (opts.now || (() => new Date()))())) await deliver(store, id, opts);
+  }
   const stuck = await store.stuck(now);
   if (stuck.length) {
     try { await (opts.alert || sendAlert)(stuck); await store.markAlerted(stuck.map((s) => s.id)); } catch { /* tried again on the next pass */ }
   }
+  await dailySummary(store, now, opts);
+  await prune(store, now, opts);
+}
+
+/**
+ * Retention, off unless set. QUOTE_PHOTO_DAYS: days after which a delivered request's photos and
+ * IP address are deleted (the photos are in the office's email by then). QUOTE_KEEP_DAYS: days
+ * after which a delivered request is deleted entirely. Requests still owed are never touched.
+ */
+export async function prune(store, now, opts = {}) {
+  const photoDays = Number(opts.photoDays ?? process.env.QUOTE_PHOTO_DAYS ?? 0);
+  const keepDays = Number(opts.keepDays ?? process.env.QUOTE_KEEP_DAYS ?? 0);
+  if (!store.prune || !(photoDays > 0 || keepDays > 0)) return;
+  try {
+    const n = await store.prune({ photoDays, keepDays }, now);
+    if (n.photos || n.deleted) console.log(`retention: photos and IP removed from ${n.photos} requests, ${n.deleted} requests deleted`);
+  } catch (e) {
+    console.error('retention pass failed:', e.message);
+  }
+}
+
+/** Hour (UTC) after which the day's summary goes out: 13:00 UTC is 8 or 9 in the morning in New York. */
+export const SUMMARY_HOUR_UTC = 13;
+
+/**
+ * Once a day, on the first pass after SUMMARY_HOUR_UTC, emails a list of every request still
+ * undelivered, not only the ones newly stuck, so a request nobody acted on is reported again
+ * each morning. Nothing is sent when everything was delivered.
+ */
+export async function dailySummary(store, now, opts = {}) {
+  if (!store.claimDailySummary || now.getUTCHours() < (opts.summaryHourUtc ?? SUMMARY_HOUR_UTC)) return;
+  const day = now.toISOString().slice(0, 10);
+  try {
+    if (!(await store.claimDailySummary(day))) return;
+    const list = await store.undelivered();
+    if (list.length) await (opts.summary || sendSummary)(list, now);
+  } catch (e) {
+    console.error('daily undelivered summary not sent:', e.message);
+    await store.releaseDailySummary(day).catch(() => {});
+  }
+}
+
+export async function sendSummary(list, now = new Date(), transport) {
+  const t = transport || relay();
+  const age = (r) => Math.round((now.getTime() - new Date(r.created_at).getTime()) / 3600000);
+  const lines = list.map((r) => `#${r.id} ${r.name}, ${age(r)} h old. GigFriend: ${r.intake_state}, email: ${r.email_state}. ${r.last_error || ''}`.trim()).join('\n');
+  await t.sendMail({
+    from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
+    to: process.env.QUOTE_EMAIL_TO,
+    subject: `${stagingTag()}Website quote requests still undelivered: ${list.length}`,
+    text: `These quote requests are saved on the website but have not fully reached GigFriend or the inbox. They are still being retried.\n\n${lines}`,
+  });
 }

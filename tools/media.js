@@ -8,16 +8,28 @@
 //
 // --rebuild is for a fresh checkout: the manifest is in Git but the files are not.
 // --upload needs the bucket settings (see server/lib/bucket.js); it skips files already there.
+//
+// An original that is not in .media/originals is read from the bucket's originals/ prefix when
+// the bucket settings are present, and from the previous host (Wix) only if the bucket does not
+// have it (tools/lib/originals.js). So after the Wix plan ends, sizes can still be rebuilt from
+// the bucket. A new photo: put the file in .media/originals/<id>, refer to it as wix:<id> in the
+// Markdown, and run with --upload.
+//
+// Every file is written under a temporary name and renamed when complete, so an interrupted
+// run never leaves a cut-short file that a later run would skip and upload. The run exits with
+// status 1 when a photo failed, except photos listed in content/photos-unavailable.json (known
+// to be gone from the previous host), which are reported only; --upload is refused then.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
+import { clearPartials, TMP_PREFIX, writeAtomic } from './lib/write-atomic.js';
+import { fetchOriginal } from './lib/originals.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const ORIG = path.join(ROOT, '.media/originals');
 const OUT = path.join(ROOT, '.media/variants');
 const MANIFEST = path.join(ROOT, 'content/photos.json');
 const WIDTHS = [480, 800, 1200, 1600];
-const SOURCE = 'https://static.wixstatic.com/media/';
 
 async function* walk(dir) {
   for (const e of await fs.readdir(dir, { withFileTypes: true })) {
@@ -44,17 +56,17 @@ async function referenced() {
 const exists = (p) => fs.access(p).then(() => true, () => false);
 const stem = (id) => id.replace(/~mv2/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
 
+// Where each original came from this run: local, bucket or wix.
+const sources = { local: 0, bucket: 0, wix: 0 };
+let originals = null; // the bucket client, when the bucket settings are present
+
 async function one(id, alt, manifest) {
   const src = path.join(ORIG, id);
-  if (!(await exists(src))) {
-    const res = await fetch(SOURCE + id);
-    if (!res.ok) throw new Error(`download ${res.status}`);
-    await fs.writeFile(src, Buffer.from(await res.arrayBuffer()));
-  }
+  sources[await fetchOriginal(id, src, { bucket: originals })] += 1;
   const meta = await sharp(src).metadata();
   if (meta.format === 'svg' || meta.format === 'gif') {
     const file = `${stem(id)}.${meta.format}`;
-    await fs.copyFile(src, path.join(OUT, file));
+    await writeAtomic(path.join(OUT, file), (tmp) => fs.copyFile(src, tmp));
     manifest[id] = { width: meta.width, height: meta.height, alt, file };
     return;
   }
@@ -66,7 +78,7 @@ async function one(id, alt, manifest) {
       const dest = path.join(OUT, file);
       if (!(await exists(dest))) {
         const img = sharp(src).rotate().resize({ width: w, withoutEnlargement: true });
-        await (fmt === 'avif' ? img.avif({ quality: 55, effort: 3 }) : img.webp({ quality: 78 })).toFile(dest);
+        await writeAtomic(dest, (tmp) => (fmt === 'avif' ? img.avif({ quality: 55, effort: 3 }) : img.webp({ quality: 78 })).toFile(tmp));
       }
       entry[fmt].push([w, file]);
     }
@@ -77,13 +89,23 @@ async function one(id, alt, manifest) {
   const fdest = path.join(OUT, entry.fallback);
   if (!(await exists(fdest))) {
     const img = sharp(src).rotate().resize({ width: fw, withoutEnlargement: true });
-    await (opaque ? img.jpeg({ quality: 80, mozjpeg: true }) : img.png({ compressionLevel: 9 })).toFile(fdest);
+    await writeAtomic(fdest, (tmp) => (opaque ? img.jpeg({ quality: 80, mozjpeg: true }) : img.png({ compressionLevel: 9 })).toFile(tmp));
   }
   manifest[id] = entry;
 }
 
 await fs.mkdir(ORIG, { recursive: true });
 await fs.mkdir(OUT, { recursive: true });
+{
+  const { bucket, bucketConfigured, ORIGINALS } = await import('../server/lib/bucket.js');
+  if (bucketConfigured()) {
+    const b = bucket();
+    originals = { get: (key) => b.get(key).then((o) => (o ? { body: o.body } : null)) };
+    console.log(`originals not on this disk are read from the bucket (${ORIGINALS}) first`);
+  }
+}
+const cleared = (await clearPartials(ORIG)) + (await clearPartials(OUT));
+if (cleared) console.log(`removed ${cleared} partial files left by an interrupted run`);
 const ids = await referenced();
 const manifest = (await exists(MANIFEST)) ? JSON.parse(await fs.readFile(MANIFEST, 'utf8')) : {};
 const rebuild = process.argv.includes('--rebuild');
@@ -104,8 +126,21 @@ await Promise.all(Array.from({ length: 6 }, async () => {
 }));
 const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
 await fs.writeFile(MANIFEST, JSON.stringify(sorted, null, 1) + '\n');
-console.log(`${Object.keys(sorted).length} photos in manifest, ${failed.length} failed`);
-for (const f of failed) console.log('  failed', f.join(' '));
+const UNAVAILABLE = path.join(ROOT, 'content/photos-unavailable.json');
+const known = new Set(Object.keys((await exists(UNAVAILABLE)) ? JSON.parse(await fs.readFile(UNAVAILABLE, 'utf8')).photos || {} : {}));
+const expected = failed.filter(([id]) => known.has(id));
+const unexpected = failed.filter(([id]) => !known.has(id));
+console.log(`originals: ${sources.local} on disk, ${sources.bucket} from the bucket, ${sources.wix} from the previous host`);
+console.log(`${Object.keys(sorted).length} photos in manifest, ${failed.length} failed (${expected.length} already listed as unavailable, ${unexpected.length} new)`);
+for (const f of expected) console.log('  unavailable', f.join(' '));
+for (const f of unexpected) console.log('  FAILED', f.join(' '));
+if (unexpected.length) {
+  process.exitCode = 1;
+  if (process.argv.includes('--upload')) {
+    console.error('Not uploading: fix or list the failed photos first (content/photos-unavailable.json).');
+    process.exit(1);
+  }
+}
 
 if (process.argv.includes('--upload')) {
   const { bucket, bucketConfigured, TYPES, VARIANTS, ORIGINALS } = await import('../server/lib/bucket.js');
@@ -114,7 +149,7 @@ if (process.argv.includes('--upload')) {
   let sent = 0;
   for (const [dir, prefix] of [[OUT, VARIANTS], [ORIG, ORIGINALS]]) {
     const have = await b.list(prefix);
-    const jobs = (await fs.readdir(dir)).filter((f) => !have.has(prefix + f));
+    const jobs = (await fs.readdir(dir)).filter((f) => !f.startsWith(TMP_PREFIX) && !have.has(prefix + f));
     await Promise.all(Array.from({ length: 8 }, async () => {
       for (let f = jobs.shift(); f; f = jobs.shift()) {
         const ext = f.split('.').pop().toLowerCase();

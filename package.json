@@ -12,25 +12,30 @@
     "check:inventory": "node tools/inventory-diff.js",
     "start": "node --env-file-if-exists=.env.local server/server.js",
     "check:a11y": "node tools/a11y.js",
-    "check:db": "node --env-file-if-exists=.env.local tools/db-check.js"
+    "check:db": "node --env-file-if-exists=.env.local tools/db-check.js",
+    "check:perf": "node tools/perf.js",
+    "check:smoke": "node tools/smoke.js",
+    "vault": "node tools/vault-sync.js",
+    "alt-text": "node tools/glow-alt-text.js"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.3.10",
     "@aws-sdk/client-s3": "^3.1175.0",
     "@fastify/multipart": "^10.1.9",
     "@fastify/static": "^10.1.12",
-    "astro": "^7.4.13",
     "fastify": "^5.12.8",
     "nodemailer": "^10.6.1",
     "pg": "^8.23.1",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "@astrojs/markdown-remark": "^7.3.10",
+    "@neon/config": "^1.14.6",
+    "@neon/env": "^2.1.9",
     "@neondatabase/serverless": "^1.2.1",
+    "astro": "^7.4.13",
     "axe-core": "^4.14.1",
     "pg-mem": "^3.0.14",
-    "purgecss": "^9.1.0",
-    "@neon/config": "^1.14.6",
-    "@neon/env": "^2.1.9"
+    "playwright": "1.63.0",
+    "purgecss": "^9.1.0"
   }
 }

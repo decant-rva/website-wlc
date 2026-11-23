@@ -6,8 +6,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import site from '../data/site.json';
 import { allEntries, firstPhoto, latestPosts, trail as trailFor } from './entries.js';
-import { photos } from './photos.js';
+import { photos, capDensity } from './photos.js';
 import { blocks, cleanAlt, crumbs, cta, esc, fmtDate, friends, inline, pageHead, pic, prose } from './html.js';
+import { BOOKING_SCALE, SUBSCRIBE_FORM, serviceGroup } from '../../server/lib/quote-form-data.js';
 
 const sentences = (s) => s.split(/(?<=[.?!])\s+/);
 
@@ -161,6 +162,14 @@ function contact(entry, trail, h) {
 // ---- shared pieces for the home, services and catalog pages
 const STARS = '<span class="stars" role="img" aria-label="5 Star Google reviews">★★★★★</span>';
 const photoUrl = (id) => (photos[id] ? `/media/${photos[id].fallback || photos[id].file}` : '');
+// The first slide of a slideshow that opens the page is its largest paint, so it gets a srcset of
+// WebP sizes (every current browser reads WebP) instead of the single 1200 px JPEG. The slideshow
+// script drops the srcset before it shows the next slide, which comes from the plain src.
+const heroSrcset = (id, sizes) => {
+  const p = photos[id];
+  if (!p?.webp?.length) return '';
+  return ` srcset="${p.webp.map(([w, f]) => `/media/${f} ${w}w`).join(', ')}" sizes="${capDensity(sizes)}"`;
+};
 const stem = (id) => id.replace(/~mv2/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
 
 const FEATURED = [['Brides', 263, 64], ['Virginia Weddings', 263, 102], ['Carats & Cake', 230, 86], ['MunaLuchi Bride', 253, 88],
@@ -178,8 +187,8 @@ function serviceCards(bl) {
   }
   return out;
 }
-// Discipline colour for each service: lights blue, decor green, AV red, drapes magenta.
-const DISCIPLINE = { Drapes: 'dr', 'Silk Florals & Trees': 'de', Decor: 'de', 'LED Dance Floor': 'de', Video: 'av', 'Live Audio': 'av', 'Special Effects': 'av' };
+// Discipline colour for each service (lights blue, decor green, AV red, drapes magenta): serviceGroup()
+// in server/lib/quote-form-data.js, shared with the notification email.
 
 // ---- home
 const HERO = [
@@ -212,7 +221,7 @@ async function home(entry, trail, h) {
   const aimg = ab.find((b) => b[0] === 'img');
   const about = aimg ? `<section class="about"><figure>${pic(aimg[1], { alt: 'wedding decorators' })}</figure><div>${prose(ab.filter((b) => b[0] !== 'img' && b[0] !== 'raw'))}</div></section>` : '';
   const cards = serviceCards(blocks(entries.get('/services').body));
-  const tiles = `<section class="svct"><h2>Services</h2><ul>${cards.map((c) => `<li><a class="${DISCIPLINE[c.name] || 'li'}" href="${c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}<span>${inline(c.name)}</span></a></li>`).join('')}</ul></section>`;
+  const tiles = `<section class="svct"><h2>Services</h2><ul>${cards.map((c) => `<li><a class="${serviceGroup(c.name)}" href="${c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}<span>${inline(c.name)}</span></a></li>`).join('')}</ul></section>`;
   return { html: `${hero}${intro}<div class="fband">${featured()}</div>${bans}${cta()}${about}${tiles}`, bodyClass: 'home', closing: false };
 }
 
@@ -233,7 +242,7 @@ const SERVICE_BAND = {
   Video: ['a16fb7_11544e25cf0f404abb99e3d7420ba2e5~mv2.jpg', 'custom branding texture projections for corporate event'],
 };
 // Changes the photo and the service name every three seconds. Stops for reduced motion or when paused.
-const BAND_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000)})()</script>`;
+const BAND_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000)})()</script>`;
 function serviceBand(cards) {
   const D = cards.filter((c) => SERVICE_BAND[c.name] && photoUrl(SERVICE_BAND[c.name][0])).map((c) => [photoUrl(SERVICE_BAND[c.name][0]), SERVICE_BAND[c.name][1], c.name, c.href]);
   if (!D.length) return '';
@@ -259,7 +268,7 @@ async function services(entry, trail, h) {
   const bl = blocks(entry.body);
   const lede = bl.find((b) => b[0] === 'p')?.[1];
   const cards = serviceCards(bl);
-  const list = cards.map((c) => `<li><a class="ico" href="${c.img[3] || c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}</a><h2>${inline(c.name)}</h2><p>${inline(c.text)}</p><a class="lnk" href="${c.href}">${esc(c.label)}</a></li>`).join('');
+  const list = cards.map((c) => `<li><a class="ico" href="${c.img[3] || c.href}" aria-label="${esc(String(c.name).replace(/[*_`\\]/g, ''))}">${pic(c.img[1], { alt: '', sizes: '8rem' })}</a><h2>${inline(c.name)}</h2><p>${inline(c.text)}</p><a class="lnk" href="${c.href}">${esc(c.label)}</a></li>`).join('');
   return { html: `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="svcs">${list}</ul>${await facts()}${serviceBand(cards)}`, closing: false };
 }
 
@@ -279,8 +288,8 @@ export function timeChart({ heading = 'What we spend our time doing', stats = tr
   const st = stats ? `<ul class="tms">${TIME_STATS.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join('')}</ul>` : '';
   return `<section class="tm tq tq2"><h2>${esc(heading)}</h2>${st}<div class="tq-pan">${panels}</div></section>`;
 }
-// Email sign-up, the same form as src/components/SubscribeForm.astro. Posts to /api/subscribe.
-const SUBSCRIBE = '<form class="quote subscribe" action="/api/subscribe" method="post"><p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p><p class="trap" aria-hidden="true"><label for="s-company">Company</label><input id="s-company" name="company" tabindex="-1" autocomplete="off"></p><p><button class="btn solid" type="submit">Subscribe</button></p></form>';
+// Email sign-up, shared with src/components/SubscribeForm.astro (server/lib/quote-form-data.js).
+const SUBSCRIBE = SUBSCRIBE_FORM;
 // Discipline of each of the eight newest products, in page order.
 const NEWEST = ['de', 'li', 'li', 'li', 'de', 'de', 'de', 'li'];
 async function catalog(entry, trail, h) {
@@ -374,7 +383,7 @@ const SERVICE_PATHS = new Set(site.nav.find((n) => n.label === 'Services').child
 
 // ---- about
 // Swaps the photo every three seconds. Stops for reduced motion or when paused.
-const SLIDES_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.ab-wf'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d;b.style.opacity=t?0:1;t=!t};n.src=d},3000)})()</script>`;
+const SLIDES_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.ab-wf'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d;b.style.opacity=t?0:1;t=!t};n.src=d},3000)})()</script>`;
 function about(entry, trail, h) {
   const bl = blocks(entry.body);
   const h2 = bl.find((b) => b[0] === 'h' && b[1] === 2)?.[2] || '';
@@ -418,7 +427,7 @@ const GLYPH = {
 };
 const glyph = (slug) => (GLYPH[slug] ? `<svg class="gl" aria-hidden="true" viewBox="0 0 24 24"><use href="#g-${slug}"/></svg>` : '');
 // Clicking a style tile ticks the matching filter. The slideshow stops for reduced motion or when paused.
-const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
+const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.removeAttribute('srcset');f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
 async function chandeliers(entry, trail, h) {
   const entries = await allEntries();
   const sb = blocks(entries.get('/chandeliers-pendants').body);
@@ -434,7 +443,7 @@ async function chandeliers(entry, trail, h) {
   const show = [0, 1, 6, 9].map((k) => ph[k]).filter(Boolean);
   const D = show.map((x) => [photoUrl(x[1]), cleanAlt(x[2]), cleanAlt(x[2])]);
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" decoding="async"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
+  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}"${heroSrcset(show[0][1], '(min-width: 62rem) 61vw, 100vw')} alt="${esc(D[0][1])}" fetchpriority="high"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
   // 2 style row
   const row = styles.map((s) => `<li><a href="#items" data-s="${slug(s)}"><span class="chs-i"><img src="/img/styles/${slug(s)}.jpg" alt="" loading="lazy" decoding="async"></span><span class="chs-n">${glyph(slug(s))}${esc(s)}</span><span class="chs-c">${count[s]}</span></a></li>`).join('');
   const srow = `<section class="chs" aria-label="Chandelier styles"><ul>${row}</ul></section>`;
@@ -504,17 +513,16 @@ const QUOTE_SERVICE_PHOTOS = {
   "Special Effects": ["a16fb7_ccfdf0365a6c4c2aa959b6a0045734b1~mv2.jpg", "Epic Bridal photo with cold sparks Maymont Richmond Virginia wedding lighting decor trends"],
   "Video": ["a16fb7_3a492250d9864a5bbe6d6d3e968e092f~mv2.jpg", "video projections for academy awards show"],
 };
-// "When to book" wording supplied by the owner, 22 November 2026. Third value: bars lit out of six.
-const BOOKING = [
-  ["12 months or more", "Certain", 6],
-  ["9 to 12 months", "Almost certain", 5],
-  ["6 to 9 months", "Likely", 4],
-  ["3 to 6 months", "No custom order, dates spotty", 3],
-  ["2 to 3 months", "Unlikely", 2],
-  ["< 1 Month", "Rarely available. Limited Options", 1],
-];
+// "When to book": label, outlook, bars lit out of six. One scale with the email: server/lib/quote-form-data.js.
+const BOOKING = BOOKING_SCALE.map((r) => [r.label, r.outlook, r.bars]);
 // Service slideshow and review rotation. Both stop for reduced motion; reviews stop once the visitor touches them.
-const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
+// Slideshows only advance while they are on screen and the tab is visible: each step downloads a 1200 px photo.
+const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
+// Quote form helpers, independent of the slideshow script above (which stops for reduced motion).
+// Checks the chosen photos before anything is sent, so a visitor fixes the selection instead of
+// losing it to a refused request, and sends the form once however often Submit is pressed.
+// Without JavaScript the form still posts and the server checks the same limits.
+const FORM_JS = `<script>(()=>{const f=document.querySelector('form.quote');if(!f)return;const i=f.querySelector('#q-files'),m=document.getElementById('q-files-msg'),b=f.querySelector('button[type=submit]'),t=b.textContent;const chk=()=>{const x=[...i.files],big=x.filter(y=>y.size>8388608).map(y=>y.name),e=x.length>5?'Choose up to 5 photos. You chose '+x.length+'.':big.length?'Each photo must be 8 MB or less. Too large: '+big.join(', ')+'.':'';m.textContent=e;i.setCustomValidity(e);return!e};i.addEventListener('change',chk);f.addEventListener('submit',e=>{if(!chk()||f.dataset.sent){e.preventDefault();return}f.dataset.sent='1';b.disabled=true;b.textContent='Sending…'});addEventListener('pageshow',()=>{delete f.dataset.sent;b.disabled=false;b.textContent=t})})()</script>`;
 async function quote(entry, trail, h) {
   const entries = await allEntries();
   const cards = serviceCards(blocks(entries.get('/services').body));
@@ -529,12 +537,17 @@ async function quote(entry, trail, h) {
     ['q-venue', 'What is your venue?', '<input name="venue">', false],
     ['q-vision', 'Tell us about yourself, your vision, and where you are in your event planning process.', '<textarea name="details" rows="5"></textarea>', false, 'w'],
     ['q-ref', 'How did you find us?', '<input name="howDidYouFindUs">', false],
-    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/gif">', false, 'w'],
+    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" aria-describedby="q-files-msg"><span class="qfw" id="q-files-msg" aria-live="polite"></span>', false, 'w'],
   ];
   const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
   // Hidden from people; a filled value marks the submission as spam.
-  const trap = '<p class="trap" aria-hidden="true"><label for="q-company">Company</label><input id="q-company" name="company" tabindex="-1" autocomplete="off"></p>';
-  const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f"><p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
+  const trap = '<p class="trap" aria-hidden="true"><label for="q-extra">Leave this empty</label><input id="q-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p>';
+  // Cloudflare Turnstile, only when the build is given a site key (PUBLIC_TURNSTILE_SITEKEY).
+  // Without one the page is exactly as before. See server/quote.js for how the answer is checked.
+  const siteKey = String(process.env.PUBLIC_TURNSTILE_SITEKEY || '').trim();
+  const turnstile = siteKey ? `<div class="cf-turnstile" data-sitekey="${esc(siteKey)}" data-theme="light"></div>` : '';
+  const turnstileJs = siteKey ? '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>' : '';
+  const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f">${turnstile}<p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
   const rvs = `<section class="rvs"><h2>GLOWING REVIEWS</h2><div class="rsl">${QUOTE_REVIEWS.map(([n, q], i) => `<figure class="rs rs${i + 1}"><blockquote><p>${esc(q)}</p></blockquote><figcaption>${STARS}<span>${esc(n)}</span></figcaption></figure>`).join('')}</div><div class="rvd">${QUOTE_REVIEWS.map((_, i) => `<input type="radio" name="rvs" id="rv${i + 1}" aria-label="Review ${i + 1} of ${QUOTE_REVIEWS.length}"${i === 0 ? ' checked' : ''}>`).join('')}<a href="/reviews">Reviews on Google</a></div></section>`;
   const D = cards.filter((c) => QUOTE_SERVICE_PHOTOS[c.name] && photoUrl(QUOTE_SERVICE_PHOTOS[c.name][0])).map((c) => { const [id, alt] = QUOTE_SERVICE_PHOTOS[c.name]; return [photoUrl(id), alt ?? photos[id].alt ?? '', c.name, c.href]; });
   const svs = D.length ? `<section class="svs" data-s="${esc(JSON.stringify(D))}"><h2>Services</h2><div class="svw"><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><p class="svn"><a href="${D[0][3]}">${esc(D[0][2])}</a></p></div></section>` : '';
@@ -546,7 +559,7 @@ async function quote(entry, trail, h) {
   const half = Math.ceil(fq.length / 2);
   const faqBand = `<div class="faq bfq"><h2>FAQ</h2><div class="fqc"><div>${fq.slice(0, half).join('')}</div><div>${fq.slice(half).join('')}</div></div><p><a class="btn" href="/faq">FAQ</a></p></div>`;
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}`;
+  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}${FORM_JS}${turnstileJs}`;
   return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
 }
 

@@ -3,13 +3,18 @@
 import Base from '../../layouts/Base.astro';
 import site from '../../data/site.json';
 import { venuePage, venuesWithPhotos } from '../../lib/templates.js';
+import { allEntries } from '../../lib/entries.js';
+import { venueSchema } from '../../lib/schema.js';
 
 export function getStaticPaths() {
   return venuesWithPhotos().map((venue) => ({ params: { slug: venue.slug }, props: { venue } }));
 }
 
 const { venue } = Astro.props;
+// Base adds JSON-LD only for pages with a content entry; a venue page has none, so its blocks go here.
+const schema = venueSchema(venue, await allEntries());
 ---
 <Base title={`${venue.name} | ${site.shortName}`} description={venue.description} canonical={`${site.url}/venue/${venue.slug}`} section="/venue" bodyClass="vgp vgv">
   <Fragment set:html={venuePage(venue)} />
+  {schema.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
 </Base>

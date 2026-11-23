@@ -76,7 +76,7 @@ Chandeliers for weddings come in dozens of shapes and sizes. Also, much like lam
 
 Chandeliers come in many shapes and styles, perfect to suit any wedding or event.
 
-[Our catalog has a full-color look at some of our more popular wedding chandeliers.](https://www.weddinglightingco.comhttps)
+[Our catalog has a full-color look at some of our more popular wedding chandeliers.](/chandelier-pendant-catalog)
 
 ### Gobo Textures
 

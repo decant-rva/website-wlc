@@ -5,6 +5,8 @@
 // Subject and field labels match the email the previous site sent, so inbox
 // filters and the Gmail lead parser keep working. The plain-text part is the
 // same label-and-value list as before.
+import { BOOKING_SCALE, GROUP_COLOUR, serviceGroup } from './quote-form-data.js';
+
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const NAVY = '#141C40';
@@ -29,9 +31,8 @@ const box = (k, v) => `<div style="padding:12px 14px 14px;border-bottom:2px soli
 
 // Each service belongs to a group with its own colour, the same ones the website uses:
 // lights blue, decor green, AV red, drapes magenta. [full colour, pale tint for an unchosen tile]
-const GROUP_COLOUR = { li: ['#5E93FB', '#CFDFFE'], de: ['#2FBF71', '#C1ECD4'], av: ['#E5383B', '#F7C3C4'], dr: ['#D6249F', '#F3BDE2'] };
-const GROUP = { Drapes: 'dr', 'Silk Florals & Trees': 'de', Decor: 'de', 'LED Dance Floor': 'de', Video: 'av', 'Live Audio': 'av', 'Special Effects': 'av' };
-const colourOf = (name) => GROUP_COLOUR[GROUP[name] || 'li'];
+// The groups and colours are shared with the website: server/lib/quote-form-data.js.
+const colourOf = (name) => GROUP_COLOUR[serviceGroup(name)];
 
 function tiles(chosen) {
   const names = [...new Set([...ALL_SERVICES, ...chosen])];
@@ -50,10 +51,9 @@ function tiles(chosen) {
   return `<div style="padding:14px 14px 11px;border-bottom:2px solid ${LINE}">${label(`Services (${chosen.length} chosen)`)}<div style="margin:5px -3px 0;font-size:0">${names.map(cell).join('')}</div></div>`;
 }
 
-// The owner's "When to book" scale: months before the event, what to expect, bars lit out of six.
-// The scale has no entry for 1 to 2 months; that range is shown as "Unlikely".
-const WINDOWS = [[12, '12 months or more', 'Certain', 6], [9, '9 to 12 months', 'Almost certain', 5], [6, '6 to 9 months', 'Likely', 4],
-  [3, '3 to 6 months', 'No custom order, dates spotty', 3], [1, '1 to 3 months', 'Unlikely', 2], [0, 'Under 1 month', 'Rarely available. Limited Options', 1]];
+// The owner's "When to book" scale, shared with the quote page: [months, range, outlook, bars lit out of six].
+// The scale has no entry for 1 to 2 months; the email shows that range as "Unlikely" (see quote-form-data.js).
+const WINDOWS = BOOKING_SCALE.map((r) => [r.months, r.emailLabel || r.label, r.outlook, r.bars]);
 const BAR = ['#E5383B', '#D6249F', '#FFB627', '#5E93FB', '#2FBF71', '#2FBF71'];
 
 /** Days from the day the request came in (New York date) to the event. null when there is no usable date. */
@@ -66,7 +66,7 @@ function tracker(row) {
   const days = daysUntil(row.event_date, row.submitted_on);
   const wrap = (inner) => `<div style="background:${NAVY};padding:14px 14px 16px">${inner}</div>`;
   const line = (t) => `<span style="${F}display:block;font-size:14px;line-height:1.4;color:#C9D3EE">${t}</span>`;
-  if (days === null) return wrap(line('No event date given'));
+  if (days === null || Number.isNaN(days)) return wrap(line('No event date given'));
   if (days < 0) return wrap(line('The event date given has already passed'));
   const [, range, outlook, lit] = WINDOWS.find(([m]) => days / 30.44 >= m);
   const bars = [0, 1, 2, 3, 4, 5].map((k) => `<span style="display:inline-block;width:26px;height:10px;margin-right:3px;background:${k < lit ? BAR[lit - 1] : '#3A4780'};font-size:0;line-height:0">&nbsp;</span>`).join('');
@@ -89,7 +89,9 @@ export function quoteEmail(row, files = [], inline = true) {
   if (chosen.length) fields.push(['Services', chosen.join(', ')]);
   if (files.length) fields.push(['Photos', `${files.length}${inline ? '' : ' (too large to attach, saved on the website)'}`]);
   const subject = `New RFQ: ${row.name} filled out Get a Quote Form`;
-  const text = fields.map(([k, v]) => `${k}: ${v || ''}`).join('\n');
+  // One "Label: value" line per field, as the Gmail lead parser expects. Later lines of a
+  // multi-line answer are indented, so text typed into Vision cannot pose as a label of its own.
+  const text = fields.map(([k, v]) => `${k}: ${String(v || '').split(/\r?\n/).join('\n  ')}`).join('\n');
   const cids = files.map((_, i) => `photo${i + 1}@quote`);
   const photos = files.length && inline
     ? `<div style="padding:14px 14px 4px">${label(`Photos (${files.length})`)}${files.map((f, i) => `<img src="cid:${cids[i]}" alt="Photo ${i + 1} from ${esc(row.name)}" width="570" style="display:block;width:100%;max-width:570px;height:auto;margin:10px 0 0;border:0">`).join('')}</div>`

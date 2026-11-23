@@ -84,3 +84,10 @@ test('photos are served from the bucket when one is set', async () => {
   }
   assert.deepEqual(asked, ['variants/photo-800.webp', 'variants/missing.jpg']);
 });
+
+test('/index is not a second copy of the home page', async () => {
+  const res = await get('/index?x=1');
+  assert.equal(res.statusCode, 301);
+  assert.equal(res.headers.location, '/?x=1');
+  assert.equal((await get('/')).statusCode, 200);
+});

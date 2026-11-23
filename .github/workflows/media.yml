@@ -7,11 +7,9 @@
 name: media
 on:
   workflow_dispatch:
-  # Temporary: GitHub only offers a manual run once this file is on the default branch.
-  # Until this branch is merged, a push that changes this file starts the upload. Remove after the merge.
-  push:
-    branches: [beam-lines-build]
-    paths: ['.github/workflows/media.yml']
+# The job only needs to read the repository; the bucket keys come from secrets.
+permissions:
+  contents: read
 jobs:
   upload:
     runs-on: ubuntu-latest

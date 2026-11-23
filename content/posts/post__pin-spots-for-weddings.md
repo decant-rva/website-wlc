@@ -26,7 +26,7 @@ If you like small centerpieces, you may want to consider lighting the entry tabl
 
 ### How it works:
 
-While [uplighting](/uplighting-2) for weddings may have a 25-50 degree beam angle, pin spots are generally around 1 degree. This means that the beam of light that emits from the lens of the pin spot is very thin. If you were to hold it in one hand and point it at the other, it would barely fill your palm. [An LED source](https://www.chauvetdj.com/products/ezbar/) means you’re not feeling any heat.
+While [uplighting](/uplighting) for weddings may have a 25-50 degree beam angle, pin spots are generally around 1 degree. This means that the beam of light that emits from the lens of the pin spot is very thin. If you were to hold it in one hand and point it at the other, it would barely fill your palm. [An LED source](https://www.chauvetdj.com/products/ezbar/) means you’re not feeling any heat.
 
 However, if you shine the light at the floor below you, the light pool almost covers your feet. As the distance between the pin spot and the object you are lighting expands, so does the light pool at the end of the beam. Correctly set up, pins can light just a centerpiece. Or, they can light up a table without hitting the floor around it.
 
@@ -54,6 +54,6 @@ Angles can be used to draw appropriate focus. For example, these lights drew foc
 
 ### How much does pin spotting cost?
 
-It should cost around $20-$50 dollars per table. That is unless multiple spots are used which can drive up the costs a bit. Also it’s assuming the use of round or square tables. A rectangular table can take twice as many spots to light so the cost would be double[.](/quote)
+It should cost around $20-$50 dollars per table. That is unless multiple spots are used which can drive up the costs a bit. Also it’s assuming the use of round or square tables. A rectangular table can take twice as many spots to light so the cost would be double[.](/get-a-quote)
 
 [If you’re in the DC, Maryland, Or Virginia area you can get a quote for pin spotting at your wedding here.](/get-a-quote)

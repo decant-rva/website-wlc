@@ -3,5 +3,13 @@ dist
 .astro
 .media
 .git
+# Local credentials never go to the builder.
+.env
+.env.*
+.neon
+# The build stage needs the inventory (freeze check) and test/ (tests); nothing else under docs/,
+# and of vault/ only the seed notes (the vault sync tests copy them).
 docs
-test
+!docs/phase-1/inventory.json
+vault
+!vault/seed

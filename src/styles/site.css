@@ -104,6 +104,8 @@ main>.gal{padding-bottom:1.5rem}
 .quote input,.quote textarea{width:100%;min-height:3rem;padding:.65rem .8rem;font:inherit;color:var(--navy);background:var(--white);border:2px solid var(--navy)}
 .quote .bad input{border-color:var(--err);box-shadow:inset 4px 0 0 var(--err)}
 .quote .bad label{color:var(--err)}
+.qfw{display:block;color:var(--err);font-weight:500;margin-top:.4rem}
+.qfw:empty{display:none}
 .quote .bad label::before{content:"! ";font-weight:800}
 .qwrap aside figure{margin:0 0 1.25rem}.qwrap aside img{width:100%;aspect-ratio:4/5;object-fit:cover}
 .qwrap aside a{display:inline-block;padding:.3rem 0}
