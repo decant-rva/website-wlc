@@ -5,9 +5,11 @@
 // Environment (besides the delivery settings in lib/deliver.js):
 //   DATABASE_URL       Postgres connection string. Without it the route answers
 //                      with the "call or email us" page and saves nothing.
-//   TURNSTILE_SECRET   optional. When set, the cf-turnstile-response field is verified.
-//                      Do not set it until the form shows the Turnstile widget: without
-//                      the widget no visitor can pass the check.
+//   TURNSTILE_SECRET   optional. When set, a Turnstile answer that the form sends is checked
+//                      with Cloudflare, and a wrong one is refused. See turnstileRule() below.
+//   TURNSTILE_REQUIRED "1" also refuses a request that sends no answer at all. Honoured only
+//                      when the built quote page has the widget (PUBLIC_TURNSTILE_SITEKEY at
+//                      build time); without the widget nobody could send an answer.
 //   CF_ORIGIN_SECRET   see clientIp() below.
 //   STATUS_TOKEN       optional. When set, GET /health/delivery answers requests that send it
 //                      in the X-Status-Token header with the delivery counts. Unset: 404.
@@ -93,6 +95,20 @@ export function clientIp(req) {
   return String(req.headers['fly-client-ip'] || req.socket.remoteAddress || '');
 }
 
+/**
+ * When the Turnstile answer is checked. No setting can turn every customer away:
+ * - TURNSTILE_SECRET unset: no check.
+ * - Secret set: an answer the form sends is verified; a wrong answer is refused. If Cloudflare
+ *   does not answer within 5 s the request is accepted.
+ * - A request with no answer is refused only when TURNSTILE_REQUIRED=1 AND the built quote page
+ *   contains the widget. Otherwise it is accepted and logged. Visitors without JavaScript cannot
+ *   produce an answer, so TURNSTILE_REQUIRED is off by default.
+ */
+export function turnstileRule({ secret, required, pageHasWidget }) {
+  if (!secret) return 'off';
+  return required && pageHasWidget ? 'required' : 'verify-if-sent';
+}
+
 export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date() }) {
   // The pages the route answers with never change while the server runs.
   const pages = new Map();
@@ -102,6 +118,12 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   };
   // The email shows every service tile with the chosen ones lit, so it needs the full list.
   try { setServiceList([...page('get-a-quote').matchAll(/name="services" value="([^"]*)"/g)].map((m) => m[1].replace(/&amp;/g, '&'))); } catch { /* quote page not built */ }
+  let pageHasWidget = false;
+  try { pageHasWidget = page('get-a-quote').includes('class="cf-turnstile"'); } catch { /* quote page not built */ }
+  const turnstile = turnstileRule({ secret: process.env.TURNSTILE_SECRET, required: process.env.TURNSTILE_REQUIRED === '1', pageHasWidget });
+  if (process.env.TURNSTILE_SECRET && process.env.TURNSTILE_REQUIRED === '1' && !pageHasWidget) {
+    app.log.warn('TURNSTILE_REQUIRED=1 is ignored: the quote page was built without the Turnstile widget (PUBLIC_TURNSTILE_SITEKEY)');
+  }
   const hits = new Map();
   const limited = (ip) => {
     const t = now().getTime();
@@ -166,17 +188,22 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const ip = clientIp(req);
     if (limited(ip)) return html(429, page('quote-problem'));
 
-    if (process.env.TURNSTILE_SECRET) {
+    const token = String(fields['cf-turnstile-response'] || '');
+    const notPerson = () => html(422, formWithErrors(page('get-a-quote'), s, {}, 'We could not confirm you are a person. Please try again.'));
+    if (turnstile !== 'off' && !token) {
+      if (turnstile === 'required') return notPerson();
+      req.log.warn('quote request without a Turnstile answer; accepted (TURNSTILE_REQUIRED is not on)');
+    } else if (turnstile !== 'off') {
       const res = await fetchFn('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
         signal: AbortSignal.timeout(5000),
-        body: new URLSearchParams({ secret: process.env.TURNSTILE_SECRET, response: fields['cf-turnstile-response'] || '', remoteip: ip }),
+        body: new URLSearchParams({ secret: process.env.TURNSTILE_SECRET, response: token, remoteip: ip }),
       }).then((r) => r.json()).catch((e) => {
         // Cloudflare not answering is no reason to turn a customer away.
         req.log.error(e, 'Turnstile check could not be made; request accepted');
         return { success: true };
       });
-      if (!res.success) return html(422, formWithErrors(page('get-a-quote'), s, {}, 'We could not confirm you are a person. Please try again.'));
+      if (!res.success) return notPerson();
     }
 
     // The same request again within two minutes (a double click, a resubmitted page) gets the

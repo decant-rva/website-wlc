@@ -140,7 +140,9 @@ kept in Postgres with the request and shown in the body of the notification emai
 | `SMTP_USER`, `SMTP_PASS` | Google Workspace address the site signs in to the SMTP relay as, and its app password |
 | `QUOTE_EMAIL_FROM`, `QUOTE_EMAIL_TO` | Sender (the Workspace user or one of its aliases) and the inbox that receives the notification |
 | `SMTP_HOST`, `SMTP_PORT` | Mail server and port. The fly settings files set `smtp.gmail.com`; the port defaults to `587` |
-| `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check. **Do not set it yet:** the form has no Turnstile widget, so with the secret set no visitor can pass the check |
+| `PUBLIC_TURNSTILE_SITEKEY` | Build argument (public). When given, the quote page shows the Cloudflare Turnstile widget and loads Cloudflare's script on that page only. Without it the page has no widget. Pass it like `PUBLIC_STAGING` (`--build-arg`, or `[build.args]` in the fly file) |
+| `TURNSTILE_SECRET` | Optional. A Turnstile answer the form sends is checked with Cloudflare and a wrong one is refused; if Cloudflare does not answer within 5 s the request is accepted. A request with **no** answer is still accepted and logged, unless `TURNSTILE_REQUIRED` is on |
+| `TURNSTILE_REQUIRED` | `1` also refuses requests that send no Turnstile answer, which is what stops bots that skip the widget. Honoured only when the page was built with the widget, so no setting can lock every customer out. Off by default because visitors without JavaScript cannot produce an answer and would be refused |
 | `CF_ORIGIN_SECRET` | Proof that a request came through Cloudflare. Required before Cloudflare is put in front (see below) |
 | `CANONICAL_HOST` | Set in the fly files. Requests to the app's `fly.dev` address are redirected to this host |
 | `STATUS_TOKEN` | Optional secret for `GET /health/delivery` (see "Watching deliveries"). Unset, that endpoint is a 404 |

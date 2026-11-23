@@ -542,7 +542,12 @@ async function quote(entry, trail, h) {
   const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
   // Hidden from people; a filled value marks the submission as spam.
   const trap = '<p class="trap" aria-hidden="true"><label for="q-extra">Leave this empty</label><input id="q-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p>';
-  const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f"><p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
+  // Cloudflare Turnstile, only when the build is given a site key (PUBLIC_TURNSTILE_SITEKEY).
+  // Without one the page is exactly as before. See server/quote.js for how the answer is checked.
+  const siteKey = String(process.env.PUBLIC_TURNSTILE_SITEKEY || '').trim();
+  const turnstile = siteKey ? `<div class="cf-turnstile" data-sitekey="${esc(siteKey)}" data-theme="light"></div>` : '';
+  const turnstileJs = siteKey ? '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>' : '';
+  const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f">${turnstile}<p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
   const rvs = `<section class="rvs"><h2>GLOWING REVIEWS</h2><div class="rsl">${QUOTE_REVIEWS.map(([n, q], i) => `<figure class="rs rs${i + 1}"><blockquote><p>${esc(q)}</p></blockquote><figcaption>${STARS}<span>${esc(n)}</span></figcaption></figure>`).join('')}</div><div class="rvd">${QUOTE_REVIEWS.map((_, i) => `<input type="radio" name="rvs" id="rv${i + 1}" aria-label="Review ${i + 1} of ${QUOTE_REVIEWS.length}"${i === 0 ? ' checked' : ''}>`).join('')}<a href="/reviews">Reviews on Google</a></div></section>`;
   const D = cards.filter((c) => QUOTE_SERVICE_PHOTOS[c.name] && photoUrl(QUOTE_SERVICE_PHOTOS[c.name][0])).map((c) => { const [id, alt] = QUOTE_SERVICE_PHOTOS[c.name]; return [photoUrl(id), alt ?? photos[id].alt ?? '', c.name, c.href]; });
   const svs = D.length ? `<section class="svs" data-s="${esc(JSON.stringify(D))}"><h2>Services</h2><div class="svw"><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><p class="svn"><a href="${D[0][3]}">${esc(D[0][2])}</a></p></div></section>` : '';
@@ -554,7 +559,7 @@ async function quote(entry, trail, h) {
   const half = Math.ceil(fq.length / 2);
   const faqBand = `<div class="faq bfq"><h2>FAQ</h2><div class="fqc"><div>${fq.slice(0, half).join('')}</div><div>${fq.slice(half).join('')}</div></div><p><a class="btn" href="/faq">FAQ</a></p></div>`;
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}${FORM_JS}`;
+  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}${FORM_JS}${turnstileJs}`;
   return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
 }
 

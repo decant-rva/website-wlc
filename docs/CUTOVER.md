@@ -74,7 +74,7 @@ Proposed redirects (decision 4):
 6. **Optional secrets [LIVE].**
    - `STATUS_TOKEN=<random>` turns on `GET /health/delivery`, which an uptime monitor can call.
    - `QUOTE_PHOTO_DAYS` and `QUOTE_KEEP_DAYS` (decision 2).
-   - **Do not set `TURNSTILE_SECRET` yet.** The form has no Turnstile widget, so every visitor would fail the check.
+   - Turnstile (optional): create a widget in Cloudflare for `www.weddinglightingco.com` (and `staging.`). Put the **site key** in `[build.args]` as `PUBLIC_TURNSTILE_SITEKEY` and redeploy, then `fly secrets set TURNSTILE_SECRET=<secret key>`. Answers are then checked, but a request without one is still accepted. Only after a week of `fly logs` showing real visitors' requests arriving with answers, consider `TURNSTILE_REQUIRED=1`; it turns away visitors without JavaScript.
 7. **Staging password [LIVE].** Run `fly secrets set STAGING_PASSWORD=<password> --app wlc-site-staging`. Staging refuses to start without it.
 8. **[LIVE] Cloudflare, on the `weddinglightingco.com` zone:**
    1. **DNS.**
@@ -152,7 +152,7 @@ Proposed redirects (decision 4):
 
 - Quote photos are stored in Postgres, not the bucket, until decision 2 or a move to the bucket.
 - `/api/subscribe` is not built. The subscribe form answers with the "call or email us" page.
-- There is no Turnstile widget. Spam protection is the trap field and the per-address rate limit.
+- Turnstile is off until a site key and secret are set (see section 2). Until then spam protection is the trap field and the per-address rate limit.
 - `tools/media.js` reads originals from the bucket first and from Wix only when the bucket lacks one. Run the `media` workflow (or `node tools/media.js --rebuild --upload`) before the Wix plan ends, so every original is in the bucket; after that, sizes are rebuilt from the bucket.
 - `/health` reports only that the process is up. `/health/delivery` is the real check.
 - An identical request within two minutes is treated as a repeat, even if the photos differ.

@@ -14,6 +14,9 @@ COPY test ./test
 COPY docs/phase-1/inventory.json ./docs/phase-1/inventory.json
 ARG PUBLIC_STAGING=0
 ENV PUBLIC_STAGING=$PUBLIC_STAGING
+# Cloudflare Turnstile site key (public). Empty: the quote page has no widget.
+ARG PUBLIC_TURNSTILE_SITEKEY=
+ENV PUBLIC_TURNSTILE_SITEKEY=$PUBLIC_TURNSTILE_SITEKEY
 RUN npx astro telemetry disable && npm run build
 # A production image is only built when the launch-freeze check and the tests pass.
 # (A staging build writes noindex into every page, which the freeze check would rightly refuse.)
