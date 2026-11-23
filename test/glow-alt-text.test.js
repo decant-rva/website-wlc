@@ -96,6 +96,21 @@ test('descriptions are matched by file name whatever path the describer wrote', 
   assert.ok(!d.get(todo[0].file).includes('<|eot|>'));
 });
 
+test('a description line with an error is ignored, and a later clean line for the same photo wins', async () => {
+  const { work, todo } = await prepared(0);
+  const f = todo.length ? todo[0].file : jobsAll.find((j) => !j.skip).file;
+  fs.writeFileSync(path.join(work, 'photos', 'descriptions.jsonl'), [
+    JSON.stringify({ file: f, description: 'Warm uplighting on dra', error: 'cut off at the token cap', seconds: 30 }),
+    JSON.stringify({ file: 'other.jpg', description: '', error: 'empty reply', seconds: 2 }),
+    JSON.stringify({ file: f, description: 'Warm uplighting on drapes in a ballroom.', error: null, seconds: 21 }),
+  ].join('\n'));
+  const d = readDescriptions(work);
+  assert.equal(d.get(f), 'Warm uplighting on drapes in a ballroom.');
+  assert.ok(!d.has('other.jpg'));
+  fs.writeFileSync(path.join(work, 'photos', 'descriptions.jsonl'), JSON.stringify({ file: f, description: 'Cut off', error: 'cut off at the token cap' }));
+  assert.ok(!readDescriptions(work).has(f));
+});
+
 test('draft calls the chat route once per described photo, and a re-run does only what is left', async () => {
   const { work, todo } = await prepared(4);
   const chat = await fakeChat(() => '{"alt": "Amber uplighting on ivory drapes in a ballroom", "decorative": false, "venue": "", "confidence": "high", "note": ""}<|eot|>');

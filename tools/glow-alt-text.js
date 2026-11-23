@@ -155,6 +155,9 @@ export function readDescriptions(work) {
       if (!line.trim()) continue;
       let o;
       try { o = JSON.parse(line); } catch { continue; }
+      // describe-photo.js also writes failed photos, with `error` set (sometimes beside a cut-off description),
+      // and retries them on the next run; only a clean line counts, and the last one wins.
+      if (o.error) continue;
       const file = o.file ?? o.photo ?? o.path ?? o.image ?? o.name ?? o.filename;
       const text = o.description ?? o.text ?? o.response ?? o.output ?? o.content;
       if (file && typeof text === 'string' && text.trim()) out.set(path.basename(String(file).replace(/\\/g, '/')), stripTokens(text));
