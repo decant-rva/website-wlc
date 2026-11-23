@@ -67,6 +67,8 @@ test('the prompt carries the rules, the description and the context', () => {
   assert.match(p, new RegExp(j.uses[0].path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert.match(p, /No dashes/);
   assert.match(p, /for style only/);
+  assert.match(p, /NOT decorative/);
+  assert.match(p, /never to add things that are not/);
   assert.match(p, /VENUES: /);
 });
 
@@ -87,6 +89,7 @@ test('checks flag long, dashed, salesy and unsupported-venue alt text', () => {
   assert.deepEqual(check({ venues: ['Dover Hall'] }, { alt: 'Uplighting in the ballroom at Dover Hall' }, venuesIn).flags, []);
   assert.match(check(j, { alt: 'x'.repeat(130) }, venuesIn).flags.join(), /over 125/);
   assert.deepEqual(check(j, { alt: '', decorative: true }, venuesIn), { alt: '', flags: ['the model says it is decorative'] });
+  assert.deepEqual(check(j, { alt: 'Poly\u2011silk drape with\u00a0soft folds in a ballroom' }, venuesIn), { alt: 'Poly-silk drape with soft folds in a ballroom', flags: [] });
 });
 
 test('descriptions are matched by file name whatever path the describer wrote', async () => {

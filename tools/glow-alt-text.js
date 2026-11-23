@@ -181,8 +181,9 @@ Rules:
 - Say what the photo shows: the lighting or decor first, then the setting, then the venue, but name a venue only if it is listed under VENUES below.
 - 6 to 16 words and under ${MAX_ALT} characters. Sentence case, no full stop at the end.
 - Do not start with "image of", "photo of" or "picture of". No dashes of any kind. No sales words such as stunning, beautiful, elegant or magical.
-- Use only what the description and the context support. Never guess a venue, a city, a brand, a colour you were not told, or a number.
-- If the photo is a logo, an icon, a badge or a graphic of text, set "decorative" to true and leave "alt" empty.
+- Describe what can be seen in the photo. Use the page text to name things that are visible, never to add things that are not.
+- Never guess a venue, a city, a brand, a colour you were not told, or a number.
+- Set "decorative" to true and leave "alt" empty only for an icon or ornament that tells the reader nothing. A logo strip, a rating, a badge or a graphic with words is NOT decorative: say what it tells the reader (the names in the logos, the rating, the headline of the text).
 
 DESCRIPTION (from a vision model; it can be wrong about names):
 ${description}
@@ -208,7 +209,8 @@ export function parseReply(text) {
 /** Deterministic checks on a draft. Each problem is a short reason; any problem leaves the box unticked. */
 export function check(j, draft, venuesIn) {
   const flags = [];
-  const alt = oneLine(draft?.alt);
+  // gpt-oss writes non-breaking hyphens and spaces, which break search and copy-paste.
+  const alt = oneLine(String(draft?.alt ?? '').replace(/[\u2010\u2011]/g, '-').replace(/[\u00a0\u202f]/g, ' '));
   if (draft?.decorative) return { alt: '', flags: ['the model says it is decorative'] };
   if (!alt) return { alt: '', flags: ['no alt text in the reply'] };
   const words = alt.split(' ').length;
