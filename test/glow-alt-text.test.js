@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
-import { collect, prepare, draft, proposals, apply, approved, parseReply, check, promptFor, readDescriptions } from '../tools/glow-alt-text.js';
+import { collect, prepare, draft, proposals, apply, approved, parseReply, check, promptFor, readDescriptions, readDecisions, applyDecisions } from '../tools/glow-alt-text.js';
 
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'wlc-alt-'));
@@ -267,5 +267,27 @@ test('--redo drafts chosen photos again, and --only --force rewrites just those 
     await chat.close();
     fs.rmSync(work, { recursive: true, force: true });
     fs.rmSync(vault, { recursive: true, force: true });
+  }
+});
+
+test('decisions from the review page apply to every page where the photo has no alt text, and only approved ones', () => {
+  const root = contentCopy();
+  const dir = tmp();
+  try {
+    const multi = jobsAll.find((j) => !j.skip && new Set(j.uses.map((u) => u.path)).size > 1 && j.uses.every((u) => u.file !== 'content/venues.json'));
+    const other = jobsAll.find((j) => !j.skip && j.id !== multi.id);
+    // As the artifact database tool saves them: one file per document, the body under data.
+    fs.writeFileSync(path.join(dir, `${multi.id}.json`), JSON.stringify({ id: multi.id, data: { status: 'approved', alt: 'Bistro lights over a tent [at night]', basedOn: '', edited: true }, version: 2 }));
+    fs.writeFileSync(path.join(dir, `${other.id}.json`), JSON.stringify({ status: 'skipped', alt: '' }));
+    const decisions = readDecisions(dir);
+    assert.equal(decisions.length, 2);
+    const r = applyDecisions(decisions, { root });
+    assert.equal(r.approved, 1);
+    assert.equal(r.applied, multi.uses.length);
+    for (const u of multi.uses) assert.match(fs.readFileSync(path.join(root, u.file), 'utf8'), /!\[Bistro lights over a tent \(at night\)\]\(wix:/);
+    assert.equal(applyDecisions(decisions, { root }).applied, 0);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
