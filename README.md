@@ -90,6 +90,20 @@ the Actions tab, or run `node tools/media.js --rebuild --upload` with them in th
 from the previous host (HTTP 403). They are left out of the manifest, so pages skip them. To bring
 one back, put the original in `.media/originals/` under its ID and run `npm run media`.
 
+Where `tools/media.js` gets an original that is not in `.media/originals/`: from the bucket's
+`originals/` prefix when the bucket settings are in the environment, and from the previous host
+(Wix) only when the bucket does not have it. The end of each run says how many came from each
+place. Every original uploaded once with `--upload` is in the bucket, so after the Wix plan ends
+the sizes can still be rebuilt: run `node tools/media.js --rebuild` with the bucket settings set.
+Upload all originals with `--upload` **before** the Wix plan ends.
+
+To add a new photo:
+
+1. Put the file in `.media/originals/` under a new ID, for example `wlc_2027-dover-hall-01.jpg`.
+2. Refer to it in the Markdown as `![alt text](wix:wlc_2027-dover-hall-01.jpg)`. The `wix:` prefix is only the ID scheme.
+3. Run `node tools/media.js --upload` with the bucket settings set. It makes the sizes, adds the photo to `content/photos.json` and uploads the original and the sizes.
+4. Commit `content/photos.json` and the Markdown, then deploy.
+
 ## Editing content
 
 Edit the Markdown file for the page and deploy. The path in the front matter is

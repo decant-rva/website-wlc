@@ -153,7 +153,7 @@ Proposed redirects (decision 4):
 - Quote photos are stored in Postgres, not the bucket, until decision 2 or a move to the bucket.
 - `/api/subscribe` is not built. The subscribe form answers with the "call or email us" page.
 - There is no Turnstile widget. Spam protection is the trap field and the per-address rate limit.
-- `tools/media.js` can only fetch originals from Wix. After the Wix plan ends, photos can't be rebuilt from that source.
+- `tools/media.js` reads originals from the bucket first and from Wix only when the bucket lacks one. Run the `media` workflow (or `node tools/media.js --rebuild --upload`) before the Wix plan ends, so every original is in the bucket; after that, sizes are rebuilt from the bucket.
 - `/health` reports only that the process is up. `/health/delivery` is the real check.
 - An identical request within two minutes is treated as a repeat, even if the photos differ.
 - Photos over 8 MB, over 50 megapixels, or more than 5 at once are refused. The form warns about the first and last before sending.
