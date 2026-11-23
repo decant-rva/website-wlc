@@ -11,6 +11,7 @@
 //   SMTP_PASS            app password for that address
 //   SMTP_HOST            default smtp-relay.gmail.com
 //   SMTP_PORT            default 587 (STARTTLS)
+//   SMTP_HELO_NAME       domain the server introduces itself as; default is the sender's domain
 //   QUOTE_EMAIL_FROM     address the notification is sent from (the Workspace user or one of its aliases)
 //   QUOTE_EMAIL_TO       inbox that receives the notification
 import nodemailer from 'nodemailer';
@@ -28,6 +29,9 @@ function relay() {
   cached ||= nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp-relay.gmail.com',
     port: Number(process.env.SMTP_PORT || 587),
+    // The name this server introduces itself with. Google's relay hangs up (421 4.7.0 at EHLO) on a
+    // name that is not a real domain, and a fly.io machine's own name is just an id.
+    name: process.env.SMTP_HELO_NAME || String(process.env.QUOTE_EMAIL_FROM).split('@')[1],
     secure: false,
     requireTLS: true,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
