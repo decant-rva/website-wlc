@@ -22,7 +22,7 @@ Each fact carries one of these marks:
 - **Keeping the site online must not depend on Glow.** Glow runs on a PC that can be off or asleep. Alarms belong to fly.io's health check, an outside uptime monitor and scheduled GitHub Actions. Glow's job there is to read the results, explain them in plain words and draft the fix. None of those scheduled jobs exists yet. **Verified.**
 - **The curation backlog is sized:** 220 photos to describe on 87 pages, 48 thin pages, 64 pages with no meta description and 14 with no H1 (both frozen), 16 redirects awaiting approval, 179 venues with no photos. **Verified.**
 - **Pull requests #3 and #4 do not merge cleanly.** One conflict in `.dockerignore` and one failing test, because #4 moved the booking scale out of `templates.js`, where the vault sync looks for it. Both are small, and the fixes are written up in section 3. **Verified.**
-- **Questions for the owner.** Answered from the PC (section 13): where the Glow brain lives and what it reads, what Beam's "Bright mode" is, the hub's routes and machines, and which models are installed. The owner decided the rest on 23 November: D-001 is accepted (curate through the Glow network and the vault, no admin screen), D-003 stays with one rule added (a batch of proposals runs only after the owner says yes to that run), and health notes go in a new `Status/` folder in the vault. Still open: which uptime monitor, and who it alerts (options in section 8).
+- **Questions for the owner.** Answered from the PC (section 13): where the Glow brain lives and what it reads, what Beam's "Bright mode" is, the hub's routes and machines, and which models are installed. The owner decided the rest on 23 November: D-001 is accepted (curate through the Glow network and the vault, no admin screen), D-003 stays with one rule added (a batch of proposals runs only after the owner says yes to that run), and health notes go in a new `Status/` folder in the vault. Uptime monitoring starts on UptimeRobot's free plan, moving to Solo if it proves useful (section 8). Still open: who the alerts go to.
 - **One correction from the probes:** the hub's port on the PC serves only Ollama's own format. The OpenAI-format URLs answer 404 there, so the shared client should speak Ollama's `/api/chat` and `/api/generate` (section 4). **Probed.**
 
 ## 2. Where everything is
@@ -296,6 +296,13 @@ Paid options, for faster checks and stronger alerts. Prices are as listed in Nov
 Suggested setup:
 
 - **The pager:** UptimeRobot Solo for the home page, `/health` and `/health/delivery`. Choose Better Stack Responder instead if phone calls are wanted. The free fallback is Better Stack's free plan plus Checkly's.
+
+**Owner's choice, 23 November 2026:** start on UptimeRobot's free plan and move to Solo if it proves useful. While on the free plan:
+
+- **Checks run every 5 minutes** on the home page, plus `/health` once the new site is live.
+- **`/health/delivery` is not checked,** because custom headers are a paid feature. The app's daily email of undelivered quote requests covers it until the upgrade.
+- **Until launch,** the home page monitor watches the Wix site; at cutover the same URL starts watching the new one.
+- **Business use:** confirm on UptimeRobot's terms page at sign-up that the free plan allows it.
 - **`/health/delivery` answers 503 once a delivery has waited 60 minutes** (the server change above), so the monitor only needs the header and a status check.
 - **A daily GitHub Action for the deeper checks**, which pings a heartbeat monitor when it finishes, so a schedule that silently stops is noticed. Missed scheduled jobs are the failure `gigfriend-server` already ran into (architecture section 11).
 
@@ -466,7 +473,7 @@ Facts only the owner has (answered from the PC):
 7. Which gpt-oss size runs (20b or 120b), and whether an embedding model is installed.
    *Answer:* both are installed on Beam: `gpt-oss:20b` and `gpt-oss:120b`. The 120b wrote the first run's alt text, and Shine and Beacon have the 20b only. The embedding model is `nomic-embed-text` (768 dimensions), on Beam and on two other machines; `qwen3-embedding` is not installed. **Probed**
 8. Which outside uptime monitor to use, and who it alerts.
-   *Options and a suggested pairing are in section 8. Still the owner's choice.*
+   *Owner, 23 November 2026:* start on UptimeRobot's free plan, and move to Solo (about $8 a month) if it proves useful. Section 8 has what the free plan covers. **Still open:** who the alerts go to.
 
 ## 14. Build order
 
