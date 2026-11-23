@@ -260,7 +260,7 @@ async function services(entry, trail, h) {
   const bl = blocks(entry.body);
   const lede = bl.find((b) => b[0] === 'p')?.[1];
   const cards = serviceCards(bl);
-  const list = cards.map((c) => `<li><a class="ico" href="${c.img[3] || c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}</a><h2>${inline(c.name)}</h2><p>${inline(c.text)}</p><a class="lnk" href="${c.href}">${esc(c.label)}</a></li>`).join('');
+  const list = cards.map((c) => `<li><a class="ico" href="${c.img[3] || c.href}" aria-label="${esc(String(c.name).replace(/[*_`\\]/g, ''))}">${pic(c.img[1], { alt: '', sizes: '8rem' })}</a><h2>${inline(c.name)}</h2><p>${inline(c.text)}</p><a class="lnk" href="${c.href}">${esc(c.label)}</a></li>`).join('');
   return { html: `${pageHead(h.text, trail, { lede, tag: h.tag })}<ul class="svcs">${list}</ul>${await facts()}${serviceBand(cards)}`, closing: false };
 }
 
@@ -510,6 +510,11 @@ const BOOKING = BOOKING_SCALE.map((r) => [r.label, r.outlook, r.bars]);
 // Service slideshow and review rotation. Both stop for reduced motion; reviews stop once the visitor touches them.
 // Slideshows only advance while they are on screen and the tab is visible: each step downloads a 1200 px photo.
 const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
+// Quote form helpers, independent of the slideshow script above (which stops for reduced motion).
+// Checks the chosen photos before anything is sent, so a visitor fixes the selection instead of
+// losing it to a refused request, and sends the form once however often Submit is pressed.
+// Without JavaScript the form still posts and the server checks the same limits.
+const FORM_JS = `<script>(()=>{const f=document.querySelector('form.quote');if(!f)return;const i=f.querySelector('#q-files'),m=document.getElementById('q-files-msg'),b=f.querySelector('button[type=submit]'),t=b.textContent;const chk=()=>{const x=[...i.files],big=x.filter(y=>y.size>8388608).map(y=>y.name),e=x.length>5?'Choose up to 5 photos. You chose '+x.length+'.':big.length?'Each photo must be 8 MB or less. Too large: '+big.join(', ')+'.':'';m.textContent=e;i.setCustomValidity(e);return!e};i.addEventListener('change',chk);f.addEventListener('submit',e=>{if(!chk()||f.dataset.sent){e.preventDefault();return}f.dataset.sent='1';b.disabled=true;b.textContent='Sending…'});addEventListener('pageshow',()=>{delete f.dataset.sent;b.disabled=false;b.textContent=t})})()</script>`;
 async function quote(entry, trail, h) {
   const entries = await allEntries();
   const cards = serviceCards(blocks(entries.get('/services').body));
@@ -524,7 +529,7 @@ async function quote(entry, trail, h) {
     ['q-venue', 'What is your venue?', '<input name="venue">', false],
     ['q-vision', 'Tell us about yourself, your vision, and where you are in your event planning process.', '<textarea name="details" rows="5"></textarea>', false, 'w'],
     ['q-ref', 'How did you find us?', '<input name="howDidYouFindUs">', false],
-    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif">', false, 'w'],
+    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" aria-describedby="q-files-msg"><span class="qfw" id="q-files-msg" aria-live="polite"></span>', false, 'w'],
   ];
   const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
   // Hidden from people; a filled value marks the submission as spam.
@@ -541,7 +546,7 @@ async function quote(entry, trail, h) {
   const half = Math.ceil(fq.length / 2);
   const faqBand = `<div class="faq bfq"><h2>FAQ</h2><div class="fqc"><div>${fq.slice(0, half).join('')}</div><div>${fq.slice(half).join('')}</div></div><p><a class="btn" href="/faq">FAQ</a></p></div>`;
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}`;
+  const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}${FORM_JS}`;
   return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
 }
 

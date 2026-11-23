@@ -1,5 +1,6 @@
 // Run after `npm run build`:  node --test
 // The database is an in-memory Postgres (pg-mem); the lead intake and the email are fakes.
+import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newDb } from 'pg-mem';
@@ -458,4 +459,20 @@ test('retention removes photos and old requests only once they are delivered', a
   assert.deepEqual(rows.map((r) => r.ip), ['', '203.0.113.9', '203.0.113.9']);
   const files = (await pool.query('SELECT s.name FROM quote_files f JOIN quote_submissions s ON s.id = f.submission_id ORDER BY s.id')).rows.map((r) => r.name);
   assert.deepEqual(files, ['new delivered', 'old undelivered']);
+});
+
+test('the quote page checks photos before sending and sends once', () => {
+  const html = fs.readFileSync(new URL('../dist/get-a-quote.html', import.meta.url), 'utf8');
+  assert.match(html, /id="q-files"[^>]*aria-describedby="q-files-msg"/);
+  assert.match(html, /<span class="qfw" id="q-files-msg" aria-live="polite"><\/span>/);
+  assert.match(html, /x\.length>5/);
+  assert.match(html, /y\.size>8388608/);
+  assert.match(html, /b\.disabled=true/);
+});
+
+test('every icon link on /services has an accessible name', () => {
+  const html = fs.readFileSync(new URL('../dist/services.html', import.meta.url), 'utf8');
+  const links = [...html.matchAll(/<a class="ico"[^>]*>/g)].map((m) => m[0]);
+  assert.ok(links.length >= 10);
+  for (const a of links) assert.match(a, /aria-label="[^"]+"/);
 });
