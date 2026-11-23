@@ -150,10 +150,10 @@ export function quoteStore(db) {
      */
     async findRepeat(s, now = new Date()) {
       const { rows } = await db.query(
-        'SELECT id, name, event_date, details, services FROM quote_submissions WHERE email = $1 AND created_at >= $2 ORDER BY id DESC',
+        'SELECT id, name, event_date, venue, referral, details, services FROM quote_submissions WHERE email = $1 AND created_at >= $2 ORDER BY id DESC',
         [s.email, new Date(now.getTime() - 2 * 60 * 1000)]);
       const services = s.services.join(', ');
-      const same = rows.find((r) => r.name === s.name && r.event_date === s.eventDate && r.details === s.details && r.services === services);
+      const same = rows.find((r) => r.name === s.name && r.event_date === s.eventDate && r.venue === s.venue && r.referral === s.howDidYouFindUs && r.details === s.details && r.services === services);
       return same ? same.id : null;
     },
     /** True for the first caller on a given day; later callers (a restart, a second machine) get false. */

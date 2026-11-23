@@ -486,3 +486,74 @@ test('every icon link on /services has an accessible name', () => {
   assert.ok(links.length >= 10);
   for (const a of links) assert.match(a, /aria-label="[^"]+"/);
 });
+
+// Regression tests for the second review.
+
+test('a quick resubmission that adds photos or corrects the venue is kept, not taken for a repeat', async () => {
+  const { app, pool, sent } = await setup();
+  assert.equal((await post(app, good)).statusCode, 303);
+  await settle();
+  const withPhoto = await app.inject({ method: 'POST', url: '/api/quote', payload: multipartBody('----t', [['a.png', 'image/png', await png()]]), headers: { 'content-type': 'multipart/form-data; boundary=----t' } });
+  assert.equal(withPhoto.statusCode, 303);
+  assert.equal((await post(app, { ...good, venue: 'Other Venue, corrected' })).statusCode, 303);
+  assert.equal((await post(app, { ...good, howDidYouFindUs: 'Instagram' })).statusCode, 303);
+  // The exact same request again is still a repeat.
+  assert.equal((await post(app, { ...good, howDidYouFindUs: 'Instagram' })).statusCode, 303);
+  await settle();
+  const rows = (await pool.query('SELECT venue, referral FROM quote_submissions ORDER BY id')).rows;
+  assert.equal(rows.length, 4, JSON.stringify(rows));
+  assert.equal((await pool.query('SELECT * FROM quote_files')).rows.length, 1, 'the photo was kept');
+  assert.equal(sent.email.length, 4);
+});
+
+test('the retry worker takes each lease from the time it claims, not from the start of the pass', async () => {
+  const { store, pool, deliverOpts } = await setup();
+  for (const n of ['A', 'B']) await pool.query("INSERT INTO quote_submissions (submitted_on, name, email, next_try_at) VALUES ('2026-11-23', $1, 'l@example.com', now() - interval '1 minute')", [n]);
+  let clock = Date.now();
+  // Each delivery takes 11 minutes of (fake) time, longer than the lease.
+  const opts = { ...deliverOpts, now: () => new Date(clock), intake: async () => {}, email: async () => { clock += 11 * 60 * 1000; } };
+  await retryPass(store, opts);
+  const leases = (await pool.query("SELECT name, next_try_at FROM quote_submissions ORDER BY id")).rows;
+  assert.deepEqual(leases.map((r) => r.name), ['A', 'B']);
+  // B was claimed 11 minutes into the pass, so its lease must run from then, not from the start
+  // (from the start it would already have expired while B was being delivered).
+  const gap = new Date(leases[1].next_try_at).getTime() - new Date(leases[0].next_try_at).getTime();
+  assert.ok(gap >= 10 * 60 * 1000, `B's lease starts ${gap / 60000} minutes after A's`);
+  // Both were delivered once each.
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM quote_submissions WHERE email_state = 'sent'")).rows[0].n, 2);
+});
+
+test('staging marks its alerts and summaries, and runs without the lead intake', async () => {
+  const { postIntake, sendAlert, sendSummary } = await import('../server/lib/deliver.js');
+  process.env.STAGING = '1';
+  process.env.QUOTE_EMAIL_FROM = 'q@example.com';
+  process.env.QUOTE_EMAIL_TO = 'i@example.com';
+  try {
+    await postIntake({ name: 'x' }, async () => { throw new Error('must not be called'); });
+    const subjects = [];
+    const transport = { sendMail: async (m) => { subjects.push(m.subject); } };
+    await sendAlert([{ id: 1, name: 'A', last_error: '' }], transport);
+    await sendSummary([{ id: 1, name: 'A', created_at: new Date(), intake_state: 'sent', email_state: 'failed', last_error: '' }], new Date(), transport);
+    for (const s of subjects) assert.match(s, /^\[STAGING\] /);
+  } finally {
+    delete process.env.STAGING; delete process.env.QUOTE_EMAIL_FROM; delete process.env.QUOTE_EMAIL_TO;
+  }
+});
+
+test('a request through Cloudflare without the origin proof does not get its own rate limit', async () => {
+  const { clientIp } = await import('../server/quote.js');
+  const req = (h) => ({ headers: h, socket: { remoteAddress: '10.0.0.5' } });
+  process.env.CF_ORIGIN_SECRET = 'right';
+  try {
+    assert.equal(clientIp(req({ 'cf-connecting-ip': '203.0.113.1', 'x-origin-secret': 'right' })), '203.0.113.1');
+    assert.equal(clientIp(req({ 'cf-connecting-ip': '203.0.113.1', 'x-origin-secret': 'wrong' })), '10.0.0.5');
+    assert.equal(clientIp(req({ 'cf-connecting-ip': '203.0.113.1' })), '10.0.0.5');
+  } finally { delete process.env.CF_ORIGIN_SECRET; }
+});
+
+test('a made-up CF-Connecting-IP header does not escape the rate limit', async () => {
+  const { app } = await setup();
+  const codes = [];
+  for (let i = 0; i < 7; i++) codes.push((await post(app, { ...good, name: `Customer ${i}` }, '10.0.0.9', { 'cf-connecting-ip': `198.51.100.${i}` })).statusCode);
+  assert.deepEqual(codes, [303, 303, 303, 303, 303, 429, 429]);
+});

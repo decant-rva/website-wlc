@@ -89,9 +89,18 @@ export function formWithErrors(html, s, bad, extra = '') {
  * Until CF_ORIGIN_SECRET is configured, requests through Cloudflare all show Cloudflare's own
  * addresses here, so configure it before Cloudflare is put in front.
  */
+const digest = (x) => crypto.createHash('sha256').update(String(x)).digest();
+let warnedCf = 0;
 export function clientIp(req) {
   const secret = process.env.CF_ORIGIN_SECRET;
-  if (secret && req.headers['x-origin-secret'] === secret && req.headers['cf-connecting-ip']) return String(req.headers['cf-connecting-ip']);
+  const cf = req.headers['cf-connecting-ip'];
+  if (cf && secret && crypto.timingSafeEqual(digest(req.headers['x-origin-secret'] || ''), digest(secret))) return String(cf);
+  // Through Cloudflare without the proof, every visitor would share Cloudflare's addresses and
+  // one rate limit. Say so in the log (at most once a minute) so a missing rule is noticed.
+  if (cf && Date.now() - warnedCf > 60000) {
+    warnedCf = Date.now();
+    console.warn(`request with CF-Connecting-IP but ${secret ? 'a wrong or missing X-Origin-Secret' : 'no CF_ORIGIN_SECRET set'}: rate limit uses the proxy address`);
+  }
   return String(req.headers['fly-client-ip'] || req.socket.remoteAddress || '');
 }
 
@@ -141,7 +150,36 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   // Requests being saved right now, by content, so a double click's second request is not saved
   // twice before the first one reaches the database. The value resolves to true once saved.
   const inFlight = new Map();
-  const contentKey = (s) => crypto.createHash('sha256').update(JSON.stringify([s.email, s.name, s.eventDate, s.details, s.services])).digest('hex');
+  // Every answer and every photo is part of the key: a second request that adds photos or
+  // corrects the venue is a new request, not a repeat.
+  const contentKey = (s, uploads) => {
+    const h = crypto.createHash('sha256').update(JSON.stringify([s.email, s.name, s.eventDate, s.venue, s.howDidYouFindUs, s.details, s.services]));
+    for (const u of uploads) h.update(crypto.createHash('sha256').update(u).digest());
+    return h.digest('hex');
+  };
+  // Uploads are read into memory before they can be checked, so only a few requests may read
+  // them at once; the rest wait (their bytes stay in the network buffers, not in this process).
+  // A looser per-address count, taken before anything is read, keeps one address from filling
+  // the queue with requests that will fail validation and never reach the main rate limit.
+  // The form always posts as multipart, even without photos, so these limits apply to every quote
+  // request. Six at once keeps the worst case near 6 x 40 MB; no address may hold more than two,
+  // so a few deliberately slow uploads from one place cannot keep everyone else waiting.
+  const UPLOAD_SLOTS = 6;
+  const PER_ADDRESS = 2;
+  const readingFrom = new Map();
+  let readingUploads = 0;
+  const waiting = [];
+  const takeSlot = () => (readingUploads < UPLOAD_SLOTS ? (readingUploads++, Promise.resolve()) : new Promise((r) => waiting.push(r)));
+  const giveSlot = () => { const next = waiting.shift(); if (next) next(); else readingUploads--; };
+  const posts = new Map();
+  const tooManyPosts = (ip) => {
+    const t = now().getTime();
+    if (posts.size > 10000) for (const [k, v] of posts) if (t - v[v.length - 1] >= RATE_WINDOW) posts.delete(k);
+    const recent = (posts.get(ip) || []).filter((x) => t - x < RATE_WINDOW);
+    recent.push(t);
+    posts.set(ip, recent);
+    return recent.length > RATE_LIMIT * 4;
+  };
 
   // The form posts multipart. A plain urlencoded post is accepted too.
   app.addContentTypeParser('application/x-www-form-urlencoded', { parseAs: 'string', bodyLimit: 100000 }, (req, body, done) => {
@@ -158,8 +196,19 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const fields = {};
     const uploads = [];
     let tooBig = false;
+    // Per-address limits need the visitor's own address: see clientIp() and CF_ORIGIN_SECRET.
+    // (Skipping them when a CF-Connecting-IP header is unproven would let anyone bypass them by
+    // sending that header to the fly.dev address.)
+    const from = clientIp(req);
+    if (tooManyPosts(from)) return html(429, page('quote-problem'));
+    const multi = req.isMultipart();
+    if (multi) {
+      if ((readingFrom.get(from) || 0) >= PER_ADDRESS) return html(429, page('quote-problem'));
+      readingFrom.set(from, (readingFrom.get(from) || 0) + 1);
+      await takeSlot();
+    }
     try {
-      if (req.isMultipart()) {
+      if (multi) {
         for await (const part of req.parts()) {
           if (part.type === 'file') {
             // Kept as sent for now. Decoding is the expensive part, so it waits until the request
@@ -173,6 +222,12 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
       } else Object.assign(fields, req.body || {});
     } catch (e) {
       if (e.code === 'FST_REQ_FILE_TOO_LARGE' || e.code === 'FST_FILES_LIMIT') tooBig = true; else throw e;
+    } finally {
+      if (multi) {
+        giveSlot();
+        const n = (readingFrom.get(from) || 1) - 1;
+        if (n) readingFrom.set(from, n); else readingFrom.delete(from);
+      }
     }
 
     // A filled trap field is a bot. It gets the same confirmation and nothing is kept. The log
@@ -208,7 +263,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
 
     // The same request again within two minutes (a double click, a resubmitted page) gets the
     // same confirmation and is not saved or delivered a second time.
-    const key = contentKey(s);
+    const key = contentKey(s, uploads);
     // A browser shows only the answer to the last click, so the second request waits for the
     // first and confirms only if the first was saved. Checking and marking happen with no await
     // in between, so two requests arriving together cannot both pass.
@@ -218,7 +273,9 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     let saved = () => {};
     inFlight.set(key, new Promise((r) => { saved = r; }));
     try {
-      if (store?.findRepeat) {
+      // The database check covers a resubmit after the first request finished. It cannot compare
+      // photos (they are stored re-encoded), so a request with photos is only matched in memory.
+      if (store?.findRepeat && !uploads.length) {
         const repeat = await store.findRepeat(s, now()).catch((e) => { req.log.error(e, 'repeat check failed'); return null; });
         if (repeat) {
           req.log.info({ id: repeat }, 'quote request repeated within two minutes; not saved again');
