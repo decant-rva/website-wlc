@@ -10,12 +10,28 @@
 // SVG is refused outright because it can carry scripts. PDFs are not accepted.
 import sharp from 'sharp';
 
+// One small shared CPU serves the whole site, so photos are cleaned one at a time with one
+// libvips thread and no cache. A burst of large uploads then queues instead of exhausting
+// the machine's 512 MB and the worker threads that page reads also use.
+sharp.concurrency(1);
+sharp.cache(false);
+let queue = Promise.resolve();
+const oneAtATime = (fn) => {
+  const run = queue.then(fn, fn);
+  queue = run.catch(() => {});
+  return run;
+};
+
 const ALLOWED = new Set(['jpeg', 'png', 'webp', 'gif', 'heif', 'avif', 'tiff']);
 const MAX_PIXELS = 50_000_000;   // about 7000 x 7000
 const MAX_EDGE = 2000;
 
 /** Returns { bytes, mime, width, height } or null when the file is not a usable picture. */
-export async function safePhoto(input) {
+export function safePhoto(input) {
+  return oneAtATime(() => clean(input));
+}
+
+async function clean(input) {
   try {
     const img = sharp(input, { limitInputPixels: MAX_PIXELS, failOn: 'error', animated: false });
     const meta = await img.metadata();

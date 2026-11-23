@@ -9,6 +9,10 @@
 //   BUILD_SHA         commit the image was built from, reported by /health
 //   DATABASE_URL      Postgres (Neon, pooled address), for quote requests. See quote.js and lib/deliver.js for the rest
 //   DATABASE_URL_UNPOOLED  Neon's direct address, used only to apply migrations at start-up
+//   CANONICAL_HOST    host this app is published under (www.weddinglightingco.com or the staging host).
+//                     A request to the app's *.fly.dev address is sent there, so the site is not
+//                     served twice and Cloudflare cannot be bypassed by accident.
+//   CF_ORIGIN_SECRET  see clientIp() in quote.js
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -44,15 +48,22 @@ const assets = new Set();
   }
 })(DIST);
 
-const same = (a, b) => a.length === b.length && crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+// Compares digests, which are always the same length, so neither the length of the password
+// nor a character outside ASCII can change the answer or make the comparison throw.
+const digest = (x) => crypto.createHash('sha256').update(String(x)).digest();
+const same = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
+const CANONICAL_HOST = process.env.CANONICAL_HOST || '';
 
 // quote: { store, deliverOpts } lets tests pass an in-memory store and fake deliveries.
 // media: an object with get(key), to serve /media from a bucket (tests pass a fake).
 export function build({ quote = {}, media } = {}) {
-  const app = Fastify({ logger: process.env.NODE_ENV === 'production', trustProxy: true });
+  // trustProxy stays off: X-Forwarded-For can be written by anyone. See clientIp() in quote.js.
+  const app = Fastify({ logger: process.env.NODE_ENV === 'production', requestTimeout: 120000 });
 
   app.addHook('onRequest', async (req, reply) => {
     if (req.url === '/health') return;
+    const host = String(req.headers.host || '').toLowerCase();
+    if (CANONICAL_HOST && host.endsWith('.fly.dev')) return reply.redirect(`https://${CANONICAL_HOST}${req.url}`, 301);
     if (STAGING) {
       reply.header('X-Robots-Tag', 'noindex, nofollow');
       const given = Buffer.from((req.headers.authorization || '').replace(/^Basic /, ''), 'base64').toString().split(':').slice(1).join(':');
@@ -61,6 +72,27 @@ export function build({ quote = {}, media } = {}) {
       }
     }
   });
+
+  app.addHook('onSend', async (req, reply, payload) => {
+    reply.header('X-Content-Type-Options', 'nosniff');
+    reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+    reply.header('X-Frame-Options', 'SAMEORIGIN');
+    if (!STAGING) reply.header('Strict-Transport-Security', 'max-age=31536000');
+    // A password-protected page must never be kept by a shared cache such as Cloudflare's.
+    if (STAGING) reply.header('Cache-Control', 'private, no-store');
+    return payload;
+  });
+
+  // A visitor never sees a bare JSON error: form problems get the "call or email us" page, everything else the 404 page.
+  const sendPage = (reply, code, name) => reply.code(code).header('Cache-Control', 'no-store').type('text/html; charset=utf-8')
+    .send(fs.createReadStream(path.join(DIST, `${name}.html`)));
+  app.setErrorHandler((err, req, reply) => {
+    const code = err.statusCode >= 400 && err.statusCode < 600 ? err.statusCode : 500;
+    if (code >= 500) req.log.error(err); else req.log.warn({ err: err.message, url: req.url }, 'request refused');
+    if (req.url.startsWith('/api/')) return sendPage(reply, code, 'quote-problem');
+    return reply.code(code).type('text/plain; charset=utf-8').send(code >= 500 ? 'Something went wrong. Please call 804-410-3605.' : 'Bad request');
+  });
+  app.setNotFoundHandler((req, reply) => (req.url.startsWith('/api/') ? sendPage(reply, 404, 'quote-problem') : sendPage(reply, 404, '404')));
 
   app.get('/health', async () => ({ ok: true, sha: process.env.BUILD_SHA || 'dev', staging: STAGING }));
 
@@ -89,6 +121,9 @@ export function build({ quote = {}, media } = {}) {
     const query = q >= 0 ? req.url.slice(q) : '';
     let pathname;
     try { pathname = decodeURIComponent(q >= 0 ? req.url.slice(0, q) : req.url); } catch { pathname = '/'; }
+    // "//example.org/" must not become a redirect to another site: browsers read a Location
+    // starting with // (or /\) as a different host.
+    if (/^[\/\\]{2,}/.test(pathname)) return reply.redirect(encodeURI(pathname.replace(/^[\/\\]+/, '/').replace(/\/+$/, '') || '/') + query, 301);
 
     // One hop only: the slash is removed and the redirect map applied together.
     const bare = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
@@ -106,7 +141,7 @@ export function build({ quote = {}, media } = {}) {
       return reply.header('Cache-Control', 'public, max-age=300').type('text/html; charset=utf-8')
         .send(fs.createReadStream(path.join(DIST, `${page.slice(1)}.html`)));
     }
-    return reply.code(404).type('text/html; charset=utf-8').send(fs.createReadStream(path.join(DIST, '404.html')));
+    return sendPage(reply, 404, '404');
   });
 
   return app;
@@ -118,7 +153,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const { default: pg } = await import('pg');
     // The site must come up even when the database is unreachable: pages are static, and the
     // quote form falls back to "call or email us" until the database answers.
-    const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 4 });
+    // Timeouts, so a slow database gives the visitor the "call or email us" page in seconds
+    // instead of leaving them waiting until Cloudflare gives up.
+    const pool = new pg.Pool({
+      connectionString: process.env.DATABASE_URL, max: 4,
+      connectionTimeoutMillis: 5000, query_timeout: 15000, statement_timeout: 15000,
+    });
     pool.on('error', (e) => console.error('database connection lost:', e.message));
     store = quoteStore(pool);
     // Neon gives two addresses for the same database. Schema changes go over the direct one;
@@ -138,5 +178,20 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     };
     applySchema();
   }
-  build({ quote: { store }, media: bucketConfigured() ? bucket() : undefined }).listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
+  const app = build({ quote: { store }, media: bucketConfigured() ? bucket() : undefined });
+  await app.listen({ port: Number(process.env.PORT || 8080), host: '0.0.0.0' });
+  // fly.io stops a machine with SIGINT (deploys, restarts). Stop taking new requests, let the ones
+  // under way finish (a photo upload can take a while on a phone) and wait for running deliveries.
+  // kill_timeout in the fly files gives this 30 seconds.
+  let stopping = false;
+  const stop = async (signal) => {
+    if (stopping) return;
+    stopping = true;
+    console.log(`${signal}: finishing requests and deliveries under way`);
+    setTimeout(() => process.exit(0), 25000).unref();
+    await app.close().catch((e) => console.error(e));
+    process.exit(0);
+  };
+  process.on('SIGINT', stop);
+  process.on('SIGTERM', stop);
 }

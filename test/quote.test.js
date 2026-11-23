@@ -9,10 +9,11 @@ import { build } from '../server/server.js';
 import { migrate, quoteStore } from '../server/lib/store.js';
 import nodemailer from 'nodemailer';
 import { deliver, retryPass, backoff, quoteMessage, sendEmail } from '../server/lib/deliver.js';
+import { LEASE_MS } from '../server/lib/store.js';
 import { quoteEmail, daysUntil } from '../server/lib/quote-email.js';
-import { validate, newYorkDate } from '../server/quote.js';
+import { validate, newYorkDate, formWithErrors, TRAP_FIELD } from '../server/quote.js';
 
-async function setup({ intakeFails = false, emailFails = false } = {}) {
+async function setup({ intakeFails = false, emailFails = false, fetchFn } = {}) {
   const { Pool } = newDb().adapters.createPg();
   const pool = new Pool();
   await migrate(pool);
@@ -23,13 +24,13 @@ async function setup({ intakeFails = false, emailFails = false } = {}) {
     email: async (row, files) => { if (emailFails) throw new Error('email down'); sent.email.push({ row, files }); },
     alert: async (stuck) => { sent.alert.push(stuck); },
   };
-  const app = build({ quote: { store, deliverOpts } });
+  const app = build({ quote: { store, deliverOpts, ...(fetchFn ? { fetchFn } : {}) } });
   return { app, store, pool, sent, deliverOpts };
 }
 const form = (o) => new URLSearchParams(o).toString();
-const post = (app, body, ip = '10.0.0.1') => app.inject({
+const post = (app, body, ip = '10.0.0.1', headers = {}) => app.inject({
   method: 'POST', url: '/api/quote', payload: form(body), remoteAddress: ip,
-  headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers },
 });
 const settle = () => new Promise((r) => setTimeout(r, 50));
 const good = { name: 'Test Person', email: 'test@example.com', eventDate: '2027-05-01', venue: 'Dover Hall', howDidYouFindUs: 'Google', details: 'String lights over the patio.' };
@@ -70,7 +71,7 @@ test('answers are escaped when the form is sent back', async () => {
 
 test('a filled trap field is confirmed but nothing is saved or sent', async () => {
   const { app, pool, sent } = await setup();
-  const res = await post(app, { ...good, company: 'Spam Ltd' });
+  const res = await post(app, { ...good, [TRAP_FIELD]: 'Spam Ltd' });
   assert.equal(res.statusCode, 303);
   await settle();
   assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 0);
@@ -223,4 +224,118 @@ test('validation and backoff', () => {
   assert.equal(Object.keys(validate(good).bad).length, 0);
   assert.equal(backoff(0), 60000);
   assert.equal(backoff(20), 3600000);
+});
+
+// Regression tests for the pre-launch review.
+
+test('typed "$`" and "$\'" are kept as text, not read as copy instructions', async () => {
+  const { app } = await setup();
+  const res = await post(app, { ...good, email: 'x', name: "A$'B", details: '$`'.repeat(2500) });
+  assert.equal(res.statusCode, 422);
+  assert.ok(res.body.length < 200000, `page is ${res.body.length} bytes`);
+  assert.equal(res.body.split('</html>').length, 2, 'one page, not two');
+  assert.match(res.body, /id="q-name" value="A\$'B"/);
+});
+
+test('a company filled in by autofill no longer makes a real request look like a bot', async () => {
+  const { app, pool, sent } = await setup();
+  assert.equal((await post(app, { ...good, company: 'Acme Weddings' })).statusCode, 303);
+  await settle();
+  assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 1);
+  assert.equal(sent.email.length, 1);
+});
+
+test('a slow mail server and overlapping retry passes deliver each request once', async () => {
+  let intakes = 0, emails = 0;
+  const { app, store, pool, deliverOpts } = await setup();
+  const opts = { ...deliverOpts, intake: async () => { intakes++; }, email: async () => { emails++; await new Promise((r) => setTimeout(r, 300)); } };
+  // The request's own first delivery runs while four retry passes start.
+  await pool.query("INSERT INTO quote_submissions (submitted_on, name, email) VALUES ('2026-11-23', 'Lease', 'l@example.com')");
+  const id = (await pool.query("SELECT id FROM quote_submissions WHERE name = 'Lease'")).rows[0].id;
+  const later = () => new Date(Date.now() + 1000);
+  await Promise.all([1, 2, 3, 4].map(() => retryPass(store, { ...opts, now: later })));
+  await settle();
+  const row = (await pool.query('SELECT intake_state, email_state FROM quote_submissions WHERE id = $1', [id])).rows[0];
+  assert.deepEqual([intakes, emails], [1, 1]);
+  assert.deepEqual(row, { intake_state: 'sent', email_state: 'sent' });
+  // A request saved through the form is leased to its own first delivery: a retry pass right away does nothing.
+  intakes = 0; emails = 0;
+  const res = await app.inject({ method: 'POST', url: '/api/quote', payload: form(good), remoteAddress: '10.0.0.2', headers: { 'content-type': 'application/x-www-form-urlencoded' } });
+  assert.equal(res.statusCode, 303);
+  await retryPass(store, { ...opts, now: () => new Date(Date.now() + LEASE_MS - 1000) });
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(intakes + emails, 0, 'the fake deliveries in setup() handled the first delivery; the retry pass left it alone');
+});
+
+test('a step that went through is never marked failed by a later failure', async () => {
+  const { store, pool, deliverOpts } = await setup();
+  await pool.query("INSERT INTO quote_submissions (submitted_on, name, email) VALUES ('2026-11-23', 'Step', 's@example.com')");
+  const id = (await pool.query("SELECT id FROM quote_submissions WHERE name = 'Step'")).rows[0].id;
+  await deliver(store, id, { ...deliverOpts, intake: async () => {}, email: async () => { throw new Error('timeout'); } });
+  let row = (await pool.query('SELECT intake_state, email_state FROM quote_submissions WHERE id = $1', [id])).rows[0];
+  assert.deepEqual(row, { intake_state: 'sent', email_state: 'failed' });
+  let intakes = 0;
+  await deliver(store, id, { ...deliverOpts, intake: async () => { intakes++; }, email: async () => {} });
+  row = (await pool.query('SELECT intake_state, email_state FROM quote_submissions WHERE id = $1', [id])).rows[0];
+  assert.deepEqual(row, { intake_state: 'sent', email_state: 'sent' });
+  assert.equal(intakes, 0, 'the intake is not posted again');
+});
+
+test('one-line answers stay one line in the email the lead parser reads', async () => {
+  const { app, pool, sent } = await setup();
+  assert.equal((await post(app, { ...good, name: 'Eve\nEmail: attacker@evil.example', details: 'Hi\nServices: Video' })).statusCode, 303);
+  await settle();
+  const row = (await pool.query('SELECT * FROM quote_submissions')).rows[0];
+  assert.equal(row.name, 'Eve Email: attacker@evil.example');
+  const { text } = quoteEmail(row, []);
+  assert.equal(text.match(/^Email:/gm).length, 1);
+  assert.equal(text.match(/^Services:/gm), null, 'a Services line typed into Vision is indented');
+  assert.equal(sent.email.length, 1);
+});
+
+test('impossible dates are refused, and the email copes with one already saved', async () => {
+  const { app } = await setup();
+  for (const d of ['2027-13-45', '2027-02-30', '0000-00-00', '2027-00-10']) {
+    const res = await post(app, { ...good, eventDate: d });
+    assert.equal(res.statusCode, 422, d);
+    assert.match(res.body, /aria-invalid="true" value="/);
+  }
+  assert.equal((await post(app, { ...good, eventDate: '2028-02-29' })).statusCode, 303);
+  assert.match(quoteEmail({ name: 'A', email: 'a@example.com', event_date: '2027-13-45', submitted_on: '2026-11-22' }).html, /No event date given/);
+});
+
+test('the rate limit is not fooled by X-Forwarded-For', async () => {
+  const { app } = await setup();
+  const codes = [];
+  for (let i = 0; i < 7; i++) codes.push((await post(app, good, '10.0.0.7', { 'x-forwarded-for': `203.0.113.${i}` })).statusCode);
+  assert.deepEqual(codes, [303, 303, 303, 303, 303, 429, 429]);
+});
+
+test('broken or oversized posts get a page with the phone number, never JSON', async () => {
+  const { app } = await setup();
+  for (const payload of ['--B\r\nContent-Disposition: form-data; name="name"\r\n\r\nA', multipartBody('B', []).toString().replace('--B--', Array.from({ length: 45 }, (_, i) => `--B\r\nContent-Disposition: form-data; name="x${i}"\r\n\r\ny\r\n`).join('') + '--B--')]) {
+    const res = await app.inject({ method: 'POST', url: '/api/quote', payload, headers: { 'content-type': 'multipart/form-data; boundary=B' } });
+    assert.ok(res.statusCode >= 400);
+    assert.match(res.headers['content-type'], /text\/html/);
+    assert.match(res.body, /804-410-3605/);
+  }
+  const sub = await app.inject({ method: 'POST', url: '/api/subscribe', payload: 'email=a@b.co', headers: { 'content-type': 'application/x-www-form-urlencoded' } });
+  assert.match(sub.headers['content-type'], /text\/html/);
+});
+
+test('a Turnstile outage does not turn customers away', async () => {
+  process.env.TURNSTILE_SECRET = 'x';
+  try {
+    const { app } = await setup({ fetchFn: async () => { throw new Error('timeout'); } });
+    assert.equal((await post(app, good)).statusCode, 303);
+  } finally { delete process.env.TURNSTILE_SECRET; }
+});
+
+test('formWithErrors keeps the page whole for every replacement pattern', () => {
+  const page = '<html><form class="quote"><p class="f"><label for="q-name">N</label><input id="q-name"></p><textarea id="q-vision"></textarea></form></html>';
+  for (const v of ["$'", '$`', '$&', '$1', '$$']) {
+    const out = formWithErrors(page, { name: v, email: '', eventDate: '', venue: '', howDidYouFindUs: '', details: v, services: [] }, { 'q-name': 'x' });
+    assert.ok(out.includes(`value="${v.replace(/&/g, "&amp;")}"`), v);
+    assert.equal(out.split('</html>').length, 2, v);
+  }
 });

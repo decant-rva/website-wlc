@@ -233,7 +233,7 @@ const SERVICE_BAND = {
   Video: ['a16fb7_11544e25cf0f404abb99e3d7420ba2e5~mv2.jpg', 'custom branding texture projections for corporate event'],
 };
 // Changes the photo and the service name every three seconds. Stops for reduced motion or when paused.
-const BAND_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000)})()</script>`;
+const BAND_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000)})()</script>`;
 function serviceBand(cards) {
   const D = cards.filter((c) => SERVICE_BAND[c.name] && photoUrl(SERVICE_BAND[c.name][0])).map((c) => [photoUrl(SERVICE_BAND[c.name][0]), SERVICE_BAND[c.name][1], c.name, c.href]);
   if (!D.length) return '';
@@ -280,7 +280,7 @@ export function timeChart({ heading = 'What we spend our time doing', stats = tr
   return `<section class="tm tq tq2"><h2>${esc(heading)}</h2>${st}<div class="tq-pan">${panels}</div></section>`;
 }
 // Email sign-up, the same form as src/components/SubscribeForm.astro. Posts to /api/subscribe.
-const SUBSCRIBE = '<form class="quote subscribe" action="/api/subscribe" method="post"><p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p><p class="trap" aria-hidden="true"><label for="s-company">Company</label><input id="s-company" name="company" tabindex="-1" autocomplete="off"></p><p><button class="btn solid" type="submit">Subscribe</button></p></form>';
+const SUBSCRIBE = '<form class="quote subscribe" action="/api/subscribe" method="post"><p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p><p class="trap" aria-hidden="true"><label for="s-extra">Leave this empty</label><input id="s-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p><p><button class="btn solid" type="submit">Subscribe</button></p></form>';
 // Discipline of each of the eight newest products, in page order.
 const NEWEST = ['de', 'li', 'li', 'li', 'de', 'de', 'de', 'li'];
 async function catalog(entry, trail, h) {
@@ -374,7 +374,7 @@ const SERVICE_PATHS = new Set(site.nav.find((n) => n.label === 'Services').child
 
 // ---- about
 // Swaps the photo every three seconds. Stops for reduced motion or when paused.
-const SLIDES_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.ab-wf'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d;b.style.opacity=t?0:1;t=!t};n.src=d},3000)})()</script>`;
+const SLIDES_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.ab-wf'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d;b.style.opacity=t?0:1;t=!t};n.src=d},3000)})()</script>`;
 function about(entry, trail, h) {
   const bl = blocks(entry.body);
   const h2 = bl.find((b) => b[0] === 'h' && b[1] === 2)?.[2] || '';
@@ -418,7 +418,7 @@ const GLYPH = {
 };
 const glyph = (slug) => (GLYPH[slug] ? `<svg class="gl" aria-hidden="true" viewBox="0 0 24 24"><use href="#g-${slug}"/></svg>` : '');
 // Clicking a style tile ticks the matching filter. The slideshow stops for reduced motion or when paused.
-const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
+const CHAND_JS = `<script>(()=>{document.querySelectorAll('.chs a').forEach(a=>a.addEventListener('click',()=>{const r=document.getElementById('st-'+a.dataset.s);if(r)r.checked=true}));if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svb'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.kcat-cap'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2]};n.src=d[0]},3000)})()</script>`;
 async function chandeliers(entry, trail, h) {
   const entries = await allEntries();
   const sb = blocks(entries.get('/chandeliers-pendants').body);
@@ -434,7 +434,7 @@ async function chandeliers(entry, trail, h) {
   const show = [0, 1, 6, 9].map((k) => ph[k]).filter(Boolean);
   const D = show.map((x) => [photoUrl(x[1]), cleanAlt(x[2]), cleanAlt(x[2])]);
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
-  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" decoding="async"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
+  const sl = D.length ? `<section class="svb kcat-sl" data-s="${esc(JSON.stringify(D))}"><div class="svt">${crumbs(trail)}${head}<p class="kcat-cap">${esc(D[0][2])}</p><input class="hp" type="checkbox" aria-label="Pause photo changes"></div><div class="svp"><img src="${D[0][0]}" alt="${esc(D[0][1])}" fetchpriority="high"><img alt="" decoding="async"></div></section>` : pageHead(h.text, trail, { tag: h.tag });
   // 2 style row
   const row = styles.map((s) => `<li><a href="#items" data-s="${slug(s)}"><span class="chs-i"><img src="/img/styles/${slug(s)}.jpg" alt="" loading="lazy" decoding="async"></span><span class="chs-n">${glyph(slug(s))}${esc(s)}</span><span class="chs-c">${count[s]}</span></a></li>`).join('');
   const srow = `<section class="chs" aria-label="Chandelier styles"><ul>${row}</ul></section>`;
@@ -514,7 +514,8 @@ const BOOKING = [
   ["< 1 Month", "Rarely available. Limited Options", 1],
 ];
 // Service slideshow and review rotation. Both stop for reduced motion; reviews stop once the visitor touches them.
-const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;setInterval(()=>{if(p.checked)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
+// Slideshows only advance while they are on screen and the tab is visible: each step downloads a 1200 px photo.
+const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;
 async function quote(entry, trail, h) {
   const entries = await allEntries();
   const cards = serviceCards(blocks(entries.get('/services').body));
@@ -529,11 +530,11 @@ async function quote(entry, trail, h) {
     ['q-venue', 'What is your venue?', '<input name="venue">', false],
     ['q-vision', 'Tell us about yourself, your vision, and where you are in your event planning process.', '<textarea name="details" rows="5"></textarea>', false, 'w'],
     ['q-ref', 'How did you find us?', '<input name="howDidYouFindUs">', false],
-    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/gif">', false, 'w'],
+    ['q-files', 'Photos or inspiration (optional)', '<input name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif">', false, 'w'],
   ];
   const fields = F.map(([id, label, input, req, cls = '']) => `<p class="${cls}"><label for="${id}">${label}${req ? ' <span aria-hidden="true">*</span>' : ''}</label>${input.replace(/^<(input|textarea)/, `<$1 id="${id}"`)}</p>`).join('');
   // Hidden from people; a filled value marks the submission as spam.
-  const trap = '<p class="trap" aria-hidden="true"><label for="q-company">Company</label><input id="q-company" name="company" tabindex="-1" autocomplete="off"></p>';
+  const trap = '<p class="trap" aria-hidden="true"><label for="q-extra">Leave this empty</label><input id="q-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p>';
   const form = `<form class="quote" action="/api/quote" method="post" enctype="multipart/form-data"><div class="q3h"><img src="/img/badge.webp" alt="" width="480" height="480"><span>RICHMOND | CHARLOTTESVILLE | DC | BOSTON</span></div><fieldset class="q6s"><legend>Services <span>Select all that apply</span></legend><div class="q5g">${tiles}</div></fieldset><div class="q3g">${fields}${trap}</div><div class="q3f"><p><button class="btn solid" type="submit">Submit</button></p></div></form>`;
   const rvs = `<section class="rvs"><h2>GLOWING REVIEWS</h2><div class="rsl">${QUOTE_REVIEWS.map(([n, q], i) => `<figure class="rs rs${i + 1}"><blockquote><p>${esc(q)}</p></blockquote><figcaption>${STARS}<span>${esc(n)}</span></figcaption></figure>`).join('')}</div><div class="rvd">${QUOTE_REVIEWS.map((_, i) => `<input type="radio" name="rvs" id="rv${i + 1}" aria-label="Review ${i + 1} of ${QUOTE_REVIEWS.length}"${i === 0 ? ' checked' : ''}>`).join('')}<a href="/reviews">Reviews on Google</a></div></section>`;
   const D = cards.filter((c) => QUOTE_SERVICE_PHOTOS[c.name] && photoUrl(QUOTE_SERVICE_PHOTOS[c.name][0])).map((c) => { const [id, alt] = QUOTE_SERVICE_PHOTOS[c.name]; return [photoUrl(id), alt ?? photos[id].alt ?? '', c.name, c.href]; });

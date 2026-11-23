@@ -36,6 +36,11 @@ function relay() {
     secure: false,
     requireTLS: true,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    // nodemailer's defaults wait up to 2 minutes to connect and 10 minutes on a silent
+    // connection. A delivery must finish well inside the lease in store.js.
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 60000,
   });
   return cached;
 }
@@ -46,6 +51,7 @@ export async function postIntake(row, fetchFn = fetch) {
   if (!url || !secret) throw new Error(`lead intake is not configured: missing ${[!url && 'LEAD_INTAKE_URL', !secret && 'LEAD_INTAKE_SECRET'].filter(Boolean).join(', ')}`);
   const res = await fetchFn(url, {
     method: 'POST',
+    signal: AbortSignal.timeout(20000),
     headers: { 'content-type': 'application/json', 'X-Lead-Token': secret },
     // The field names gigfriend-server already accepts.
     body: JSON.stringify({
@@ -75,7 +81,10 @@ export function quoteMessage(row, files, { from, to }) {
 
 export async function sendEmail(row, files, transport) {
   const t = transport || relay();
-  await t.sendMail(quoteMessage(row, files, { from: process.env.QUOTE_EMAIL_FROM, to: process.env.QUOTE_EMAIL_TO }));
+  const message = quoteMessage(row, files, { from: process.env.QUOTE_EMAIL_FROM, to: process.env.QUOTE_EMAIL_TO });
+  // Staging sends real mail, so its notifications say where they came from.
+  if (process.env.STAGING === '1') message.subject = `[STAGING] ${message.subject}`;
+  await t.sendMail(message);
 }
 
 export async function sendAlert(stuck, transport) {
@@ -92,7 +101,12 @@ export async function sendAlert(stuck, transport) {
 // Wait before try n: 1, 2, 4, 8 ... minutes, capped at an hour.
 export const backoff = (attempts) => Math.min(60, 2 ** attempts) * 60 * 1000;
 
-/** Runs whatever is still owed for one submission and records the outcome. */
+/**
+ * Runs whatever is still owed for one submission. Each step is recorded the moment it succeeds,
+ * so a crash or timeout part way never causes a step that went through to be repeated.
+ * The caller must hold the lease: save() gives it to the request's own first delivery,
+ * claim() to the retry worker.
+ */
 export async function deliver(store, id, { intake = postIntake, email = sendEmail, now = () => new Date() } = {}) {
   const found = await store.load(id);
   if (!found) return;
@@ -101,20 +115,23 @@ export async function deliver(store, id, { intake = postIntake, email = sendEmai
   let emailState = row.email_state;
   const errors = [];
   if (intakeState !== 'sent') {
-    try { await intake(row); intakeState = 'sent'; } catch (e) { intakeState = 'failed'; errors.push(`intake: ${e.message}`); }
+    try { await intake(row); intakeState = 'sent'; await store.markSent(id, 'intake'); } catch (e) { if (intakeState !== 'sent') intakeState = 'failed'; errors.push(`intake: ${e.message}`); }
   }
   if (emailState !== 'sent') {
-    try { await email(row, files); emailState = 'sent'; } catch (e) { emailState = 'failed'; errors.push(`email: ${e.message}`); }
+    try { await email(row, files); emailState = 'sent'; await store.markSent(id, 'email'); } catch (e) { if (emailState !== 'sent') emailState = 'failed'; errors.push(`email: ${e.message}`); }
   }
+  if (!errors.length) return store.recordSuccess(id);
   // Also in the app log, so `fly logs` shows why a delivery failed.
-  if (errors.length) console.error(`quote request ${id} not fully delivered: ${errors.join('; ')}`);
-  await store.record(id, { intake: intakeState, email: emailState, error: errors.join('; '), nextTryAt: new Date(now().getTime() + backoff(row.attempts)) });
+  console.error(`quote request ${id} not fully delivered: ${errors.join('; ')}`);
+  await store.recordFailure(id, { intake: intakeState, email: emailState, error: errors.join('; '), nextTryAt: new Date(now().getTime() + backoff(row.attempts)) });
 }
 
-/** One pass of the retry worker. */
+/** One pass of the retry worker. Only submissions this pass manages to claim are delivered. */
 export async function retryPass(store, opts = {}) {
   const now = (opts.now || (() => new Date()))();
-  for (const id of await store.due(now)) await deliver(store, id, opts);
+  for (const id of await store.due(now)) {
+    if (await store.claim(id, now)) await deliver(store, id, opts);
+  }
   const stuck = await store.stuck(now);
   if (stuck.length) {
     try { await (opts.alert || sendAlert)(stuck); await store.markAlerted(stuck.map((s) => s.id)); } catch { /* tried again on the next pass */ }

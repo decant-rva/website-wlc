@@ -3,7 +3,7 @@
 The Wedding Lighting Co website. Static HTML built with Astro, served by a small
 Fastify app on fly.io.
 
-Start with `docs/ARCHITECTURE.md` for the design and the reasons behind it.
+Start with `docs/phase-1/ARCHITECTURE.md` for the design and the reasons behind it.
 `docs/phase-1/` holds the audit of the previous site that this build is checked
 against.
 
@@ -68,7 +68,7 @@ Template photos are `<picture>` elements with AVIF, WebP and a JPEG fallback. Th
 `<img>` would.
 
 `node tools/a11y.js http://localhost:8080` runs the automated WCAG checks
-against a running copy.
+against a running copy. It needs Playwright, which is not in `package.json` (`npm i -D playwright`).
 
 ## Photo storage
 
@@ -119,7 +119,10 @@ kept in Postgres with the request and shown in the body of the notification emai
 | `SMTP_USER`, `SMTP_PASS` | Google Workspace address the site signs in to the SMTP relay as, and its app password |
 | `QUOTE_EMAIL_FROM`, `QUOTE_EMAIL_TO` | Sender (the Workspace user or one of its aliases) and the inbox that receives the notification |
 | `SMTP_HOST`, `SMTP_PORT` | Mail server and port. The fly settings files set `smtp.gmail.com`; the port defaults to `587` |
-| `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check (the form widget is not added yet) |
+| `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check. **Do not set it yet:** the form has no Turnstile widget, so with the secret set no visitor can pass the check |
+| `CF_ORIGIN_SECRET` | Proof that a request came through Cloudflare. Required before Cloudflare is put in front (see below) |
+| `CANONICAL_HOST` | Set in the fly files. Requests to the app's `fly.dev` address are redirected to this host |
+| `RETRY_EVERY_MS` | How often the retry worker looks for undelivered requests. Default 10 minutes, so the Neon database can scale to zero |
 
 Email is sent through `smtp.gmail.com` (set as `SMTP_HOST` in the fly settings files), signed in
 as the Workspace user in `SMTP_USER`. That user needs 2-Step Verification on and an app password
@@ -140,7 +143,32 @@ seconds.
 `npm run check:db` saves, reads back and removes a test request in the real database, and posts the
 form through the app. Add `-- --http` where only web traffic is allowed.
 
-`migrations/` is applied at start-up. Tests use an in-memory Postgres (`pg-mem`) and fake deliveries.
+### Behind Cloudflare
+
+The form's rate limit needs each visitor's own address. The server never reads `X-Forwarded-For`,
+which anyone can write. Through Cloudflare it uses `CF-Connecting-IP`, but only when the request
+also carries `X-Origin-Secret` with the value of `CF_ORIGIN_SECRET`, because anyone can also send a
+request straight to the `fly.dev` address with a made-up `CF-Connecting-IP`. Before Cloudflare goes
+in front:
+
+1. Pick a long random value and `fly secrets set CF_ORIGIN_SECRET=<value>` on both apps.
+2. In Cloudflare, Rules, Transform Rules, Modify Request Header: set `X-Origin-Secret` to the same value for all requests.
+3. Use SSL mode Full (strict); the app redirects plain HTTP, so Flexible would loop.
+
+Without step 1 and 2 every visitor coming through Cloudflare shares Cloudflare's addresses, and the
+limit of five requests in ten minutes applies to all of them together.
+
+### Delivery guarantees
+
+A request is saved (with its photos, in one transaction) before the visitor sees the confirmation.
+The save leases the row to its own first delivery for ten minutes; the retry worker only takes a
+row whose lease has run out, by claiming it with a conditional update, so two passes or two
+machines never deliver the same request at once. Each step (GigFriend post, email) is recorded the
+moment it succeeds, so a crash part way never repeats a step that went through. The intake post
+and the mail server have timeouts well inside the lease. On SIGINT (fly.io's stop signal) the
+server finishes requests and deliveries under way before it exits; `kill_timeout` gives it 30 s.
+
+`migrations/` is applied at start-up. Each file runs once and is recorded in `schema_migrations`. Tests use an in-memory Postgres (`pg-mem`) and fake deliveries.
 
 ## Deploying
 
@@ -153,5 +181,6 @@ tools/deploy.sh production
 
 ## Not built yet
 
-See section 9 and 8a of the architecture document: subscribe
-form, photo storage in the bucket, the blog admin and AI drafting.
+See section 9 and 8a of the architecture document: the subscribe
+form's route (`/api/subscribe` answers with the "call or email us" page until it exists), quote
+photos in the bucket instead of Postgres, the blog admin and AI drafting.

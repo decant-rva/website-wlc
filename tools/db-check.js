@@ -7,7 +7,7 @@
 //                               places that only allow web traffic (some CI and sandboxes)
 import fs from 'node:fs';
 import path from 'node:path';
-import { quoteStore } from '../server/lib/store.js';
+import { quoteStore, LEASE_MS } from '../server/lib/store.js';
 
 const url = process.env.DATABASE_URL;
 if (!url) { console.error('DATABASE_URL is not set. Run `neon env pull` or set it.'); process.exit(1); }
@@ -30,6 +30,11 @@ if (http) {
 }
 
 const step = (name, detail = '') => console.log(`ok  ${name}${detail ? `: ${detail}` : ''}`);
+// Every row this check writes is removed at the end, even when a step fails. Saved rows start
+// out leased to their first delivery (LEASE_MS), so the staging app's retry worker will not
+// pick them up and send them as real leads while the check runs.
+const written = [];
+let app;
 try {
   const v = await db.query('select version() as v, current_database() as d');
   step('connected', `${v.rows[0].v.split(' ').slice(0, 2).join(' ')}, database ${v.rows[0].d}, over ${http ? 'HTTPS' : 'the Postgres protocol'}`);
@@ -47,6 +52,7 @@ try {
     submittedAt: '2026-11-23', name: 'Database check', email: 'check@example.com', eventDate: '2027-10-16',
     howDidYouFindUs: 'db-check', venue: 'Dover Hall', details: 'Written by tools/db-check.js', services: ['Uplighting', 'Drapes'], ip: '127.0.0.1',
   }, [{ filename: 'photo-1.jpg', mime: 'image/jpeg', bytes: photo }]);
+  written.push(id);
   step('request saved', `id ${id}`);
 
   const found = await store.load(id);
@@ -55,11 +61,13 @@ try {
   if (!back.equals(photo)) throw new Error('the photo bytes read back do not match what was saved');
   step('request and photo read back intact', `${back.length} bytes, states ${found.row.intake_state}/${found.row.email_state}`);
 
-  const due = await store.due(new Date(Date.now() + 1000));
+  const due = await store.due(new Date(Date.now() + LEASE_MS + 1000));
   if (!due.map(String).includes(String(id))) throw new Error('the new request is not listed as awaiting delivery');
   step('listed as awaiting delivery');
 
-  await store.record(id, { intake: 'sent', email: 'sent', error: '', nextTryAt: new Date() });
+  await store.markSent(id, 'intake');
+  await store.markSent(id, 'email');
+  await store.recordSuccess(id);
   const after = await store.load(id);
   if (after.row.intake_state !== 'sent' || after.row.email_state !== 'sent' || after.row.attempts !== 1) throw new Error('the delivery record was not stored');
   step('delivery recorded', `attempts ${after.row.attempts}`);
@@ -73,7 +81,7 @@ try {
   // so nothing is sent to GigFriend or to the inbox.
   const { build } = await import('../server/server.js');
   const sent = { intake: 0, email: 0 };
-  const app = build({ quote: { store, deliverOpts: { intake: async () => { sent.intake += 1; }, email: async () => { sent.email += 1; } } } });
+  app = build({ quote: { store, deliverOpts: { intake: async () => { sent.intake += 1; }, email: async () => { sent.email += 1; } } } });
   const res = await app.inject({
     method: 'POST', url: '/api/quote', headers: { 'content-type': 'application/x-www-form-urlencoded' },
     payload: new URLSearchParams({ name: 'Route check', email: 'route@example.com', eventDate: '2027-10-16', venue: 'Dover Hall', details: 'Posted by tools/db-check.js', services: 'Uplighting' }).toString(),
@@ -86,15 +94,17 @@ try {
     row = (await db.query("SELECT * FROM quote_submissions WHERE email = 'route@example.com' ORDER BY id DESC LIMIT 1")).rows[0];
   }
   if (!row) throw new Error('the posted request is not in the database');
+  written.push(row.id);
   if (row.intake_state !== 'sent' || row.email_state !== 'sent') throw new Error(`deliveries were not recorded: ${row.intake_state}/${row.email_state}`);
   step('posted request found in the database', `id ${row.id}, ${row.name}, ${row.venue}, deliveries ${row.intake_state}/${row.email_state} (stand-ins called ${sent.intake}/${sent.email})`);
   await db.query('DELETE FROM quote_submissions WHERE id = $1', [row.id]);
-  await app.close();
   step('posted request removed');
   console.log('\nDatabase check passed.');
 } catch (e) {
   console.error(`\nFAILED: ${e.message}`);
   process.exitCode = 1;
 } finally {
+  for (const id of written) await db.query('DELETE FROM quote_submissions WHERE id = $1', [id]).catch(() => {});
+  await app?.close();
   await close();
 }

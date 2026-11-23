@@ -66,7 +66,7 @@ function tracker(row) {
   const days = daysUntil(row.event_date, row.submitted_on);
   const wrap = (inner) => `<div style="background:${NAVY};padding:14px 14px 16px">${inner}</div>`;
   const line = (t) => `<span style="${F}display:block;font-size:14px;line-height:1.4;color:#C9D3EE">${t}</span>`;
-  if (days === null) return wrap(line('No event date given'));
+  if (days === null || Number.isNaN(days)) return wrap(line('No event date given'));
   if (days < 0) return wrap(line('The event date given has already passed'));
   const [, range, outlook, lit] = WINDOWS.find(([m]) => days / 30.44 >= m);
   const bars = [0, 1, 2, 3, 4, 5].map((k) => `<span style="display:inline-block;width:26px;height:10px;margin-right:3px;background:${k < lit ? BAR[lit - 1] : '#3A4780'};font-size:0;line-height:0">&nbsp;</span>`).join('');
@@ -89,7 +89,9 @@ export function quoteEmail(row, files = [], inline = true) {
   if (chosen.length) fields.push(['Services', chosen.join(', ')]);
   if (files.length) fields.push(['Photos', `${files.length}${inline ? '' : ' (too large to attach, saved on the website)'}`]);
   const subject = `New RFQ: ${row.name} filled out Get a Quote Form`;
-  const text = fields.map(([k, v]) => `${k}: ${v || ''}`).join('\n');
+  // One "Label: value" line per field, as the Gmail lead parser expects. Later lines of a
+  // multi-line answer are indented, so text typed into Vision cannot pose as a label of its own.
+  const text = fields.map(([k, v]) => `${k}: ${String(v || '').split(/\r?\n/).join('\n  ')}`).join('\n');
   const cids = files.map((_, i) => `photo${i + 1}@quote`);
   const photos = files.length && inline
     ? `<div style="padding:14px 14px 4px">${label(`Photos (${files.length})`)}${files.map((f, i) => `<img src="cid:${cids[i]}" alt="Photo ${i + 1} from ${esc(row.name)}" width="570" style="display:block;width:100%;max-width:570px;height:auto;margin:10px 0 0;border:0">`).join('')}</div>`
