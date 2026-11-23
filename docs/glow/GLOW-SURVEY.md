@@ -21,7 +21,7 @@ Each fact carries one of these marks:
 - **The whole site is about 207,000 tokens of text** (1,789 chunks). It will not fit in one prompt for any engine, so the suite needs retrieval over the export. **Verified.**
 - **Keeping the site online must not depend on Glow.** Glow runs on a PC that can be off or asleep. Alarms belong to fly.io's health check, an outside uptime monitor and scheduled GitHub Actions. Glow's job there is to read the results, explain them in plain words and draft the fix. None of those scheduled jobs exists yet. **Verified.**
 - **The curation backlog is sized:** 220 photos to describe on 87 pages, 48 thin pages, 64 pages with no meta description and 14 with no H1 (both frozen), 16 redirects awaiting approval, 179 venues with no photos. **Verified.**
-- **Pull requests #3 and #4 do not merge cleanly.** One conflict in `.dockerignore` and one failing test, because #4 moved the booking scale out of `templates.js`, where the vault sync looks for it. Both are small, and the fixes are written up in section 3. **Verified.**
+- **Pull requests #3 and #4 are merged.** They needed three fixes to go together: the `.dockerignore` conflict, the booking scale the vault sync could no longer find, and the vault seed notes the Docker build's tests need. All three went in through decant-rva/website-wlc#6, merged into `beam-lines-build` on 23 November (section 3). **Verified.**
 - **Questions for the owner.** Answered from the PC (section 13): where the Glow brain lives and what it reads, what Beam's "Bright mode" is, the hub's routes and machines, and which models are installed. The owner decided the rest on 23 November: D-001 is accepted (curate through the Glow network and the vault, no admin screen), D-003 stays with one rule added (a batch of proposals runs only after the owner says yes to that run), and health notes go in a new `Status/` folder in the vault. Uptime monitoring starts on UptimeRobot's free plan, moving to Solo if it proves useful, with alerts to `info@weddinglightingco.com` (section 8). Nothing is left open.
 - **One correction from the probes:** the hub's port on the PC serves only Ollama's own format. The OpenAI-format URLs answer 404 there, so the shared client should speak Ollama's `/api/chat` and `/api/generate` (section 4). **Probed.**
 
@@ -38,7 +38,7 @@ The site is a stack of draft pull requests. `main` still holds only the README.
 | `claude/kind-allen-bhqyfu` | decant-rva/website-wlc#4, into `beam-lines-build` | Launch blocker fixes, `/health/delivery`, retention, five more proposed redirects |
 | `claude/eager-hawking-jbpfwn` | | This report |
 
-The suite needs #3 and #4 together. Files to read first, all on #3 unless noted:
+Since 23 November, #3 and #4 are both merged into `beam-lines-build` through decant-rva/website-wlc#6, so every file below is on that branch. Files to read first:
 
 | File | Why |
 |---|---|
@@ -55,7 +55,9 @@ The suite needs #3 and #4 together. Files to read first, all on #3 unless noted:
 
 ## 3. Merging #3 and #4: tested
 
-A trial merge of #3 into #4 in a scratch worktree (nothing pushed). **Verified.**
+**Done.** Both pull requests were merged into `beam-lines-build` on 23 November through decant-rva/website-wlc#6. It resolved the conflicts and fixed the vault sync as described below. It also fixed a third problem this trial merge missed: the Docker build stage runs the vault tests, so it now copies `vault/seed`, and `.dockerignore` lets the seeds through (`vault` then `!vault/seed`). At the merge: build 298 pages, inventory 272 of 272, tests 98 of 98, accessibility 0 issues, and CI's `build` and `docker` jobs green.
+
+The trial merge of #3 into #4 that found the first two problems, in a scratch worktree with nothing pushed. **Verified.**
 
 | Check | Result |
 |---|---|
@@ -477,7 +479,7 @@ Facts only the owner has (answered from the PC):
 
 ## 14. Build order
 
-1. Merge #3 and #4 with the two fixes in section 3.
+1. ~~Merge #3 and #4 with the fixes in section 3.~~ Done on 23 November through decant-rva/website-wlc#6.
 2. `client.js`, `engines.json` and `probe.js`; run the probe on the PC; fill in section 11's answers.
 3. Move the alt text job onto the shared client; run it on the 220 photos; Claude checks; the owner ticks; apply.
 4. `checks.js` and `proposals.js` with the generalised apply, stale detection and the queue note.
