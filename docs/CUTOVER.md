@@ -141,7 +141,7 @@ Proposed redirects (decision 4):
 
 1. **Daily email.** From 13:00 UTC (8 or 9 a.m. New York), the office gets "Website quote requests still undelivered: N" whenever anything is stuck. No email means everything was delivered.
 2. **`fly logs --app wlc-site`.** Look for `not fully delivered`, `quote request dropped: trap field filled` (a person mistaken for a bot), `retry pass failed` and database errors.
-3. **`/health/delivery` from an uptime monitor.** It needs `STATUS_TOKEN`. Alert on `db` not `ok`, or on `oldestPendingMinutes` over 60.
+3. **`/health/delivery` from an uptime monitor.** It needs `STATUS_TOKEN`, sent as the `X-Status-Token` header. Alert when it is not 200: it answers 503 when the database does not answer or a request has waited an hour without being delivered.
 4. **Search Console.** Watch Coverage and Pages for new 404s, "Excluded by noindex" on pages that should be indexed, and redirect errors. Compare impressions and clicks with the week before.
 5. **Rollback.**
    - **[LIVE]** Redeploy the previous image: `fly releases --app wlc-site`, then `fly deploy --image <previous image> --app wlc-site`.

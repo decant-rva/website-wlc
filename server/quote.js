@@ -13,6 +13,8 @@
 //   CF_ORIGIN_SECRET   see clientIp() below.
 //   STATUS_TOKEN       optional. When set, GET /health/delivery answers requests that send it
 //                      in the X-Status-Token header with the delivery counts. Unset: 404.
+//                      503 when the database does not answer, or when a request has waited an
+//                      hour (LATE_AFTER_MS) without being delivered.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,6 +22,7 @@ import multipart from '@fastify/multipart';
 import { deliver, retryPass } from './lib/deliver.js';
 import { safePhoto } from './lib/images.js';
 import { setServiceList } from './lib/quote-email.js';
+import { LATE_AFTER_MS } from './lib/store.js';
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
@@ -366,7 +369,11 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
         store.status(now()),
         new Promise((_, no) => setTimeout(() => no(new Error('database did not answer within 3 seconds')), 3000).unref()),
       ]);
-      return { db: 'ok', ...counts };
+      // Late once a request has waited as long as the office's "not delivered" email allows, so a
+      // monitor that only reads the status code catches it. A failed attempt alone is not late:
+      // the retry worker tries again with growing waits.
+      const late = counts.oldestPendingMinutes !== null && counts.oldestPendingMinutes * 60 * 1000 >= LATE_AFTER_MS;
+      return reply.code(late ? 503 : 200).send({ db: 'ok', ...counts });
     } catch (e) {
       return reply.code(503).send({ db: 'error', error: e.message, pending: null, oldestPendingMinutes: null, failed: null });
     }

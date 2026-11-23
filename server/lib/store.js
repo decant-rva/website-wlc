@@ -10,6 +10,12 @@ const MIGRATIONS = path.resolve(import.meta.dirname, '..', '..', 'migrations');
 export const LEASE_MS = 10 * 60 * 1000;
 
 /**
+ * A request still undelivered this long after it came in is late: the office is emailed about it
+ * once (stuck), and GET /health/delivery answers 503 until it is delivered.
+ */
+export const LATE_AFTER_MS = 60 * 60 * 1000;
+
+/**
  * Applies each file in migrations/ once, in name order, and records it in schema_migrations.
  * 001 was applied on every start before this table existed; it is written to be safe to repeat.
  */
@@ -119,7 +125,7 @@ export function quoteStore(db) {
       const { rows } = await db.query(
         `SELECT id, name, last_error FROM quote_submissions
          WHERE (intake_state <> 'sent' OR email_state <> 'sent') AND alerted = false AND created_at <= $1`,
-        [new Date(now.getTime() - 60 * 60 * 1000)]);
+        [new Date(now.getTime() - LATE_AFTER_MS)]);
       return rows;
     },
     async markAlerted(ids) {

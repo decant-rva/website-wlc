@@ -387,12 +387,24 @@ test('the delivery status endpoint reports what is still owed, only with the tok
     assert.deepEqual(res.json(), { db: 'ok', pending: 0, failed: 0, oldestPendingMinutes: null });
     assert.equal((await post(app, good, '10.0.1.3')).statusCode, 303);
     await settle();
+    res = await get('monitor-secret');
+    assert.equal(res.statusCode, 200, 'a failed attempt that will be retried is not late');
+    assert.equal(res.json().pending, 1);
+    assert.equal(res.json().failed, 1);
+    await pool.query("UPDATE quote_submissions SET created_at = now() - interval '59 minutes'");
+    assert.equal((await get('monitor-secret')).statusCode, 200, 'under an hour: still not late');
     await pool.query("UPDATE quote_submissions SET created_at = now() - interval '90 minutes'");
     res = await get('monitor-secret');
+    assert.equal(res.statusCode, 503, 'waited over an hour: late, so a monitor reading only the status code alerts');
+    assert.equal(res.json().db, 'ok');
     assert.equal(res.json().pending, 1);
     assert.equal(res.json().failed, 1);
     assert.ok(res.json().oldestPendingMinutes >= 89);
     assert.equal(res.headers['cache-control'], 'no-store');
+    await pool.query("UPDATE quote_submissions SET intake_state = 'sent', email_state = 'sent'");
+    res = await get('monitor-secret');
+    assert.equal(res.statusCode, 200, 'delivered: back to 200');
+    assert.equal(res.json().pending, 0);
     // /health itself does not depend on the database.
     assert.deepEqual(Object.keys((await app.inject({ method: 'GET', url: '/health' })).json()), ['ok', 'sha', 'staging']);
   } finally { delete process.env.STATUS_TOKEN; }
