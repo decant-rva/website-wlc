@@ -6,6 +6,7 @@
 //   a paragraph holding one external link -> <p class="credit"> (photo credits)
 import fs from 'node:fs';
 import path from 'node:path';
+import { capDensity } from './photos.js';
 
 const ICON_MAX = 420;
 
@@ -93,7 +94,7 @@ function group(parent) {
         for (const r of run) {
           const pic = isEl(r, 'a') ? kids(r)[0] : r;
           for (const c of pic.children || []) {
-            if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: '(min-width: 62rem) 20vw, 50vw' };
+            if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: capDensity('(min-width: 62rem) 20vw, 50vw') };
           }
         }
         const g = el('div', 'gal', run);
@@ -138,7 +139,7 @@ function group(parent) {
         node.properties = { ...node.properties, className: ['tiles'] };
         for (const li of items) {
           for (const c of kids(li)[0].children || []) {
-            if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: '(min-width: 62rem) 25vw, 50vw' };
+            if (isEl(c, 'source')) c.properties = { ...c.properties, sizes: capDensity('(min-width: 62rem) 25vw, 50vw') };
           }
         }
       }

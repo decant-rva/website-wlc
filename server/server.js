@@ -58,11 +58,14 @@ const CANONICAL_HOST = process.env.CANONICAL_HOST || '';
 // media: an object with get(key), to serve /media from a bucket (tests pass a fake).
 export function build({ quote = {}, media } = {}) {
   // trustProxy stays off: X-Forwarded-For can be written by anyone. See clientIp() in quote.js.
-  const app = Fastify({ logger: process.env.NODE_ENV === 'production', requestTimeout: 120000 });
+  // return503OnClosing off: during a shutdown the requests still arriving are answered normally
+  // (the server finishes them) instead of with a bare JSON 503.
+  const app = Fastify({ logger: process.env.NODE_ENV === 'production', requestTimeout: 120000, return503OnClosing: false });
 
   app.addHook('onRequest', async (req, reply) => {
     if (req.url === '/health') return;
-    const host = String(req.headers.host || '').toLowerCase();
+    // Without a port or a trailing dot, so "wlc-site.fly.dev:443" and "wlc-site.fly.dev." match too.
+    const host = String(req.headers.host || '').toLowerCase().replace(/:\d+$/, '').replace(/\.$/, '');
     if (CANONICAL_HOST && host.endsWith('.fly.dev')) return reply.redirect(`https://${CANONICAL_HOST}${req.url}`, 301);
     if (STAGING) {
       reply.header('X-Robots-Tag', 'noindex, nofollow');
@@ -124,13 +127,14 @@ export function build({ quote = {}, media } = {}) {
     try { pathname = decodeURIComponent(q >= 0 ? req.url.slice(0, q) : req.url); } catch { pathname = '/'; }
     // "//example.org/" must not become a redirect to another site: browsers read a Location
     // starting with // (or /\) as a different host.
-    if (/^[\/\\]{2,}/.test(pathname)) return reply.redirect(encodeURI(pathname.replace(/^[\/\\]+/, '/').replace(/\/+$/, '') || '/') + query, 301);
+    if (/^[\/\\]{2,}/.test(pathname)) return reply.redirect(encodeURI(pathname.replace(/^[\/\\]+/, '/').replace(/\/+$/, '') || '/').replace(/\?/g, '%3F').replace(/#/g, '%23') + query, 301);
 
     // One hop only: the slash is removed and the redirect map applied together.
     const bare = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
     const target = redirects.get(bare);
     if (target) return reply.redirect(target + query, 301);
-    if (bare !== pathname) return reply.redirect(encodeURI(bare) + query, 301);
+    // encodeURI leaves ? and # alone; a decoded %3F or %23 must not become a real query or fragment.
+    if (bare !== pathname) return reply.redirect(encodeURI(bare).replace(/\?/g, '%3F').replace(/#/g, '%23') + query, 301);
 
     // Fonts, logos, scripts, sitemap and robots: any other file the build produced.
     if (assets.has(bare)) {
@@ -160,7 +164,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // instead of leaving them waiting until Cloudflare gives up.
     const pool = new pg.Pool({
       connectionString: process.env.DATABASE_URL, max: 4,
-      connectionTimeoutMillis: 5000, query_timeout: 15000, statement_timeout: 15000,
+      // query_timeout is enforced by the client. statement_timeout is not set: it travels as a
+      // startup parameter, which a PgBouncer pool (Neon's pooled address) may refuse.
+      connectionTimeoutMillis: 5000, query_timeout: 15000,
     });
     pool.on('error', (e) => console.error('database connection lost:', e.message));
     store = quoteStore(pool);

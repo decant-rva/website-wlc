@@ -89,9 +89,18 @@ export function formWithErrors(html, s, bad, extra = '') {
  * Until CF_ORIGIN_SECRET is configured, requests through Cloudflare all show Cloudflare's own
  * addresses here, so configure it before Cloudflare is put in front.
  */
+const digest = (x) => crypto.createHash('sha256').update(String(x)).digest();
+let warnedCf = 0;
 export function clientIp(req) {
   const secret = process.env.CF_ORIGIN_SECRET;
-  if (secret && req.headers['x-origin-secret'] === secret && req.headers['cf-connecting-ip']) return String(req.headers['cf-connecting-ip']);
+  const cf = req.headers['cf-connecting-ip'];
+  if (cf && secret && crypto.timingSafeEqual(digest(req.headers['x-origin-secret'] || ''), digest(secret))) return String(cf);
+  // Through Cloudflare without the proof, every visitor would share Cloudflare's addresses and
+  // one rate limit. Say so in the log (at most once a minute) so a missing rule is noticed.
+  if (cf && Date.now() - warnedCf > 60000) {
+    warnedCf = Date.now();
+    console.warn(`request with CF-Connecting-IP but ${secret ? 'a wrong or missing X-Origin-Secret' : 'no CF_ORIGIN_SECRET set'}: rate limit uses the proxy address`);
+  }
   return String(req.headers['fly-client-ip'] || req.socket.remoteAddress || '');
 }
 
@@ -109,7 +118,8 @@ export function turnstileRule({ secret, required, pageHasWidget }) {
   return required && pageHasWidget ? 'required' : 'verify-if-sent';
 }
 
-export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date() }) {
+// uploadBudget: bytes of uploads held in memory at once (tests pass a small one).
+export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date(), uploadBudget = 96 * 1024 * 1024 }) {
   // The pages the route answers with never change while the server runs.
   const pages = new Map();
   const page = (name) => {
@@ -141,7 +151,47 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   // Requests being saved right now, by content, so a double click's second request is not saved
   // twice before the first one reaches the database. The value resolves to true once saved.
   const inFlight = new Map();
-  const contentKey = (s) => crypto.createHash('sha256').update(JSON.stringify([s.email, s.name, s.eventDate, s.details, s.services])).digest('hex');
+  // Every answer and every photo is part of the key: a second request that adds photos or
+  // corrects the venue is a new request, not a repeat.
+  const contentKey = (s, uploads) => {
+    const h = crypto.createHash('sha256').update(JSON.stringify([s.email, s.name, s.eventDate, s.venue, s.howDidYouFindUs, s.details, s.services]));
+    for (const u of uploads) h.update(crypto.createHash('sha256').update(u).digest());
+    return h.digest('hex');
+  };
+  // Uploads are read into memory before they can be checked. Instead of making requests wait for
+  // a turn (a waiting request that is abandoned, or a deliberately slow one, can hold its place),
+  // the server keeps a budget of upload bytes held at once. A request that would go over it is
+  // read to the end without keeping its photos, and the visitor gets the form back with every
+  // answer kept, asked to send again or without photos. Bytes are held until the response is
+  // finished (or the connection closes), which covers decoding and saving too.
+  const budget = uploadBudget;
+  let held = 0;
+  // No address may hold more than one full request's worth (5 x 8 MB), so one place cannot take
+  // the whole budget and keep everyone else's photos out.
+  const PER_ADDRESS_BYTES = MAX_FILES * MAX_FILE_BYTES;
+  const heldBy = new Map();
+  // A looser per-address count, taken before anything is read, keeps one address from sending
+  // endless requests that fail validation and so never reach the main rate limit. A post refused
+  // here is not counted, so a refused address recovers as the window moves on.
+  const posts = new Map();
+  const tooManyPosts = (ip) => {
+    const t = now().getTime();
+    if (posts.size > 10000) for (const [k, v] of posts) if (t - v[v.length - 1] >= RATE_WINDOW) posts.delete(k);
+    const recent = (posts.get(ip) || []).filter((x) => t - x < RATE_WINDOW);
+    if (recent.length >= RATE_LIMIT * 4) { posts.set(ip, recent); return true; }
+    recent.push(t);
+    posts.set(ip, recent);
+    return false;
+  };
+  // Requests saved in the last two minutes, by content key, so the same request with photos sent
+  // again after the first one finished (Back, then Submit) is still recognised as a repeat.
+  const recentlySaved = new Map();
+  const REPEAT_WINDOW = 2 * 60 * 1000;
+  const savedRecently = (key) => {
+    const t = now().getTime();
+    for (const [k, at] of recentlySaved) if (t - at >= REPEAT_WINDOW) recentlySaved.delete(k);
+    return recentlySaved.has(key);
+  };
 
   // The form posts multipart. A plain urlencoded post is accepted too.
   app.addContentTypeParser('application/x-www-form-urlencoded', { parseAs: 'string', bodyLimit: 100000 }, (req, body, done) => {
@@ -153,20 +203,49 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   });
   app.register(multipart, { limits: { fileSize: MAX_FILE_BYTES, files: MAX_FILES, fields: 40, fieldSize: 20000 } });
 
+  // The bytes a request holds are given back only when its handler has finished (photos decoded
+  // and saved, or refused), not when the visitor hangs up: the handler keeps the photos in memory
+  // until then. A handler always finishes: an abandoned upload makes reading the body throw, and
+  // a stalled one is cut off by the server's request timeout.
   app.post('/api/quote', async (req, reply) => {
+    const acct = { from: clientIp(req), mine: 0 };
+    try {
+      return await handleQuote(req, reply, acct);
+    } finally {
+      held -= acct.mine;
+      const left = (heldBy.get(acct.from) || 0) - acct.mine;
+      if (left > 0) heldBy.set(acct.from, left); else heldBy.delete(acct.from);
+    }
+  });
+
+  async function handleQuote(req, reply, acct) {
     const html = (code, body) => reply.code(code).header('Cache-Control', 'no-store').type('text/html; charset=utf-8').send(body);
     const fields = {};
     const uploads = [];
     let tooBig = false;
+    let busy = false;
+    // Per-address limits need the visitor's own address: see clientIp() and CF_ORIGIN_SECRET.
+    // (Skipping them when a CF-Connecting-IP header is unproven would let anyone bypass them by
+    // sending that header to the fly.dev address.)
+    const from = clientIp(req);
+    if (tooManyPosts(from)) return html(429, page('quote-problem'));
+    const take = (n) => { held += n; acct.mine += n; heldBy.set(from, (heldBy.get(from) || 0) + n); };
     try {
       if (req.isMultipart()) {
         for await (const part of req.parts()) {
           if (part.type === 'file') {
             // Kept as sent for now. Decoding is the expensive part, so it waits until the request
-            // has passed every cheaper check below.
-            const bytes = await part.toBuffer();
-            if (part.file.truncated) tooBig = true;
-            else if (bytes.length) uploads.push(bytes);
+            // has passed every cheaper check below. Bytes are counted against the budget as they
+            // arrive; once a file would go over it, the rest of that file is read and dropped.
+            const chunks = [];
+            let size = 0;
+            for await (const c of part.file) {
+              if (busy) continue;
+              if (held + c.length > budget || (heldBy.get(from) || 0) + c.length > PER_ADDRESS_BYTES) { busy = true; take(-size); size = 0; chunks.length = 0; continue; }
+              take(c.length); size += c.length; chunks.push(c);
+            }
+            if (part.file.truncated) { tooBig = true; take(-size); continue; }
+            if (size) uploads.push(Buffer.concat(chunks, size));
           } else if (part.fieldname === 'services') (fields.services ||= []).push(part.value);
           else fields[part.fieldname] = part.value;
         }
@@ -185,6 +264,10 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const { s, bad } = validate(fields);
     const tooMany = `Send up to ${MAX_FILES} photos of ${MAX_FILE_BYTES / 1024 / 1024} MB or less each.`;
     if (Object.keys(bad).length || tooBig) return html(422, formWithErrors(page('get-a-quote'), s, bad, tooBig ? tooMany : ''));
+    if (busy) {
+      req.log.warn('quote request with photos refused: upload budget in use');
+      return html(503, formWithErrors(page('get-a-quote'), s, {}, 'We are receiving a lot of photos right now and could not take yours. Please send your request again in a minute, or send it without photos.'));
+    }
     const ip = clientIp(req);
     if (limited(ip)) return html(429, page('quote-problem'));
 
@@ -208,17 +291,20 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
 
     // The same request again within two minutes (a double click, a resubmitted page) gets the
     // same confirmation and is not saved or delivered a second time.
-    const key = contentKey(s);
+    const key = contentKey(s, uploads);
     // A browser shows only the answer to the last click, so the second request waits for the
     // first and confirms only if the first was saved. Checking and marking happen with no await
     // in between, so two requests arriving together cannot both pass.
+    if (savedRecently(key)) return reply.redirect('/quote-sent', 303);
     while (inFlight.has(key)) {
       if (await inFlight.get(key)) return reply.redirect('/quote-sent', 303);
     }
     let saved = () => {};
     inFlight.set(key, new Promise((r) => { saved = r; }));
     try {
-      if (store?.findRepeat) {
+      // The database check covers a resubmit after the first request finished. It cannot compare
+      // photos (they are stored re-encoded), so a request with photos is only matched in memory.
+      if (store?.findRepeat && !uploads.length) {
         const repeat = await store.findRepeat(s, now()).catch((e) => { req.log.error(e, 'repeat check failed'); return null; });
         if (repeat) {
           req.log.info({ id: repeat }, 'quote request repeated within two minutes; not saved again');
@@ -228,6 +314,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
       }
       const out = await saveAndConfirm(req, reply, s, uploads, ip, html);
       saved(reply.statusCode === 303);
+      if (reply.statusCode === 303) recentlySaved.set(key, now().getTime());
       return out;
     } catch (e) {
       saved(false);
@@ -235,7 +322,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     } finally {
       inFlight.delete(key);
     }
-  });
+  }
 
   async function saveAndConfirm(req, reply, s, uploads, ip, html) {
     // Never trust the name or type the browser sent. Each file is decoded and rewritten as a

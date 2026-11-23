@@ -45,9 +45,15 @@ function relay() {
   return cached;
 }
 
+/** Every email from staging says so in its subject. */
+const stagingTag = () => (process.env.STAGING === '1' ? '[STAGING] ' : '');
+
 export async function postIntake(row, fetchFn = fetch) {
   const url = process.env.LEAD_INTAKE_URL;
   const secret = process.env.LEAD_INTAKE_SECRET;
+  // Staging is meant to run without GigFriend (its test requests must never become real leads).
+  // There an unset intake counts as done, so test requests are not retried and reported forever.
+  if (!url && process.env.STAGING === '1') return;
   if (!url || !secret) throw new Error(`lead intake is not configured: missing ${[!url && 'LEAD_INTAKE_URL', !secret && 'LEAD_INTAKE_SECRET'].filter(Boolean).join(', ')}`);
   const res = await fetchFn(url, {
     method: 'POST',
@@ -93,7 +99,7 @@ export async function sendAlert(stuck, transport) {
   await t.sendMail({
     from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
     to: process.env.QUOTE_EMAIL_TO,
-    subject: `Website quote requests not delivered: ${stuck.length}`,
+    subject: `${stagingTag()}Website quote requests not delivered: ${stuck.length}`,
     text: `These quote requests are saved on the website but have not reached GigFriend or the inbox after an hour.\n\n${lines}\n\nThey are still being retried.`,
   });
 }
@@ -130,7 +136,8 @@ export async function deliver(store, id, { intake = postIntake, email = sendEmai
 export async function retryPass(store, opts = {}) {
   const now = (opts.now || (() => new Date()))();
   for (const id of await store.due(now)) {
-    if (await store.claim(id, now)) await deliver(store, id, opts);
+    // A fresh time for each claim: a slow pass must not hand out a lease that has already run out.
+    if (await store.claim(id, (opts.now || (() => new Date()))())) await deliver(store, id, opts);
   }
   const stuck = await store.stuck(now);
   if (stuck.length) {
@@ -185,7 +192,7 @@ export async function sendSummary(list, now = new Date(), transport) {
   await t.sendMail({
     from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
     to: process.env.QUOTE_EMAIL_TO,
-    subject: `Website quote requests still undelivered: ${list.length}`,
+    subject: `${stagingTag()}Website quote requests still undelivered: ${list.length}`,
     text: `These quote requests are saved on the website but have not fully reached GigFriend or the inbox. They are still being retried.\n\n${lines}`,
   });
 }
