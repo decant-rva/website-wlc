@@ -9,6 +9,9 @@
 //                      Do not set it until the form shows the Turnstile widget: without
 //                      the widget no visitor can pass the check.
 //   CF_ORIGIN_SECRET   see clientIp() below.
+//   STATUS_TOKEN       optional. When set, GET /health/delivery answers requests that send it
+//                      in the X-Status-Token header with the delivery counts. Unset: 404.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import multipart from '@fastify/multipart';
@@ -110,6 +113,10 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
   };
   // First deliveries still running, so a shutdown can wait for them.
   const running = new Set();
+  // Requests being saved right now, by content, so a double click's second request is not saved
+  // twice before the first one reaches the database. The value resolves to true once saved.
+  const inFlight = new Map();
+  const contentKey = (s) => crypto.createHash('sha256').update(JSON.stringify([s.email, s.name, s.eventDate, s.details, s.services])).digest('hex');
 
   // The form posts multipart. A plain urlencoded post is accepted too.
   app.addContentTypeParser('application/x-www-form-urlencoded', { parseAs: 'string', bodyLimit: 100000 }, (req, body, done) => {
@@ -169,6 +176,38 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
       if (!res.success) return html(422, formWithErrors(page('get-a-quote'), s, {}, 'We could not confirm you are a person. Please try again.'));
     }
 
+    // The same request again within two minutes (a double click, a resubmitted page) gets the
+    // same confirmation and is not saved or delivered a second time.
+    const key = contentKey(s);
+    // A browser shows only the answer to the last click, so the second request waits for the
+    // first and confirms only if the first was saved. Checking and marking happen with no await
+    // in between, so two requests arriving together cannot both pass.
+    while (inFlight.has(key)) {
+      if (await inFlight.get(key)) return reply.redirect('/quote-sent', 303);
+    }
+    let saved = () => {};
+    inFlight.set(key, new Promise((r) => { saved = r; }));
+    try {
+      if (store?.findRepeat) {
+        const repeat = await store.findRepeat(s, now()).catch((e) => { req.log.error(e, 'repeat check failed'); return null; });
+        if (repeat) {
+          req.log.info({ id: repeat }, 'quote request repeated within two minutes; not saved again');
+          saved(true);
+          return reply.redirect('/quote-sent', 303);
+        }
+      }
+      const out = await saveAndConfirm(req, reply, s, uploads, ip, html);
+      saved(reply.statusCode === 303);
+      return out;
+    } catch (e) {
+      saved(false);
+      throw e;
+    } finally {
+      inFlight.delete(key);
+    }
+  });
+
+  async function saveAndConfirm(req, reply, s, uploads, ip, html) {
     // Never trust the name or type the browser sent. Each file is decoded and rewritten as a
     // plain JPEG; anything that is not a picture is refused. See lib/images.js.
     const files = [];
@@ -195,6 +234,25 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const job = deliver(store, id, deliverOpts).catch((e) => req.log.error(e, 'quote delivery failed')).finally(() => running.delete(job));
     running.add(job);
     return reply;
+  }
+
+  // Delivery health for an outside monitor. Kept off /health, which Fly checks: a database
+  // outage must not make Fly restart a machine that still serves every page.
+  const digest = (x) => crypto.createHash('sha256').update(String(x)).digest();
+  app.get('/health/delivery', async (req, reply) => {
+    const token = process.env.STATUS_TOKEN;
+    if (!token || !crypto.timingSafeEqual(digest(req.headers['x-status-token'] || ''), digest(token))) return reply.callNotFound();
+    reply.header('Cache-Control', 'no-store');
+    if (!store?.status) return reply.code(503).send({ db: 'not configured', pending: null, oldestPendingMinutes: null, failed: null });
+    try {
+      const counts = await Promise.race([
+        store.status(now()),
+        new Promise((_, no) => setTimeout(() => no(new Error('database did not answer within 3 seconds')), 3000).unref()),
+      ]);
+      return { db: 'ok', ...counts };
+    } catch (e) {
+      return reply.code(503).send({ db: 'error', error: e.message, pending: null, oldestPendingMinutes: null, failed: null });
+    }
   });
 
   if (store) {

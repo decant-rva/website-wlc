@@ -136,4 +136,38 @@ export async function retryPass(store, opts = {}) {
   if (stuck.length) {
     try { await (opts.alert || sendAlert)(stuck); await store.markAlerted(stuck.map((s) => s.id)); } catch { /* tried again on the next pass */ }
   }
+  await dailySummary(store, now, opts);
+}
+
+/** Hour (UTC) after which the day's summary goes out: 13:00 UTC is 8 or 9 in the morning in New York. */
+export const SUMMARY_HOUR_UTC = 13;
+
+/**
+ * Once a day, on the first pass after SUMMARY_HOUR_UTC, emails a list of every request still
+ * undelivered, not only the ones newly stuck, so a request nobody acted on is reported again
+ * each morning. Nothing is sent when everything was delivered.
+ */
+export async function dailySummary(store, now, opts = {}) {
+  if (!store.claimDailySummary || now.getUTCHours() < (opts.summaryHourUtc ?? SUMMARY_HOUR_UTC)) return;
+  const day = now.toISOString().slice(0, 10);
+  try {
+    if (!(await store.claimDailySummary(day))) return;
+    const list = await store.undelivered();
+    if (list.length) await (opts.summary || sendSummary)(list, now);
+  } catch (e) {
+    console.error('daily undelivered summary not sent:', e.message);
+    await store.releaseDailySummary(day).catch(() => {});
+  }
+}
+
+export async function sendSummary(list, now = new Date(), transport) {
+  const t = transport || relay();
+  const age = (r) => Math.round((now.getTime() - new Date(r.created_at).getTime()) / 3600000);
+  const lines = list.map((r) => `#${r.id} ${r.name}, ${age(r)} h old. GigFriend: ${r.intake_state}, email: ${r.email_state}. ${r.last_error || ''}`.trim()).join('\n');
+  await t.sendMail({
+    from: { name: 'Wedding Lighting Co website', address: process.env.QUOTE_EMAIL_FROM },
+    to: process.env.QUOTE_EMAIL_TO,
+    subject: `Website quote requests still undelivered: ${list.length}`,
+    text: `These quote requests are saved on the website but have not fully reached GigFriend or the inbox. They are still being retried.\n\n${lines}`,
+  });
 }

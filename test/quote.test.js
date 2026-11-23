@@ -339,3 +339,95 @@ test('formWithErrors keeps the page whole for every replacement pattern', () => 
     assert.equal(out.split('</html>').length, 2, v);
   }
 });
+
+// Operations: repeats, the delivery status endpoint and the daily summary.
+
+test('a double click or a resubmitted page is saved and delivered once', async () => {
+  const { app, pool, sent } = await setup();
+  const [a, b] = await Promise.all([post(app, good, '10.0.1.1'), post(app, good, '10.0.1.1')]);
+  assert.deepEqual([a.statusCode, b.statusCode], [303, 303]);
+  assert.equal((await post(app, good, '10.0.1.1')).statusCode, 303, 'resubmitted a moment later');
+  await settle();
+  assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 1);
+  assert.equal(sent.email.length, 1);
+  assert.equal(sent.intake.length, 1);
+  // A changed answer is a new request.
+  assert.equal((await post(app, { ...good, details: 'Also a dance floor.' }, '10.0.1.1')).statusCode, 303);
+  await settle();
+  assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 2);
+  assert.equal(sent.email.length, 2);
+});
+
+test('a repeat is not confirmed when the first request could not be saved', async () => {
+  const { app, store } = await setup();
+  const save = store.save;
+  let calls = 0;
+  store.save = async (...args) => { calls++; await new Promise((r) => setTimeout(r, 50)); if (calls === 1) throw new Error('database down'); return save(...args); };
+  const [a, b] = await Promise.all([post(app, good, '10.0.1.2'), post(app, good, '10.0.1.2')]);
+  assert.equal(a.statusCode, 503);
+  assert.equal(b.statusCode, 303, 'the second click is saved on its own');
+  assert.equal(calls, 2);
+});
+
+test('the delivery status endpoint reports what is still owed, only with the token', async () => {
+  const { app, pool } = await setup({ intakeFails: true });
+  const get = (token) => app.inject({ method: 'GET', url: '/health/delivery', headers: token ? { 'x-status-token': token } : {} });
+  assert.equal((await get('anything')).statusCode, 404, 'no STATUS_TOKEN set: not there');
+  process.env.STATUS_TOKEN = 'monitor-secret';
+  try {
+    assert.equal((await get()).statusCode, 404);
+    assert.equal((await get('wrong')).statusCode, 404);
+    let res = await get('monitor-secret');
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.json(), { db: 'ok', pending: 0, failed: 0, oldestPendingMinutes: null });
+    assert.equal((await post(app, good, '10.0.1.3')).statusCode, 303);
+    await settle();
+    await pool.query("UPDATE quote_submissions SET created_at = now() - interval '90 minutes'");
+    res = await get('monitor-secret');
+    assert.equal(res.json().pending, 1);
+    assert.equal(res.json().failed, 1);
+    assert.ok(res.json().oldestPendingMinutes >= 89);
+    assert.equal(res.headers['cache-control'], 'no-store');
+    // /health itself does not depend on the database.
+    assert.deepEqual(Object.keys((await app.inject({ method: 'GET', url: '/health' })).json()), ['ok', 'sha', 'staging']);
+  } finally { delete process.env.STATUS_TOKEN; }
+});
+
+test('the delivery status endpoint answers 503 when the database does not', async () => {
+  process.env.STATUS_TOKEN = 't';
+  try {
+    const { app, store } = await setup();
+    store.status = async () => { throw new Error('connection refused'); };
+    const res = await app.inject({ method: 'GET', url: '/health/delivery', headers: { 'x-status-token': 't' } });
+    assert.equal(res.statusCode, 503);
+    assert.equal(res.json().db, 'error');
+  } finally { delete process.env.STATUS_TOKEN; }
+});
+
+test('every morning, the requests still undelivered are listed in one email, once a day', async () => {
+  const { app, store, pool, deliverOpts } = await setup({ intakeFails: true });
+  const summaries = [];
+  const opts = { ...deliverOpts, summary: async (list) => { summaries.push(list); } };
+  assert.equal((await post(app, good, '10.0.1.4')).statusCode, 303);
+  await settle();
+  const at = (iso) => () => new Date(iso);
+  await retryPass(store, { ...opts, now: at('2030-01-05T12:50:00Z') });
+  assert.equal(summaries.length, 0, 'not before 13:00 UTC');
+  await retryPass(store, { ...opts, now: at('2030-01-05T13:05:00Z') });
+  await retryPass(store, { ...opts, now: at('2030-01-05T15:00:00Z') });
+  assert.equal(summaries.length, 1, 'once a day');
+  assert.equal(summaries[0].length, 1);
+  assert.equal(summaries[0][0].name, 'Test Person');
+  await retryPass(store, { ...opts, now: at('2030-01-06T13:10:00Z') });
+  assert.equal(summaries.length, 2, 'and again the next day while it is still undelivered');
+  // A failed send is tried again on the next pass.
+  let tries = 0;
+  const flaky = { ...deliverOpts, summary: async () => { tries++; if (tries === 1) throw new Error('smtp down'); } };
+  await retryPass(store, { ...flaky, now: at('2030-01-07T13:00:00Z') });
+  await retryPass(store, { ...flaky, now: at('2030-01-07T13:10:00Z') });
+  assert.equal(tries, 2);
+  // Nothing undelivered: no email.
+  await pool.query("UPDATE quote_submissions SET intake_state = 'sent', email_state = 'sent'");
+  await retryPass(store, { ...opts, now: at('2030-01-08T13:00:00Z') });
+  assert.equal(summaries.length, 2);
+});

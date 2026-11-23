@@ -125,5 +125,51 @@ export function quoteStore(db) {
     async markAlerted(ids) {
       for (const id of ids) await db.query('UPDATE quote_submissions SET alerted = true WHERE id = $1', [id]);
     },
+    /** Every submission with a delivery still owed, oldest first, for the daily summary. */
+    async undelivered() {
+      const { rows } = await db.query(
+        `SELECT id, name, created_at, intake_state, email_state, last_error FROM quote_submissions
+         WHERE intake_state <> 'sent' OR email_state <> 'sent' ORDER BY id`);
+      return rows;
+    },
+    /** Counts for the delivery status endpoint. */
+    async status(now = new Date()) {
+      const { rows } = await db.query(
+        `SELECT id, created_at, intake_state, email_state FROM quote_submissions
+         WHERE intake_state <> 'sent' OR email_state <> 'sent'`);
+      const oldest = rows.reduce((m, r) => Math.min(m, new Date(r.created_at).getTime()), Infinity);
+      return {
+        pending: rows.length,
+        failed: rows.filter((r) => r.intake_state === 'failed' || r.email_state === 'failed').length,
+        oldestPendingMinutes: rows.length ? Math.max(0, Math.floor((now.getTime() - oldest) / 60000)) : null,
+      };
+    },
+    /**
+     * The id of a request from the same person, saved in the last two minutes, with the same
+     * name, event date, details and services: a double click or a resubmitted page.
+     */
+    async findRepeat(s, now = new Date()) {
+      const { rows } = await db.query(
+        'SELECT id, name, event_date, details, services FROM quote_submissions WHERE email = $1 AND created_at >= $2 ORDER BY id DESC',
+        [s.email, new Date(now.getTime() - 2 * 60 * 1000)]);
+      const services = s.services.join(', ');
+      const same = rows.find((r) => r.name === s.name && r.event_date === s.eventDate && r.details === s.details && r.services === services);
+      return same ? same.id : null;
+    },
+    /** True for the first caller on a given day; later callers (a restart, a second machine) get false. */
+    async claimDailySummary(day) {
+      // A plain insert: the primary key refuses a second row for the same day.
+      try {
+        await db.query('INSERT INTO quote_daily_summary (day) VALUES ($1)', [day]);
+        return true;
+      } catch (e) {
+        if (e.code === '23505' || /duplicate|unique/i.test(e.message)) return false;
+        throw e;
+      }
+    },
+    /** Gives the day back when the summary could not be sent, so the next pass tries again. */
+    async releaseDailySummary(day) {
+      await db.query('DELETE FROM quote_daily_summary WHERE day = $1', [day]);
+    },
   };
 }

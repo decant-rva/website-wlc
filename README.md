@@ -122,6 +122,7 @@ kept in Postgres with the request and shown in the body of the notification emai
 | `TURNSTILE_SECRET` | Optional. Turns on the Cloudflare Turnstile check. **Do not set it yet:** the form has no Turnstile widget, so with the secret set no visitor can pass the check |
 | `CF_ORIGIN_SECRET` | Proof that a request came through Cloudflare. Required before Cloudflare is put in front (see below) |
 | `CANONICAL_HOST` | Set in the fly files. Requests to the app's `fly.dev` address are redirected to this host |
+| `STATUS_TOKEN` | Optional secret for `GET /health/delivery` (see "Watching deliveries"). Unset, that endpoint is a 404 |
 | `RETRY_EVERY_MS` | How often the retry worker looks for undelivered requests. Default 10 minutes, so the Neon database can scale to zero |
 
 Email is sent through `smtp.gmail.com` (set as `SMTP_HOST` in the fly settings files), signed in
@@ -167,6 +168,24 @@ machines never deliver the same request at once. Each step (GigFriend post, emai
 moment it succeeds, so a crash part way never repeats a step that went through. The intake post
 and the mail server have timeouts well inside the lease. On SIGINT (fly.io's stop signal) the
 server finishes requests and deliveries under way before it exits; `kill_timeout` gives it 30 s.
+
+The same request again within two minutes (same email, name, event date, details and services:
+a double click, or the page submitted again) gets the normal confirmation and is not saved or
+delivered a second time.
+
+### Watching deliveries
+
+- `GET /health` stays a plain "the server is up" answer for Fly's check, and is not logged.
+- `GET /health/delivery` reports `{ db, pending, failed, oldestPendingMinutes }` for an outside
+  monitor. It answers only when the `X-Status-Token` header matches the `STATUS_TOKEN` secret
+  (`fly secrets set STATUS_TOKEN=<random value>`); without the secret it is a 404. It answers 503
+  when the database does not respond within 3 seconds. Point an uptime monitor at it and alert
+  when it is not 200, or when `oldestPendingMinutes` passes 60.
+- Every day after 13:00 UTC (8 or 9 a.m. in New York) the first retry pass emails a list of every
+  request still undelivered, not only new ones. At most once a day, even with a restart or two
+  machines (`quote_daily_summary` records the day). Nothing is sent when everything was delivered.
+  It goes through the same mail account as the notifications, so it cannot report that account
+  failing; the status endpoint can.
 
 `migrations/` is applied at start-up. Each file runs once and is recorded in `schema_migrations`. Tests use an in-memory Postgres (`pg-mem`) and fake deliveries.
 
