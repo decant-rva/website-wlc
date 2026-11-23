@@ -118,7 +118,8 @@ export function turnstileRule({ secret, required, pageHasWidget }) {
   return required && pageHasWidget ? 'required' : 'verify-if-sent';
 }
 
-export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date() }) {
+// uploadBudget: bytes of uploads held in memory at once (tests pass a small one).
+export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fetch, now = () => new Date(), uploadBudget = 128 * 1024 * 1024 }) {
   // The pages the route answers with never change while the server runs.
   const pages = new Map();
   const page = (name) => {
@@ -157,28 +158,35 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     for (const u of uploads) h.update(crypto.createHash('sha256').update(u).digest());
     return h.digest('hex');
   };
-  // Uploads are read into memory before they can be checked, so only a few requests may read
-  // them at once; the rest wait (their bytes stay in the network buffers, not in this process).
-  // A looser per-address count, taken before anything is read, keeps one address from filling
-  // the queue with requests that will fail validation and never reach the main rate limit.
-  // The form always posts as multipart, even without photos, so these limits apply to every quote
-  // request. Six at once keeps the worst case near 6 x 40 MB; no address may hold more than two,
-  // so a few deliberately slow uploads from one place cannot keep everyone else waiting.
-  const UPLOAD_SLOTS = 6;
-  const PER_ADDRESS = 2;
-  const readingFrom = new Map();
-  let readingUploads = 0;
-  const waiting = [];
-  const takeSlot = () => (readingUploads < UPLOAD_SLOTS ? (readingUploads++, Promise.resolve()) : new Promise((r) => waiting.push(r)));
-  const giveSlot = () => { const next = waiting.shift(); if (next) next(); else readingUploads--; };
+  // Uploads are read into memory before they can be checked. Instead of making requests wait for
+  // a turn (a waiting request that is abandoned, or a deliberately slow one, can hold its place),
+  // the server keeps a budget of upload bytes held at once. A request that would go over it is
+  // read to the end without keeping its photos, and the visitor gets the form back with every
+  // answer kept, asked to send again or without photos. Bytes are held until the response is
+  // finished (or the connection closes), which covers decoding and saving too.
+  const budget = uploadBudget;
+  let held = 0;
+  // A looser per-address count, taken before anything is read, keeps one address from sending
+  // endless requests that fail validation and so never reach the main rate limit. A post refused
+  // here is not counted, so a refused address recovers as the window moves on.
   const posts = new Map();
   const tooManyPosts = (ip) => {
     const t = now().getTime();
     if (posts.size > 10000) for (const [k, v] of posts) if (t - v[v.length - 1] >= RATE_WINDOW) posts.delete(k);
     const recent = (posts.get(ip) || []).filter((x) => t - x < RATE_WINDOW);
+    if (recent.length >= RATE_LIMIT * 4) { posts.set(ip, recent); return true; }
     recent.push(t);
     posts.set(ip, recent);
-    return recent.length > RATE_LIMIT * 4;
+    return false;
+  };
+  // Requests saved in the last two minutes, by content key, so the same request with photos sent
+  // again after the first one finished (Back, then Submit) is still recognised as a repeat.
+  const recentlySaved = new Map();
+  const REPEAT_WINDOW = 2 * 60 * 1000;
+  const savedRecently = (key) => {
+    const t = now().getTime();
+    for (const [k, at] of recentlySaved) if (t - at >= REPEAT_WINDOW) recentlySaved.delete(k);
+    return recentlySaved.has(key);
   };
 
   // The form posts multipart. A plain urlencoded post is accepted too.
@@ -196,38 +204,38 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const fields = {};
     const uploads = [];
     let tooBig = false;
+    let busy = false;
     // Per-address limits need the visitor's own address: see clientIp() and CF_ORIGIN_SECRET.
     // (Skipping them when a CF-Connecting-IP header is unproven would let anyone bypass them by
     // sending that header to the fly.dev address.)
     const from = clientIp(req);
     if (tooManyPosts(from)) return html(429, page('quote-problem'));
-    const multi = req.isMultipart();
-    if (multi) {
-      if ((readingFrom.get(from) || 0) >= PER_ADDRESS) return html(429, page('quote-problem'));
-      readingFrom.set(from, (readingFrom.get(from) || 0) + 1);
-      await takeSlot();
-    }
+    let mine = 0;
+    let released = false;
+    const release = () => { if (!released) { released = true; held -= mine; } };
+    reply.raw.once('close', release);
     try {
-      if (multi) {
+      if (req.isMultipart()) {
         for await (const part of req.parts()) {
           if (part.type === 'file') {
             // Kept as sent for now. Decoding is the expensive part, so it waits until the request
-            // has passed every cheaper check below.
-            const bytes = await part.toBuffer();
-            if (part.file.truncated) tooBig = true;
-            else if (bytes.length) uploads.push(bytes);
+            // has passed every cheaper check below. Bytes are counted against the budget as they
+            // arrive; once a file would go over it, the rest of that file is read and dropped.
+            const chunks = [];
+            let size = 0;
+            for await (const c of part.file) {
+              if (busy) continue;
+              if (held + c.length > budget) { busy = true; held -= size; mine -= size; size = 0; chunks.length = 0; continue; }
+              held += c.length; mine += c.length; size += c.length; chunks.push(c);
+            }
+            if (part.file.truncated) { tooBig = true; held -= size; mine -= size; continue; }
+            if (size) uploads.push(Buffer.concat(chunks, size));
           } else if (part.fieldname === 'services') (fields.services ||= []).push(part.value);
           else fields[part.fieldname] = part.value;
         }
       } else Object.assign(fields, req.body || {});
     } catch (e) {
-      if (e.code === 'FST_REQ_FILE_TOO_LARGE' || e.code === 'FST_FILES_LIMIT') tooBig = true; else throw e;
-    } finally {
-      if (multi) {
-        giveSlot();
-        const n = (readingFrom.get(from) || 1) - 1;
-        if (n) readingFrom.set(from, n); else readingFrom.delete(from);
-      }
+      if (e.code === 'FST_REQ_FILE_TOO_LARGE' || e.code === 'FST_FILES_LIMIT') tooBig = true; else { release(); throw e; }
     }
 
     // A filled trap field is a bot. It gets the same confirmation and nothing is kept. The log
@@ -240,6 +248,10 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     const { s, bad } = validate(fields);
     const tooMany = `Send up to ${MAX_FILES} photos of ${MAX_FILE_BYTES / 1024 / 1024} MB or less each.`;
     if (Object.keys(bad).length || tooBig) return html(422, formWithErrors(page('get-a-quote'), s, bad, tooBig ? tooMany : ''));
+    if (busy) {
+      req.log.warn('quote request with photos refused: upload budget in use');
+      return html(503, formWithErrors(page('get-a-quote'), s, {}, 'We are receiving a lot of photos right now and could not take yours. Please send your request again in a minute, or send it without photos.'));
+    }
     const ip = clientIp(req);
     if (limited(ip)) return html(429, page('quote-problem'));
 
@@ -267,6 +279,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
     // A browser shows only the answer to the last click, so the second request waits for the
     // first and confirms only if the first was saved. Checking and marking happen with no await
     // in between, so two requests arriving together cannot both pass.
+    if (savedRecently(key)) return reply.redirect('/quote-sent', 303);
     while (inFlight.has(key)) {
       if (await inFlight.get(key)) return reply.redirect('/quote-sent', 303);
     }
@@ -285,6 +298,7 @@ export function registerQuote(app, { dist, store, deliverOpts = {}, fetchFn = fe
       }
       const out = await saveAndConfirm(req, reply, s, uploads, ip, html);
       saved(reply.statusCode === 303);
+      if (reply.statusCode === 303) recentlySaved.set(key, now().getTime());
       return out;
     } catch (e) {
       saved(false);

@@ -557,3 +557,86 @@ test('a made-up CF-Connecting-IP header does not escape the rate limit', async (
   for (let i = 0; i < 7; i++) codes.push((await post(app, { ...good, name: `Customer ${i}` }, '10.0.0.9', { 'cf-connecting-ip': `198.51.100.${i}` })).statusCode);
   assert.deepEqual(codes, [303, 303, 303, 303, 303, 429, 429]);
 });
+
+// Upload budget (replaces the waiting queue, which could lose places to abandoned requests).
+const noisePng = (n = 420) => sharp({ create: { width: n, height: n, channels: 3, noise: { type: 'gaussian', mean: 128, sigma: 60 } } }).png().toBuffer();
+async function budgetApp(budget) {
+  // pg-mem cannot store larger binary photos, so these tests count saves in a small stand-in store.
+  const saved = [];
+  const store = { save: async (row, files) => { saved.push({ row, files }); return saved.length; }, load: async () => null, findRepeat: async () => null };
+  const pool = { query: async (q) => ({ rows: /quote_files/.test(q) ? saved.flatMap((x) => x.files) : saved }) };
+  const app = build({ quote: { store, uploadBudget: budget, deliverOpts: { intake: async () => {}, email: async () => {}, alert: async () => {} } } });
+  apps.add(app);
+  await app.listen({ port: 0, host: '127.0.0.1' });
+  return { app, pool, url: `http://127.0.0.1:${app.server.address().port}/api/quote` };
+}
+const photoForm = (photo, extra = {}) => {
+  const f = new FormData();
+  for (const [k, v] of Object.entries({ ...good, ...extra })) f.append(k, v);
+  if (photo) f.append('files', new Blob([photo], { type: 'image/png' }), 'a.png');
+  return f;
+};
+
+test('the upload budget is given back after each request, and over it the form comes back with answers kept', async () => {
+  const photo = await noisePng();
+  const { app, pool, url } = await budgetApp(photo.length + 1000);
+  try {
+    for (let i = 0; i < 3; i++) {
+      const r = await fetch(url, { method: 'POST', body: photoForm(photo, { name: `Person ${i}` }), redirect: 'manual' });
+      assert.equal(r.status, 303, `request ${i}: the budget was released after the previous one`);
+    }
+    // Two at once: one fits, the other is asked to send again, with its answers kept.
+    const [a, b] = await Promise.all(['X', 'Y'].map((n) => fetch(url, { method: 'POST', body: photoForm(photo, { name: `Busy ${n}` }), redirect: 'manual' }).then(async (r) => ({ status: r.status, body: await r.text() }))));
+    const statuses = [a.status, b.status].sort();
+    assert.deepEqual(statuses, [303, 503]);
+    const refused = a.status === 503 ? a : b;
+    assert.match(refused.body, /receiving a lot of photos/);
+    assert.match(refused.body, /id="q-email"[^>]*value="test@example.com"/);
+    await settle();
+    assert.equal((await pool.query('SELECT * FROM quote_files')).rows.length, 4);
+  } finally { await app.close(); }
+});
+
+test('an upload abandoned part way gives its budget back', async () => {
+  const photo = await noisePng();
+  const { app, url } = await budgetApp(photo.length + 1000);
+  try {
+    const net = await import('node:net');
+    const { port } = app.server.address();
+    const boundary = 'abandon';
+    const head = Object.entries(good).map(([k, v]) => `--${boundary}\r\nContent-Disposition: form-data; name="${k}"\r\n\r\n${v}\r\n`).join('')
+      + `--${boundary}\r\nContent-Disposition: form-data; name="files"; filename="a.png"\r\nContent-Type: image/png\r\n\r\n`;
+    // Hangs up after half the photo, and again after the whole request but before the answer.
+    for (const [part, label] of [[photo.subarray(0, photo.length >> 1), 'half'], [Buffer.concat([photo, Buffer.from(`\r\n--${boundary}--\r\n`)]), 'whole']]) {
+      await new Promise((resolve) => {
+        const sock = net.connect(port, '127.0.0.1', () => {
+          const total = label === 'whole' ? head.length + part.length : head.length + photo.length + 100;
+          sock.write(`POST /api/quote HTTP/1.1\r\nHost: x\r\nContent-Type: multipart/form-data; boundary=${boundary}\r\nContent-Length: ${total}\r\n\r\n${head}`);
+          sock.write(part, () => setTimeout(() => { sock.destroy(); resolve(); }, label === 'whole' ? 5 : 100));
+        });
+        sock.on('error', () => {});
+      });
+      await new Promise((r) => setTimeout(r, 500));
+      const r = await fetch(url, { method: 'POST', body: photoForm(photo, { name: `After ${label}` }), redirect: 'manual' });
+      assert.equal(r.status, 303, `after hanging up with the ${label} photo sent`);
+    }
+  } finally { await app.close(); }
+});
+
+test('the same request with a photo sent again after the first finished is a repeat', async () => {
+  const photo = await noisePng(80);
+  const { app, pool, url } = await budgetApp(10 * 1024 * 1024);
+  try {
+    for (let i = 0; i < 2; i++) assert.equal((await fetch(url, { method: 'POST', body: photoForm(photo), redirect: 'manual' })).status, 303);
+    await settle();
+    assert.equal((await pool.query('SELECT * FROM quote_submissions')).rows.length, 1);
+  } finally { await app.close(); }
+});
+
+test('posts refused for coming too often are not counted against the address', async () => {
+  const { app } = await setup();
+  const codes = [];
+  for (let i = 0; i < 24; i++) codes.push((await post(app, { ...good, email: 'x' }, '10.0.0.44')).statusCode);
+  assert.deepEqual(codes.slice(0, 20), Array(20).fill(422));
+  assert.deepEqual(codes.slice(20), [429, 429, 429, 429]);
+});
