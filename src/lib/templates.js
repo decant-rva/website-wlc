@@ -8,6 +8,7 @@ import site from '../data/site.json';
 import { allEntries, firstPhoto, latestPosts, trail as trailFor } from './entries.js';
 import { photos } from './photos.js';
 import { blocks, cleanAlt, crumbs, cta, esc, fmtDate, friends, inline, pageHead, pic, prose } from './html.js';
+import { BOOKING_SCALE, SUBSCRIBE_FORM, serviceGroup } from '../../server/lib/quote-form-data.js';
 
 const sentences = (s) => s.split(/(?<=[.?!])\s+/);
 
@@ -178,8 +179,8 @@ function serviceCards(bl) {
   }
   return out;
 }
-// Discipline colour for each service: lights blue, decor green, AV red, drapes magenta.
-const DISCIPLINE = { Drapes: 'dr', 'Silk Florals & Trees': 'de', Decor: 'de', 'LED Dance Floor': 'de', Video: 'av', 'Live Audio': 'av', 'Special Effects': 'av' };
+// Discipline colour for each service (lights blue, decor green, AV red, drapes magenta): serviceGroup()
+// in server/lib/quote-form-data.js, shared with the notification email.
 
 // ---- home
 const HERO = [
@@ -212,7 +213,7 @@ async function home(entry, trail, h) {
   const aimg = ab.find((b) => b[0] === 'img');
   const about = aimg ? `<section class="about"><figure>${pic(aimg[1], { alt: 'wedding decorators' })}</figure><div>${prose(ab.filter((b) => b[0] !== 'img' && b[0] !== 'raw'))}</div></section>` : '';
   const cards = serviceCards(blocks(entries.get('/services').body));
-  const tiles = `<section class="svct"><h2>Services</h2><ul>${cards.map((c) => `<li><a class="${DISCIPLINE[c.name] || 'li'}" href="${c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}<span>${inline(c.name)}</span></a></li>`).join('')}</ul></section>`;
+  const tiles = `<section class="svct"><h2>Services</h2><ul>${cards.map((c) => `<li><a class="${serviceGroup(c.name)}" href="${c.href}">${pic(c.img[1], { alt: '', sizes: '8rem' })}<span>${inline(c.name)}</span></a></li>`).join('')}</ul></section>`;
   return { html: `${hero}${intro}<div class="fband">${featured()}</div>${bans}${cta()}${about}${tiles}`, bodyClass: 'home', closing: false };
 }
 
@@ -279,8 +280,8 @@ export function timeChart({ heading = 'What we spend our time doing', stats = tr
   const st = stats ? `<ul class="tms">${TIME_STATS.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join('')}</ul>` : '';
   return `<section class="tm tq tq2"><h2>${esc(heading)}</h2>${st}<div class="tq-pan">${panels}</div></section>`;
 }
-// Email sign-up, the same form as src/components/SubscribeForm.astro. Posts to /api/subscribe.
-const SUBSCRIBE = '<form class="quote subscribe" action="/api/subscribe" method="post"><p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p><p class="trap" aria-hidden="true"><label for="s-extra">Leave this empty</label><input id="s-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p><p><button class="btn solid" type="submit">Subscribe</button></p></form>';
+// Email sign-up, shared with src/components/SubscribeForm.astro (server/lib/quote-form-data.js).
+const SUBSCRIBE = SUBSCRIBE_FORM;
 // Discipline of each of the eight newest products, in page order.
 const NEWEST = ['de', 'li', 'li', 'li', 'de', 'de', 'de', 'li'];
 async function catalog(entry, trail, h) {
@@ -504,15 +505,8 @@ const QUOTE_SERVICE_PHOTOS = {
   "Special Effects": ["a16fb7_ccfdf0365a6c4c2aa959b6a0045734b1~mv2.jpg", "Epic Bridal photo with cold sparks Maymont Richmond Virginia wedding lighting decor trends"],
   "Video": ["a16fb7_3a492250d9864a5bbe6d6d3e968e092f~mv2.jpg", "video projections for academy awards show"],
 };
-// "When to book" wording supplied by the owner, 22 November 2026. Third value: bars lit out of six.
-const BOOKING = [
-  ["12 months or more", "Certain", 6],
-  ["9 to 12 months", "Almost certain", 5],
-  ["6 to 9 months", "Likely", 4],
-  ["3 to 6 months", "No custom order, dates spotty", 3],
-  ["2 to 3 months", "Unlikely", 2],
-  ["< 1 Month", "Rarely available. Limited Options", 1],
-];
+// "When to book": label, outlook, bars lit out of six. One scale with the email: server/lib/quote-form-data.js.
+const BOOKING = BOOKING_SCALE.map((r) => [r.label, r.outlook, r.bars]);
 // Service slideshow and review rotation. Both stop for reduced motion; reviews stop once the visitor touches them.
 // Slideshows only advance while they are on screen and the tab is visible: each step downloads a 1200 px photo.
 const QUOTE_JS = `<script>(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const s=document.querySelector('.svs'),D=JSON.parse(s.dataset.s),[a,b]=s.querySelectorAll('img'),l=s.querySelector('.svn a'),p=s.querySelector('.hp');let i=0,t=0;let seen=0;new IntersectionObserver(e=>{seen=e[0].isIntersecting}).observe(s);setInterval(()=>{if(p.checked||!seen||document.hidden)return;const d=D[i=(i+1)%D.length],n=new Image;n.onload=()=>{const f=t?a:b;f.src=d[0];f.alt=d[1];b.style.opacity=t?0:1;t=!t;l.textContent=d[2];l.href=d[3]};n.src=d[0]},3000);const v=document.querySelector('.rvs'),r=[...v.querySelectorAll('input')];let on=1;v.onpointerdown=v.onkeydown=()=>on=0;setInterval(()=>{if(on&&!v.matches(':hover,:focus-within'))r[(r.findIndex(x=>x.checked)+1)%r.length].checked=true},6000)})()</script>`;

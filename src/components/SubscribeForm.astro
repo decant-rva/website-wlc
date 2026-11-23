@@ -1,8 +1,6 @@
 ---
 // Email sign-up. Posts to /api/subscribe, which confirms by email before adding anyone.
+// The markup is shared with the catalog page: server/lib/quote-form-data.js.
+import { SUBSCRIBE_FORM } from '../../server/lib/quote-form-data.js';
 ---
-<form class="quote subscribe" action="/api/subscribe" method="post">
-  <p><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></p>
-  <p class="trap" aria-hidden="true"><label for="s-extra">Leave this empty</label><input id="s-extra" name="qz_extra" tabindex="-1" autocomplete="off"></p>
-  <p><button class="btn solid" type="submit">Subscribe</button></p>
-</form>
+<Fragment set:html={SUBSCRIBE_FORM} />
