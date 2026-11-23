@@ -1,0 +1,107 @@
+---
+import '../styles/site.css';
+import site from '../data/site.json';
+import { allEntries, trail } from '../lib/entries.js';
+import { schemaFor } from '../lib/schema.js';
+import { ogTags } from '../lib/share.js';
+import { cta } from '../lib/html.js';
+
+// bodyClass: template classes the stylesheet keys on.
+// closing: false leaves out the "Tell us about your event!" band.
+// quoteBar: false leaves out the full-width Get A Quote bar above the footer.
+// A page with no content entry passes title, and may pass canonical and section
+// (the menu item to mark as current).
+const { entry, bodyClass = '', closing = true, quoteBar = true, title, description, canonical, section: sectionProp, noindex = false } = Astro.props;
+const d = entry?.data;
+const entries = await allEntries();
+const staging = import.meta.env.PUBLIC_STAGING === '1';
+const robots = staging ? 'noindex, nofollow' : (noindex ? 'noindex' : d?.robots);
+const path = d?.path;
+const section = entry ? trail(entry, entries, site.nav)[1]?.path : sectionProp;
+const current = (item) => item.href === path || (item.href !== '/' && item.href === section);
+const services = site.nav.find((n) => n.label === 'Services').children;
+const footerCols = [
+  { heading: 'Services', links: services },
+  { heading: 'Catalog', links: site.footerCatalog },
+  ...site.footer,
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{d?.title ?? title}</title>
+{(d?.description ?? description) && <meta name="description" content={d?.description ?? description}>}
+{(d?.canonical ?? canonical) && <link rel="canonical" href={d?.canonical ?? canonical}>}
+{robots && <meta name="robots" content={robots}>}
+{d && Object.entries(ogTags(d.og)).map(([property, content]) => <meta property={property} content={content}>)}
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preload" href="/fonts/league-spartan-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+{entry && schemaFor(entry, entries).map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+</head>
+<body class={`th4 t-${d?.template ?? 'none'} p-${!path ? 'none' : path === '/' ? 'home' : path.slice(1).split('/')[0]} ${bodyClass}`.trim()}>
+<a class="skip" href="#main">Skip to Main Content</a>
+<header class="hd">
+  <a class="logo" href="/"><img src="/img/wordmark.webp" alt="Wedding Lighting Co home" width="356" height="360"></a>
+  <nav aria-label="Main">
+    <ul>
+      {site.nav.map((item) => (
+        <li>
+          <a href={item.href} aria-current={current(item) ? 'page' : undefined}>{item.label}</a>
+          {item.children && (
+            <ul class="sub">
+              {item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <a class="btn solid q" href="/get-a-quote">Get A Quote</a>
+  <details class="menu">
+    <summary>Menu</summary>
+    <ul>
+      {site.nav.map((item) => (
+        <li>
+          <a href={item.href} aria-current={current(item) ? 'page' : undefined}>{item.label}</a>
+          {item.children && (
+            <ul class="sub">
+              {item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </details>
+</header>
+<main id="main">
+  <slot />
+  {closing && <Fragment set:html={cta()} />}
+</main>
+<footer class="ft2 lk6 tp hwd">
+  {quoteBar && <a class="fq" href="/get-a-quote">Get A Quote</a>}
+  <div class="fs">
+    <div class="fa">
+      <img class="bg" src="/img/badge.webp" alt="" width="480" height="480" loading="lazy">
+      <a class="flogo" href="/"><img src="/img/wordmark.webp" alt="Wedding Lighting Co home" width="356" height="360" loading="lazy"></a>
+      <p class="floc2">{site.areasLine}</p>
+      <a class="btn solid" href={`tel:${site.phone}`}>{site.phone}</a>
+      <a href={site.emailHref}>{site.email}</a>
+      <p class="soc">{site.social.map((s) => <a href={s.href} rel="noopener">{s.label}</a>)}</p>
+    </div>
+    <div class="fb">
+      {footerCols.map((col) => (
+        <nav aria-label={col.heading}>
+          <p class="fh">{col.heading}</p>
+          <ul>
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+    </div>
+  </div>
+</footer>
+</body>
+</html>

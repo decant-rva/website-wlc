@@ -1,0 +1,6 @@
+---
+// Email sign-up. Posts to /api/subscribe, which confirms by email before adding anyone.
+// The markup is shared with the catalog page: server/lib/quote-form-data.js.
+import { SUBSCRIBE_FORM } from '../../server/lib/quote-form-data.js';
+---
+<Fragment set:html={SUBSCRIBE_FORM} />

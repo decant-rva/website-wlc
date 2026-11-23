@@ -1,0 +1,244 @@
+{
+  "name": "The Wedding Lighting Company",
+  "shortName": "Wedding Lighting Co",
+  "url": "https://www.weddinglightingco.com",
+  "phone": "804-410-3605",
+  "email": "info@weddinglightingco.com",
+  "emailHref": "mailto:info@weddinglightingco.com?subject=Request%20for%20Event%20Lighting%2FDecor%20Services",
+  "address": {
+    "street": "1535 West Avenue",
+    "city": "Richmond",
+    "region": "VA",
+    "postalCode": "23220",
+    "country": "US"
+  },
+  "serviceAreas": [
+    "Richmond",
+    "Charlottesville",
+    "Washington, DC"
+  ],
+  "nav": [
+    {
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "label": "Services",
+      "href": "/services",
+      "children": [
+        {
+          "label": "Uplighting",
+          "href": "/uplighting"
+        },
+        {
+          "label": "String Lighting",
+          "href": "/string-lighting"
+        },
+        {
+          "label": "Pin Spots",
+          "href": "/pin-spots"
+        },
+        {
+          "label": "Drapes",
+          "href": "/drapery"
+        },
+        {
+          "label": "Chandeliers & Pendants",
+          "href": "/chandeliers-pendants"
+        },
+        {
+          "label": "Gobos",
+          "href": "/gobos"
+        },
+        {
+          "label": "Dance Floor Lighting",
+          "href": "/dance-floor-lighting"
+        },
+        {
+          "label": "Decor",
+          "href": "/decor"
+        }
+      ]
+    },
+    {
+      "label": "Catalog",
+      "href": "/catalog"
+    },
+    {
+      "label": "Pictures",
+      "href": "/venue"
+    },
+    {
+      "label": "Blog",
+      "href": "/blog"
+    },
+    {
+      "label": "About",
+      "href": "/about-wedding-lighting-co",
+      "children": [
+        {
+          "label": "Packages",
+          "href": "/wedding-decor-package-cost"
+        },
+        {
+          "label": "Reviews",
+          "href": "/reviews"
+        },
+        {
+          "label": "FAQ",
+          "href": "/faq"
+        },
+        {
+          "label": "Jobs",
+          "href": "/careers-overhire-hiring"
+        },
+        {
+          "label": "Photo Credit",
+          "href": "/photo-credit"
+        }
+      ]
+    },
+    {
+      "label": "Contact Us",
+      "href": "/contact-us"
+    }
+  ],
+  "footer": [
+    {
+      "heading": "Get Started",
+      "links": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Services",
+          "href": "/services"
+        },
+        {
+          "label": "Gallery",
+          "href": "/portfolio"
+        },
+        {
+          "label": "Contact Us",
+          "href": "/contact-us"
+        },
+        {
+          "label": "FAQ",
+          "href": "/faq"
+        }
+      ]
+    },
+    {
+      "heading": "Our Company",
+      "links": [
+        {
+          "label": "Jobs",
+          "href": "/careers-overhire-hiring"
+        },
+        {
+          "label": "Contact Us",
+          "href": "/contact-us"
+        },
+        {
+          "label": "Catalog",
+          "href": "/catalog"
+        },
+        {
+          "label": "Reviews",
+          "href": "/reviews"
+        },
+        {
+          "label": "Pricing",
+          "href": "/wedding-decor-package-cost"
+        },
+        {
+          "label": "Blog",
+          "href": "/blog"
+        }
+      ]
+    },
+    {
+      "heading": "Support",
+      "links": [
+        {
+          "label": "Terms of Service",
+          "href": "/"
+        },
+        {
+          "label": "Privacy Policy",
+          "href": "/privacy-policy"
+        },
+        {
+          "label": "Photo Credit",
+          "href": "/photo-credit"
+        },
+        {
+          "label": "Subscribe",
+          "href": "/subscribe"
+        },
+        {
+          "label": "Accessibility Statement",
+          "href": "/accessibility-statement"
+        }
+      ]
+    }
+  ],
+  "social": [
+    {
+      "label": "Instagram",
+      "href": "https://www.instagram.com/weddinglightingco/"
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/weddinglightingco/"
+    },
+    {
+      "label": "Pinterest",
+      "href": "https://www.pinterest.com/weddinglightingco/"
+    }
+  ],
+  "areasLine": "richmond • charlottesville • dc",
+  "footerCatalog": [
+    {
+      "label": "Chandeliers & Pendants",
+      "href": "/chandelier-pendant-catalog"
+    },
+    {
+      "label": "Drape Rentals",
+      "href": "/drape-walls-backdrops-canopies"
+    },
+    {
+      "label": "Hanging Decor",
+      "href": "/hanging-decor"
+    },
+    {
+      "label": "LED Lighting",
+      "href": "/led-lighting-catalog"
+    },
+    {
+      "label": "String Lighting",
+      "href": "/catalog/string-lighting-catalog"
+    },
+    {
+      "label": "Silk Florals",
+      "href": "/catalog/silk-florals-catalog"
+    },
+    {
+      "label": "Standing Lighting & Decor",
+      "href": "/catalog/standing-lighting-decor"
+    },
+    {
+      "label": "Table Lighting & Decor",
+      "href": "/catalog/table-lighting-decor-catalog"
+    },
+    {
+      "label": "Video",
+      "href": "/catalog/event-wedding-band-video"
+    },
+    {
+      "label": "Stages",
+      "href": "/product-page/bil-jax-staging-system"
+    }
+  ]
+}
