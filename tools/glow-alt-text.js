@@ -6,6 +6,7 @@
 //   node tools/glow-alt-text.js draft <work-dir> [options]       Glow's writing lane turns each description into alt text
 //   node tools/glow-alt-text.js proposals <work-dir> <vault-dir> one proposal note per page, a tick box per photo
 //   node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]  ticked lines of approved notes go into the content files
+//   node tools/glow-alt-text.js apply --decisions <dir|file>      or: approved decisions from the Glow Alt Text Review page
 //
 // draft options: --url <chat endpoint> (default the hub's http://127.0.0.1:8790/ollama/mac/api/chat), --model
 // (default mistral-medium-3.5), --header "Name: value" (repeatable), --limit <n>, --timeout <seconds>,
@@ -452,43 +453,91 @@ export function approved(vault) {
 
 const mdAlt = (s) => s.replace(/\\/g, '').replace(/\[/g, '(').replace(/\]/g, ')');
 
+/** Writes one page's ticked items into its content file. Never replaces alt text a photo already has. */
+function applyGroup(root, g, report) {
+  const abs = path.join(root, ...String(g.file).split('/'));
+  if (!g.file || !fs.existsSync(abs)) { report.notFound.push(`${g.label}: no file ${g.file}`); return 0; }
+  let changed = 0;
+  if (g.file === 'content/venues.json') {
+    const data = JSON.parse(readText(abs));
+    const slug = String(g.target || '').replace(/^\/venue\//, '');
+    for (const it of g.items) {
+      const hits = data.venues.filter((v) => v.slug === slug).flatMap((v) => v.photos || []).filter((x) => x.id === it.id);
+      if (!hits.length) { report.notFound.push(`${g.label}: ${it.id}`); continue; }
+      for (const h of hits) { if (cleanAlt(h.alt)) report.alreadyHadAlt++; else { h.alt = it.alt; changed++; } }
+    }
+    if (changed) fs.writeFileSync(abs, JSON.stringify(data, null, 1));
+  } else {
+    let text = fs.readFileSync(abs, 'utf8');
+    for (const it of g.items) {
+      let hit = false;
+      text = text.replace(PHOTO_RE, (all, alt, raw) => {
+        if (decodeId(raw) !== it.id) return all;
+        hit = true;
+        if (cleanAlt(alt)) { report.alreadyHadAlt++; return all; }
+        changed++;
+        return `![${mdAlt(it.alt)}](wix:${raw})`;
+      });
+      if (!hit) report.notFound.push(`${g.label}: ${it.id}`);
+    }
+    if (changed) fs.writeFileSync(abs, text);
+  }
+  report.applied += changed;
+  return changed;
+}
+
 export function apply(vault, { root = REPO, markApplied = false } = {}) {
   const report = { notes: 0, applied: 0, alreadyHadAlt: 0, notFound: [] };
   for (const p of approved(vault)) {
     report.notes++;
-    const abs = path.join(root, ...String(p.file).split('/'));
-    if (!p.file || !fs.existsSync(abs)) { report.notFound.push(`${p.note}: no file ${p.file}`); continue; }
-    let changed = 0;
-    if (p.file === 'content/venues.json') {
-      const data = JSON.parse(readText(abs));
-      const slug = String(p.target || '').replace(/^\/venue\//, '');
-      for (const it of p.items) {
-        const hits = data.venues.filter((v) => v.slug === slug).flatMap((v) => v.photos || []).filter((x) => x.id === it.id);
-        if (!hits.length) { report.notFound.push(`${p.note}: ${it.id}`); continue; }
-        for (const h of hits) { if (cleanAlt(h.alt)) report.alreadyHadAlt++; else { h.alt = it.alt; changed++; } }
-      }
-      if (changed) fs.writeFileSync(abs, JSON.stringify(data, null, 1));
-    } else {
-      let text = fs.readFileSync(abs, 'utf8');
-      for (const it of p.items) {
-        let hit = false;
-        text = text.replace(PHOTO_RE, (all, alt, raw) => {
-          if (decodeId(raw) !== it.id) return all;
-          hit = true;
-          if (cleanAlt(alt)) { report.alreadyHadAlt++; return all; }
-          changed++;
-          return `![${mdAlt(it.alt)}](wix:${raw})`;
-        });
-        if (!hit) report.notFound.push(`${p.note}: ${it.id}`);
-      }
-      if (changed) fs.writeFileSync(abs, text);
-    }
-    report.applied += changed;
+    const changed = applyGroup(root, { ...p, label: p.note }, report);
     if (markApplied && changed) {
       const nf = path.join(vault, 'Curation', 'Proposals', p.note);
       fs.writeFileSync(nf, readText(nf).replace(/^status: "?approved"?$/m, 'status: "applied"'));
     }
   }
+  return report;
+}
+
+/**
+ * Decisions from the Glow Alt Text Review page: a folder of `<photo id>.json` documents (as the
+ * artifact database tool saves them) or one JSON file holding an array of `{id, status, alt}`.
+ */
+export function readDecisions(src) {
+  const out = [];
+  const take = (id, o) => { const d = o && o.data && typeof o.data === 'object' ? o.data : o; if (id && d) out.push({ id: String(id), status: d.status, alt: oneLine(d.alt) }); };
+  if (fs.statSync(src).isDirectory()) {
+    const walk = (dir) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (e.isDirectory()) walk(path.join(dir, e.name));
+        else if (e.name.endsWith('.json')) { const o = JSON.parse(readText(path.join(dir, e.name))); take(o.id || e.name.replace(/\.json$/, ''), o); }
+      }
+    };
+    walk(src);
+  } else {
+    const o = JSON.parse(readText(src));
+    for (const x of Array.isArray(o) ? o : o.documents || o.docs || []) take(x.id, x);
+  }
+  return out;
+}
+
+/** Approved decisions go onto every page where that photo has no alt text yet. */
+export function applyDecisions(decisions, { root = REPO } = {}) {
+  const report = { decisions: decisions.length, approved: 0, applied: 0, alreadyHadAlt: 0, notFound: [] };
+  const jobs = new Map(collect(root).map((j) => [j.id, j]));
+  const groups = new Map();
+  for (const d of decisions) {
+    if (d.status !== 'approved' || !d.alt) continue;
+    report.approved++;
+    const j = jobs.get(d.id);
+    if (!j) { report.notFound.push(`${d.id}: no page has it without alt text`); continue; }
+    for (const u of j.uses) {
+      const k = `${u.file}\u0000${u.path}`;
+      if (!groups.has(k)) groups.set(k, { file: u.file, target: u.path, label: u.path, items: [] });
+      groups.get(k).items.push({ id: d.id, alt: d.alt });
+    }
+  }
+  for (const g of groups.values()) applyGroup(root, g, report);
   return report;
 }
 
@@ -511,6 +560,7 @@ async function main(argv) {
     else if (a === '--only') opts.only = [...(opts.only || []), rest[++i]];
     else if (a === '--redo-page') opts.redoPages = [...(opts.redoPages || []), rest[++i]];
     else if (a === '--mark-applied') opts.markApplied = true;
+    else if (a === '--decisions') opts.decisions = rest[++i];
     else pos.push(a);
   }
   if (cmd === 'prepare' && pos[0]) {
@@ -525,11 +575,14 @@ async function main(argv) {
   } else if (cmd === 'proposals' && pos[1]) {
     const r = proposals(path.resolve(pos[0]), path.resolve(pos[1]), { force: opts.force, only: opts.only || [] });
     console.log(`Proposal notes written ${r.written.length}, kept ${r.kept.length}. ${JSON.stringify(r.tally)}`);
+  } else if (cmd === 'apply' && opts.decisions) {
+    const r = applyDecisions(readDecisions(path.resolve(opts.decisions)));
+    console.log(`Decisions ${r.decisions}, approved ${r.approved}; alt text added to ${r.applied} photo uses; ${r.alreadyHadAlt} already had alt text and were left alone.${r.notFound.length ? `\nNot found:\n${r.notFound.join('\n')}` : ''}`);
   } else if (cmd === 'apply' && pos[0]) {
     const r = apply(path.resolve(pos[0]), { markApplied: opts.markApplied });
     console.log(`Approved notes ${r.notes}; alt text added to ${r.applied} photos; ${r.alreadyHadAlt} already had alt text and were left alone.${r.notFound.length ? `\nNot found:\n${r.notFound.join('\n')}` : ''}`);
   } else {
-    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s] [--redo id,id] [--redo-page /page/path]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force] [--only /page/path ...]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]');
+    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s] [--redo id,id] [--redo-page /page/path]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force] [--only /page/path ...]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]\n  node tools/glow-alt-text.js apply --decisions <folder or file from the review page>');
     process.exit(cmd ? 1 : 0);
   }
 }
