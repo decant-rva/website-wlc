@@ -7,7 +7,7 @@ canonical: "https://www.weddinglightingco.com/post/wedding-decor-dover-hall"
 robots: ""
 h1: ["Wedding Decor - Dover Hall"]
 og: {"og:title": "Wedding Decor - Dover Hall", "og:description": "Up-lighting, drapery, and cold sparks featured at Dover Hall Wedding. Decor that transforms a venue. ", "og:image": "https://static.wixstatic.com/media/f5b740_98b89fe327d5475ea3c31d319c26b68f~mv2.jpg/v1/fill/w_1437,h_958,al_c,q_85/f5b740_98b89fe327d5475ea3c31d319c26b68f~mv2.jpg", "og:image:width": "1437", "og:image:height": "958", "og:url": "https://www.weddinglightingco.com/post/wedding-decor-dover-hall", "og:site_name": "Wedding Lighting Co", "og:type": "article"}
-schema: {"@type": "BlogPosting", "headline": "Wedding Decor - Dover Hall", "description": "If you're having your spring wedding at Dover Hall, these pictures may help with some ideas and design inspiration for your decor.", "datePublished": "2025-02-06T15:34:55.864Z", "dateModified": "2025-04-05T12:35:59.320Z", "author": {"@type": "Person", "name": "Nic Creery", "url": "https://www.weddinglightingco.com/profile/nic/profile"}}
+schema: {"@type": "BlogPosting", "headline": "Wedding Decor - Dover Hall", "description": "If you're having your spring wedding at Dover Hall, these pictures may help with some ideas and design inspiration for your decor.", "datePublished": "2025-02-06T15:34:55.864Z", "dateModified": "2025-04-05T12:35:59.320Z", "author": {"@type": "Person", "name": "Nic Creery"}}
 categories: ["/blog/categories/wedding-decor", "/blog/categories/wedding-lighting-guides", "/blog/categories/wedding-lighting-inspiration"]
 tags: ["/blog/tags/dover-hall", "/blog/tags/drapes", "/blog/tags/uplighting-1"]
 ---

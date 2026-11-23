@@ -64,4 +64,4 @@ In venues with unattractive ceilings, drape canopies serve as a stylish and prac
 
 In tented venues, drape canopies are equally impactful, infusing the space with elegance and charm while visually dividing the ceiling into sections, creating a more intimate and captivating atmosphere. Whether it's a wedding reception, gala, or corporate event, drape canopies provide a captivating focal point, with the option to play with different colors, textures, and lighting effects to enhance the overall ambiance. From airy, ethereal canopies that cascade from the ceiling to more structured and tailored designs, drape canopies offer endless creative possibilities for customizing and enhancing event spaces.
 
-[Interested in a drapery canopy for your wedding or event? Explore our catalog!](/drape-canopies)
+[Interested in a drapery canopy for your wedding or event? Explore our catalog!](/drape-walls-backdrops-canopies)
