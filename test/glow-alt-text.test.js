@@ -224,3 +224,46 @@ test('apply never replaces alt text a photo already has, and handles venue photo
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test('a caption beside the photo is venue evidence: the /venue covers name their own venues, not Mount Ida', () => {
+  const linden = jobsAll.find((j) => j.id === 'a16fb7_b571d98a3ae34ac58944940b6a11c133~mv2.jpg');
+  assert.deepEqual(linden.venues, ['Linden Row Inn']);
+  assert.ok(linden.uses.some((u) => u.path === '/venue' && u.caption === 'Linden Row Inn'));
+  assert.match(promptFor(linden, 'A brick courtyard.'), /Caption beside the photo: Linden Row Inn/);
+  // Only Mount Ida's own photo may name it.
+  assert.deepEqual(jobsAll.filter((j) => j.venues.includes('Mount Ida Event Barn')).map((j) => j.id), []);
+  assert.deepEqual(jobsAll.find((j) => j.id.startsWith('a16fb7_6296c7d7')).venues, ['Jefferson Hotel']);
+});
+
+test('--redo drafts chosen photos again, and --only --force rewrites just those pages, dropping a stale draft note', async () => {
+  const { work, todo } = await prepared();
+  let alt = 'Amber uplighting on ivory drapes in a ballroom';
+  const chat = await fakeChat(() => JSON.stringify({ alt, confidence: 'high' }));
+  const vault = tmp();
+  try {
+    await draft(work, { url: chat.url, log: () => {} });
+    proposals(work, vault, { root: REPO, now: new Date('2026-11-23T12:00:00Z') });
+    const dir = path.join(vault, 'Curation', 'Proposals');
+    const linden = jobsAll.find((j) => j.id.startsWith('a16fb7_b571d98a'));
+    // A stale note for a page that no longer has anything to propose, still in draft.
+    fs.writeFileSync(path.join(dir, '2026-11-23 Alt text - Mount Ida Event Barn (venue).md'), '---\ntype: "proposal"\nstatus: "draft"\ntarget: "/venue/mount-ida-event-barn"\nfield: "alt"\n---\n# old\n');
+    const calls = chat.calls.length;
+    alt = 'Bistro lights over a brick courtyard reception at Linden Row Inn';
+    const r = await draft(work, { url: chat.url, redo: [linden.file], log: () => {} });
+    assert.equal(r.drafted, 1);
+    assert.equal(chat.calls.length, calls + 1);
+    const before = fs.readFileSync(path.join(dir, '2026-11-23 Alt text - UPLIGHTING.md'), 'utf8');
+    const p = proposals(work, vault, { root: REPO, now: new Date('2026-11-23T12:00:00Z'), force: true, only: ['/venue', '/venue/linden-row-inn', '/venue/mount-ida-event-barn'] });
+    assert.ok(p.removed.includes('2026-11-23 Alt text - Mount Ida Event Barn (venue).md'));
+    assert.ok(!fs.existsSync(path.join(dir, '2026-11-23 Alt text - Mount Ida Event Barn (venue).md')));
+    assert.match(fs.readFileSync(path.join(dir, '2026-11-23 Alt text - Linden Row Inn (venue).md'), 'utf8'), /: Bistro lights over a brick courtyard reception at Linden Row Inn$/m);
+    assert.match(fs.readFileSync(path.join(dir, '2026-11-23 Alt text - Pictures by Venue.md'), 'utf8'), /Linden Row Inn/);
+    // Pages not named in --only are left exactly as they were.
+    assert.equal(fs.readFileSync(path.join(dir, '2026-11-23 Alt text - UPLIGHTING.md'), 'utf8'), before);
+    assert.ok(todo.length > 0);
+  } finally {
+    await chat.close();
+    fs.rmSync(work, { recursive: true, force: true });
+    fs.rmSync(vault, { recursive: true, force: true });
+  }
+});

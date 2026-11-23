@@ -8,7 +8,8 @@
 //   node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]  ticked lines of approved notes go into the content files
 //
 // draft options: --url <chat endpoint> (default the hub's http://127.0.0.1:8790/ollama/mac/api/chat), --model
-// (default mistral-medium-3.5), --header "Name: value" (repeatable), --limit <n>, --timeout <seconds>.
+// (default mistral-medium-3.5), --header "Name: value" (repeatable), --limit <n>, --timeout <seconds>,
+// --redo <id or file,...> to draft those photos again. proposals --only <page path> --force rewrites just those pages' notes.
 // The endpoint may speak Ollama's /api/chat or the OpenAI /v1/chat/completions format.
 //
 // Every step can be re-run: done work is kept and skipped. Nothing reaches the website until the owner sets a
@@ -36,7 +37,8 @@ const noteId = (e) => `Site/${FOLDER[e.data.template] || 'Pages'}/${noteBase(e.d
 
 /** Known venue names, longest first, matched as whole words without a leading "The". */
 function venueMatcher(venues) {
-  const names = venues.map((v) => v.name).filter(Boolean).sort((a, b) => b.length - a.length);
+  // A venue is also known by the part of its name before " - " or " (": "Jefferson Hotel - Empire Ballroom" is the Jefferson Hotel.
+  const names = [...new Set(venues.map((v) => v.name).filter(Boolean).flatMap((n) => [n, n.split(/ - | \(/)[0].trim()]))].sort((a, b) => b.length - a.length);
   const key = (n) => n.toLowerCase().replace(/^the\s+/, '').replace(/[’']/g, "'");
   return (text) => {
     const t = ` ${String(text || '').toLowerCase().replace(/[’']/g, "'")} `;
@@ -82,7 +84,13 @@ export function collect(root = REPO) {
 
   for (const e of entries) {
     const body = e.body || '';
-    const refs = [...body.matchAll(PHOTO_RE)].map((m) => ({ id: decodeId(m[2]), alt: cleanAlt(m[1]), at: m.index }));
+    const refs = [...body.matchAll(PHOTO_RE)].map((m) => {
+      // Text after the photo on the same line is its caption: on /venue it is the venue's name.
+      const end = body.indexOf('\n', m.index + m[0].length);
+      const rest = body.slice(m.index + m[0].length, end < 0 ? undefined : end).replace(/^\]\([^)]*\)/, '');
+      const caption = oneLine(rest.replace(/\\$/, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_]/g, '')).slice(0, 120);
+      return { id: decodeId(m[2]), alt: cleanAlt(m[1]), at: m.index, caption };
+    });
     refs.forEach((r) => seen(r.id, r.alt));
     refs.forEach((r, i) => {
       if (r.alt) return;
@@ -95,6 +103,7 @@ export function collect(root = REPO) {
         heading: oneLine(heading.replace(/[*_#]/g, '')).slice(0, 120),
         text: oneLine(para.replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')).slice(0, 400),
         nearby: [...new Set(near)].slice(0, 6),
+        caption: r.caption,
       });
     });
   }
@@ -109,7 +118,7 @@ export function collect(root = REPO) {
     j.elsewhere = [...new Set([...(altElsewhere.get(j.id) || []), cleanAlt(photos[j.id]?.alt)].filter(Boolean))];
     // Venue evidence for this photo only: not the photos around it, which in a gallery are often at other venues.
     const ctx = j.uses.flatMap((u) => [u.page, u.heading, u.text]).join(' \n ');
-    const strong = venuesIn([...j.uses.map((u) => u.venue || ''), ...j.elsewhere].join(' \n '));
+    const strong = venuesIn([...j.uses.flatMap((u) => [u.venue || '', u.caption || '']), ...j.elsewhere].join(' \n '));
     const mentioned = venuesIn(ctx);
     // Strong evidence names the venue. Otherwise a venue counts only when it is the one venue mentioned around the photo.
     j.venues = strong.length ? strong : mentioned.length === 1 ? mentioned : [];
@@ -172,6 +181,7 @@ export function promptFor(j, description) {
   const uses = j.uses.slice(0, 4).map((u) => [
     `Page: ${u.page} (${u.path})`,
     u.heading && `Section heading: ${u.heading}`,
+    u.caption && `Caption beside the photo: ${u.caption}`,
     u.text && `Nearby text: ${u.text}`,
     u.nearby.length && `Alt text of the photos around it, for style only (they may be at other venues): ${u.nearby.map((n) => `"${n}"`).join('; ')}`,
   ].filter(Boolean).join('\n')).join('\n\n');
@@ -226,10 +236,17 @@ export function check(j, draft, venuesIn) {
   return { alt: alt.replace(/\.$/, ''), flags };
 }
 
-export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/chat', model = 'mistral-medium-3.5', headers = {}, limit = Infinity, timeout = 300, fetchImpl = fetch, log = console.log } = {}) {
+export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/chat', model = 'mistral-medium-3.5', headers = {}, limit = Infinity, timeout = 300, redo = [], fetchImpl = fetch, log = console.log } = {}) {
   const { jobs } = readJson(path.join(work, 'jobs.json'), { jobs: [] });
   const descriptions = readDescriptions(work);
   const outFile = path.join(work, 'drafts.jsonl');
+  // --redo: forget these photos' drafts (by ID or file name) so they are drafted again.
+  if (redo.length && fs.existsSync(outFile)) {
+    const drop = new Set(redo);
+    const fileOf = new Map(jobs.map((j) => [j.id, j.file]));
+    const keep = readText(outFile).split('\n').filter(Boolean).filter((l) => { try { const o = JSON.parse(l); return !drop.has(o.id) && !drop.has(fileOf.get(o.id)); } catch { return true; } });
+    fs.writeFileSync(outFile, keep.length ? `${keep.join('\n')}\n` : '');
+  }
   const done = new Set(fs.existsSync(outFile) ? readText(outFile).split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l).id; } catch { return null; } }) : []);
   const openai = /\/chat\/completions\/?$/.test(url);
   let n = 0;
@@ -274,7 +291,7 @@ export async function draft(work, { url = 'http://127.0.0.1:8790/ollama/mac/api/
 const fm = (o) => `---\n${Object.entries(o).map(([k, v]) => `${k}: ${typeof v === 'string' ? JSON.stringify(v) : JSON.stringify(v)}`).join('\n')}\n---\n`;
 const day = (d) => d.toISOString().slice(0, 10);
 
-export function proposals(work, vault, { root = REPO, now = new Date(), force = false } = {}) {
+export function proposals(work, vault, { root = REPO, now = new Date(), force = false, only = [] } = {}) {
   const { jobs } = readJson(path.join(work, 'jobs.json'), { jobs: [] });
   const venues = readJson(path.join(root, 'content/venues.json'), { venues: [] }).venues || [];
   const venuesIn = venueMatcher(venues);
@@ -292,12 +309,22 @@ export function proposals(work, vault, { root = REPO, now = new Date(), force = 
   }
   const dir = path.join(vault, 'Curation', 'Proposals');
   fs.mkdirSync(dir, { recursive: true });
+  // --only with --force rewrites the notes for those pages: their alt text notes still in draft are removed first,
+  // so a page with nothing left to propose loses its stale note. Notes the owner has moved past draft are kept.
+  const removed = [];
+  if (only.length && force) {
+    for (const n of fs.readdirSync(dir).filter((x) => x.endsWith('.md'))) {
+      const head = readText(path.join(dir, n)).match(/^---\n([\s\S]*?)\n---\n/)?.[1] || '';
+      const get = (k) => (head.match(new RegExp(`^${k}:\\s*"?([^"\\n]*)"?$`, 'm')) || [])[1];
+      if (get('field') === 'alt' && get('status') === 'draft' && only.includes(get('target'))) { fs.rmSync(path.join(dir, n)); removed.push(n); }
+    }
+  }
   const written = [];
   const kept = [];
   const tally = { ticked: 0, flagged: 0, decorative: 0, skipped: 0, waitingPages: 0 };
   const models = new Set([...drafts.values()].map((d) => d.model));
   const names = new Set();
-  for (const p of [...pages.values()].sort((a, b) => a.path.localeCompare(b.path))) {
+  for (const p of [...pages.values()].sort((a, b) => a.path.localeCompare(b.path)).filter((x) => !only.length || only.includes(x.path))) {
     // Named for the page; two pages with the same heading get the URL added, so neither note is lost.
     const kind = p.file === 'content/venues.json' ? ' (venue)' : p.template === 'blog-tag' ? ' (blog tag)' : p.template === 'blog-category' ? ' (blog category)' : '';
     let name = `${day(now)} Alt text - ${safeName(p.page).slice(0, 70)}${kind}.md`;
@@ -399,7 +426,7 @@ Models: descriptions by muse-glimmer:30b; alt text by ${[...models].join(', ') |
 ${written.concat(kept).sort().map((n) => `- [[Curation/Proposals/${n.replace(/\.md$/, '')}|${n.replace(/^\d{4}-\d\d-\d\d Alt text - /, '').replace(/\.md$/, '')}]]`).join('\n')}
 `;
   fs.writeFileSync(path.join(vault, 'Curation', `Alt text run ${day(now)}.md`), report);
-  return { written, kept, tally };
+  return { written, kept, tally, removed };
 }
 
 // ---------------------------------------------------------------- apply
@@ -438,7 +465,7 @@ export function apply(vault, { root = REPO, markApplied = false } = {}) {
         if (!hits.length) { report.notFound.push(`${p.note}: ${it.id}`); continue; }
         for (const h of hits) { if (cleanAlt(h.alt)) report.alreadyHadAlt++; else { h.alt = it.alt; changed++; } }
       }
-      if (changed) fs.writeFileSync(abs, `${JSON.stringify(data, null, 1)}\n`);
+      if (changed) fs.writeFileSync(abs, JSON.stringify(data, null, 1));
     } else {
       let text = fs.readFileSync(abs, 'utf8');
       for (const it of p.items) {
@@ -478,6 +505,8 @@ async function main(argv) {
     else if (a === '--timeout') opts.timeout = Number(rest[++i]);
     else if (a === '--no-download') opts.download = false;
     else if (a === '--force') opts.force = true;
+    else if (a === '--redo') opts.redo = [...(opts.redo || []), ...rest[++i].split(',').map((x) => x.trim()).filter(Boolean)];
+    else if (a === '--only') opts.only = [...(opts.only || []), rest[++i]];
     else if (a === '--mark-applied') opts.markApplied = true;
     else pos.push(a);
   }
@@ -491,13 +520,13 @@ async function main(argv) {
     const r = await draft(path.resolve(pos[0]), opts);
     console.log(`Drafted ${r.drafted}, failed ${r.failed}, no description yet ${r.noDescription}, skipped ${r.skipped}.`);
   } else if (cmd === 'proposals' && pos[1]) {
-    const r = proposals(path.resolve(pos[0]), path.resolve(pos[1]), { force: opts.force });
+    const r = proposals(path.resolve(pos[0]), path.resolve(pos[1]), { force: opts.force, only: opts.only || [] });
     console.log(`Proposal notes written ${r.written.length}, kept ${r.kept.length}. ${JSON.stringify(r.tally)}`);
   } else if (cmd === 'apply' && pos[0]) {
     const r = apply(path.resolve(pos[0]), { markApplied: opts.markApplied });
     console.log(`Approved notes ${r.notes}; alt text added to ${r.applied} photos; ${r.alreadyHadAlt} already had alt text and were left alone.${r.notFound.length ? `\nNot found:\n${r.notFound.join('\n')}` : ''}`);
   } else {
-    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]');
+    console.log('Usage:\n  node tools/glow-alt-text.js prepare <work-dir> [--no-download]\n  node tools/glow-alt-text.js draft <work-dir> [--url <chat url>] [--model <name>] [--header "Name: value"] [--limit n] [--timeout s] [--redo id,id]\n  node tools/glow-alt-text.js proposals <work-dir> <vault-dir> [--force] [--only /page/path ...]\n  node tools/glow-alt-text.js apply <vault-dir> [--mark-applied]');
     process.exit(cmd ? 1 : 0);
   }
 }
