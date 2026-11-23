@@ -13,12 +13,14 @@ import { PurgeCSS } from 'purgecss';
 const DIST = path.resolve(import.meta.dirname, '..', 'dist');
 const dir = path.join(DIST, '_astro');
 const renamed = new Map();
+// PurgeCSS reads these as globs, where a backslash escapes: give it forward slashes, so the build also runs on Windows.
+const glob = (p) => p.split(path.sep).join('/');
 for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css'))) {
   const file = path.join(dir, name);
   const before = fs.statSync(file).size;
   const [out] = await new PurgeCSS().purge({
-    content: [path.join(DIST, '**/*.html')],
-    css: [file],
+    content: [glob(path.join(DIST, '**/*.html'))],
+    css: [glob(file)],
     // Off: PurgeCSS only counts fonts named in `font-family`, and the body font is named
     // in the `font` shorthand, so it would delete DM Sans.
     fontFace: false,
