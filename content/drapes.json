@@ -1,0 +1,323 @@
+{
+  "source": "Current RMS product export of 2026-11-23, active Drapes & Linens items only (A:glow-workcategoriesdb\ref-rms-products2.json). Owner approved the design on 2026-11-25 (vault D-016).",
+  "note": "Colors are screen approximations of the RMS color names, not measured from fabric.",
+  "colors": {
+    "White": "#F6F5F1",
+    "Snow White": "#FCFCFA",
+    "Ivory": "#F0E7D3",
+    "Beige": "#D8C5A4",
+    "Champagne": "#E2CCA6",
+    "Dove": "#BDB8AF",
+    "Dark Gold": "#AF832B",
+    "Sunflower": "#F1B431",
+    "Canary Yellow": "#F2DB55",
+    "Yellow": "#EFCD34",
+    "Spun Gold": "#C8A046",
+    "Orange": "#E8812B",
+    "Pale Pink": "#F0C7CE",
+    "Dark Pink": "#C13E73",
+    "Hot Pink": "#E04699",
+    "Red": "#C1222B",
+    "Burgundy": "#6A1C28",
+    "Wine": "#59192A",
+    "Berry": "#791E4A",
+    "Sage": "#A1AE8B",
+    "Sage Green": "#869676",
+    "Olive": "#6B7040",
+    "Hunter Green": "#2D573C",
+    "Emerald Green": "#0D593D",
+    "Dusty Blue": "#8DA6BE",
+    "Robin's Egg Blue": "#8ED0D5",
+    "Pool": "#45B2C5",
+    "Steel Blue": "#5D7D9B",
+    "Sapphire Blue": "#1F3E8D",
+    "Royal Blue": "#2346B2",
+    "Deep Blue": "#1B2C6A",
+    "Navy": "#1B2545",
+    "Chocolate": "#492D21",
+    "Black": "#151515"
+  },
+  "families": [
+    {
+      "name": "Whites & creams",
+      "colors": [
+        "White",
+        "Snow White",
+        "Ivory",
+        "Beige",
+        "Champagne",
+        "Dove"
+      ]
+    },
+    {
+      "name": "Golds & yellows",
+      "colors": [
+        "Dark Gold",
+        "Sunflower",
+        "Canary Yellow",
+        "Yellow",
+        "Spun Gold",
+        "Orange"
+      ]
+    },
+    {
+      "name": "Pinks & reds",
+      "colors": [
+        "Pale Pink",
+        "Dark Pink",
+        "Hot Pink",
+        "Red",
+        "Burgundy",
+        "Wine",
+        "Berry"
+      ]
+    },
+    {
+      "name": "Greens",
+      "colors": [
+        "Sage",
+        "Sage Green",
+        "Olive",
+        "Hunter Green",
+        "Emerald Green"
+      ]
+    },
+    {
+      "name": "Blues",
+      "colors": [
+        "Dusty Blue",
+        "Robin's Egg Blue",
+        "Pool",
+        "Steel Blue",
+        "Sapphire Blue",
+        "Royal Blue",
+        "Deep Blue",
+        "Navy"
+      ]
+    },
+    {
+      "name": "Darks",
+      "colors": [
+        "Chocolate",
+        "Black"
+      ]
+    }
+  ],
+  "fabrics": [
+    {
+      "id": "sheer",
+      "name": "Sheer",
+      "onSite": true,
+      "sheer": true,
+      "feel": "soft, see-through",
+      "sample": "Ivory",
+      "blurb": "Light and see-through, and it glows when you light it.",
+      "sizes": "walls 8, 12 and 17 ft high; panels 10 ft wide, 5 to 40 ft drops",
+      "colors": [
+        "White",
+        "Ivory",
+        "Champagne",
+        "Dark Gold",
+        "Sunflower",
+        "Canary Yellow",
+        "Orange",
+        "Dark Pink",
+        "Hot Pink",
+        "Dusty Blue",
+        "Robin's Egg Blue",
+        "Hunter Green"
+      ]
+    },
+    {
+      "id": "premier",
+      "name": "Poly-Premier",
+      "onSite": true,
+      "sheer": false,
+      "feel": "matte and smooth",
+      "sample": "Champagne",
+      "blurb": "Our workhorse. It's opaque, so it hides walls, splits rooms and makes a clean backdrop.",
+      "sizes": "walls 10, 12, 13, 22 and 24 ft high; 5 ft panels",
+      "colors": [
+        "Snow White",
+        "White",
+        "Ivory",
+        "Beige",
+        "Champagne",
+        "Sage",
+        "Olive",
+        "Navy",
+        "Black"
+      ]
+    },
+    {
+      "id": "stretch",
+      "name": "Poly-Stretch",
+      "onSite": false,
+      "sheer": false,
+      "feel": "taut, with a sheen",
+      "sample": "Pool",
+      "blurb": "Opaque with a little give, so it pulls tight for clean lines. Our widest color range.",
+      "sizes": "walls 13 ft high; 5 ft panels in 12, 13, 22 and 24 ft drops",
+      "colors": [
+        "Snow White",
+        "White",
+        "Ivory",
+        "Champagne",
+        "Yellow",
+        "Orange",
+        "Pale Pink",
+        "Red",
+        "Burgundy",
+        "Chocolate",
+        "Pool",
+        "Steel Blue",
+        "Navy",
+        "Hunter Green",
+        "Black"
+      ]
+    },
+    {
+      "id": "velvet",
+      "name": "Velvet-Stretch",
+      "onSite": false,
+      "sheer": false,
+      "feel": "plush pile",
+      "sample": "Emerald Green",
+      "blurb": "Deep color with a soft sheen.",
+      "sizes": "walls 12 and 13 ft high; 5 ft panels, 10 to 24 ft drops",
+      "colors": [
+        "Champagne",
+        "Sage Green",
+        "Emerald Green",
+        "Red",
+        "Wine",
+        "Sapphire Blue",
+        "Royal Blue"
+      ]
+    },
+    {
+      "id": "silk",
+      "name": "Poly-Silk",
+      "onSite": false,
+      "sheer": false,
+      "feel": "liquid sheen",
+      "sample": "Spun Gold",
+      "blurb": "A silky sheen that catches the light.",
+      "sizes": "walls 13 ft high; 5 ft panels, 13 to 64 ft drops",
+      "colors": [
+        "Dove",
+        "Spun Gold",
+        "Burgundy",
+        "Berry"
+      ]
+    },
+    {
+      "id": "polysheer",
+      "name": "Poly-Sheer",
+      "onSite": false,
+      "sheer": true,
+      "feel": "long, light folds",
+      "sample": "Hunter Green",
+      "blurb": "Sheer in long drops, for tall ceilings and tents.",
+      "sizes": "panels 22, 24 and 64 ft drops",
+      "colors": [
+        "Ivory",
+        "Hunter Green"
+      ]
+    },
+    {
+      "id": "crushed",
+      "name": "Crushed Sheer",
+      "onSite": false,
+      "sheer": true,
+      "feel": "crinkled",
+      "sample": "Ivory",
+      "blurb": "Sheer with a crinkle in it, so it has soft texture up close.",
+      "sizes": "12 ft by 10 ft pieces",
+      "colors": [
+        "Ivory"
+      ]
+    },
+    {
+      "id": "knit",
+      "name": "Poly-Knit",
+      "onSite": false,
+      "sheer": false,
+      "feel": "shiny knit",
+      "sample": "Deep Blue",
+      "blurb": "A shiny knit for when you want some shine.",
+      "sizes": "walls 13 ft high; 12 ft panels",
+      "colors": [
+        "Spun Gold",
+        "Deep Blue"
+      ]
+    },
+    {
+      "id": "velour",
+      "name": "Velour",
+      "onSite": false,
+      "sheer": false,
+      "feel": "heavy, matte nap",
+      "sample": "Black",
+      "blurb": "Heavy black that blocks light. Your best bet for a stage backdrop or hiding what guests shouldn't see.",
+      "sizes": "walls 10 and 16 ft high",
+      "colors": [
+        "Black"
+      ]
+    }
+  ],
+  "looks": [
+    {
+      "name": "Backdrops",
+      "items": [
+        "Crystal & Gold",
+        "Asymmetric Crystal & Gold",
+        "Braided Crosses",
+        "Champagne Crosses",
+        "Lines & Curves",
+        "Parted Asymmetric Swoops",
+        "Pinched",
+        "Waterfall (10 x 10 ft)",
+        "Tent Peak",
+        "Velvet Backdrop",
+        "Seating Chart Frame",
+        "Custom Asymmetric"
+      ]
+    },
+    {
+      "name": "Arches & structures",
+      "items": [
+        "Cross-Parted Arch",
+        "Five Point Arch",
+        "3-Door Archway",
+        "Silk Archway",
+        "Archway with Accent",
+        "Sheer Archway with Top Swag",
+        "Large White Archway",
+        "Sheer Cabana",
+        "Custom Chuppah",
+        "Total Coverage Walls"
+      ]
+    },
+    {
+      "name": "Canopies",
+      "items": [
+        "Poly-Stretch Canopy",
+        "Velvet-Stretch Canopy",
+        "Silk Canopy",
+        "Diamonds Ceiling (15 ft)",
+        "Drop Ceiling Cover (sheer)"
+      ]
+    },
+    {
+      "name": "Tents & finishing",
+      "items": [
+        "Pleated Sheer Tent Liner",
+        "Tent Leg Drapes",
+        "Drape Gathers",
+        "Straight Valance",
+        "Ribbon Valance (beige, dusty blue)"
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import { allEntries, firstPhoto, latestPosts, trail as trailFor } from './entrie
 import { photos, capDensity } from './photos.js';
 import { blocks, cleanAlt, crumbs, cta, esc, fmtDate, friends, inline, pageHead, pic, prose } from './html.js';
 import { BOOKING_SCALE, SUBSCRIBE_FORM, serviceGroup } from '../../server/lib/quote-form-data.js';
+import { drapeSwatchbook, quotePrefill } from './drape-swatchbook.js';
 
 const sentences = (s) => s.split(/(?<=[.?!])\s+/);
 
@@ -325,7 +326,8 @@ function reviews(entry, trail, h) {
 // A photograph we hold files for. Drawn icons (PNG, SVG) and photos missing from the manifest are left out.
 const isPhoto = (b) => b[0] === 'img' && !/\.(png|svg|gif)$/i.test(b[1]) && Boolean(photos[b[1]]);
 const splitFirst = (x) => { const a = x.split(/(?<=[.!?])\s+/); return [a[0], a.slice(1).join(' ')]; };
-async function service(entry, trail, h) {
+// after: markup placed right under the page header (the drape swatchbook on /drapery).
+async function service(entry, trail, h, { after = '' } = {}) {
   const entries = await allEntries();
   const d = entry.data;
   const bl = blocks(entry.body).filter((b) => !(b[0] === 'h' && b[1] === 1));
@@ -376,7 +378,7 @@ async function service(entry, trail, h) {
   const btns = `<div class="actions sv-act"><a class="btn solid" href="/get-a-quote">Get A Quote</a>${links.map((x) => `<a class="btn" href="${x[2]}">${esc(x[1])}</a>`).join('')}</div>`;
   const related = (d.related || []).map((p) => entries.get(p)).filter(Boolean);
   const rel = related.length ? `<section class="rel">${moreHeading ? `<h2>${inline(moreHeading)}</h2>` : ''}<ul class="posts">${related.map(postCard).join('')}</ul></section>` : '';
-  const html = `${pageHead(h.text, trail, { lede, tag: h.tag })}${filmHtml}${tiles}<div class="bq-chs">${chapters}</div>${btns}${rel}`;
+  const html = `${pageHead(h.text, trail, { lede, tag: h.tag })}${after}${filmHtml}${tiles}<div class="bq-chs">${chapters}</div>${btns}${rel}`;
   return { html, bodyClass: 'sv sv9 sv11 bpp bq bq8', closing: false };
 }
 const SERVICE_PATHS = new Set(site.nav.find((n) => n.label === 'Services').children.map((c) => c.href));
@@ -560,7 +562,7 @@ async function quote(entry, trail, h) {
   const faqBand = `<div class="faq bfq"><h2>FAQ</h2><div class="fqc"><div>${fq.slice(0, half).join('')}</div><div>${fq.slice(half).join('')}</div></div><p><a class="btn" href="/faq">FAQ</a></p></div>`;
   const head = `<${h.tag}${h.tag === 'h1' ? '' : ' class="h1"'}>${inline(h.text)}</${h.tag}>`;
   const html = `<div class="q1 q6"><div class="q1a">${crumbs(trail)}${head}<div class="q1d qi">${info}</div>${rate}${cont}</div><div class="q6f">${form}${rvs}<div class="q6d qi">${info}</div></div>${svs}<i class="svcut" aria-hidden="true"></i></div><div class="qbands"><div class="fband">${featured()}</div>${faqBand}</div>${D.length ? QUOTE_JS : ''}${FORM_JS}${turnstileJs}`;
-  return { html, bodyClass: 'qf qf6', closing: false, quoteBar: false };
+  return { html: html + quotePrefill(), bodyClass: 'qf qf6', closing: false, quoteBar: false };
 }
 
 // ---- pictures by venue: every venue by area on the left, a wall of the venues we have photos of
@@ -602,6 +604,7 @@ export function venuePage(v) {
 const BY_PATH = {
   '/': home,
   '/services': services,
+  '/drapery': (entry, trail, h) => service(entry, trail, h, { after: drapeSwatchbook() }),
   '/reviews': reviews,
   '/venue': venues,
   // The old page listed 36 venues by a cover photo each; the previous host no longer serves 31 of those.
