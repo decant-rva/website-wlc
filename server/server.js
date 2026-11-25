@@ -16,6 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { registerQuote } from './quote.js';
@@ -154,7 +155,8 @@ export function build({ quote = {}, media } = {}) {
   return app;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compared as paths, not as `file://${argv[1]}`, which never matches on Windows (file:///A:/…).
+if (process.argv[1] && path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase()) {
   let store;
   if (process.env.DATABASE_URL) {
     const { default: pg } = await import('pg');

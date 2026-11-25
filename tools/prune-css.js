@@ -12,13 +12,16 @@ import { PurgeCSS } from 'purgecss';
 
 const DIST = path.resolve(import.meta.dirname, '..', 'dist');
 const dir = path.join(DIST, '_astro');
+// PurgeCSS reads content and css as glob patterns, which need forward slashes; with
+// Windows backslashes they match nothing and purge() returns no result.
+const glob = (p) => p.split(path.sep).join('/');
 const renamed = new Map();
 for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css'))) {
   const file = path.join(dir, name);
   const before = fs.statSync(file).size;
   const [out] = await new PurgeCSS().purge({
-    content: [path.join(DIST, '**/*.html')],
-    css: [file],
+    content: [glob(path.join(DIST, '**/*.html'))],
+    css: [glob(file)],
     // Off: PurgeCSS only counts fonts named in `font-family`, and the body font is named
     // in the `font` shorthand, so it would delete DM Sans.
     fontFace: false,
@@ -27,6 +30,7 @@ for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css'))) {
     // Classes the server adds to the quote form when it sends it back with problems marked.
     safelist: ['bad', 'qerr'],
   });
+  if (!out) throw new Error(`PurgeCSS returned nothing for ${file}`);
   const hash = crypto.createHash('sha256').update(out.css).digest('base64url').slice(0, 8);
   const next = name.replace(/\.[^.]+\.css$/, `.${hash}.css`);
   fs.writeFileSync(path.join(dir, next), out.css);
