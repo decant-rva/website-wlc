@@ -7,7 +7,7 @@ import path from 'node:path';
 import Fastify from 'fastify';
 import { registerQuote, turnstileRule } from '../server/quote.js';
 
-const DIST = new URL('../dist/', import.meta.url).pathname;
+const DIST = path.join(import.meta.dirname, '..', 'dist') + path.sep;
 const good = { name: 'Test Person', email: 'test@example.com', eventDate: '2027-05-01', venue: 'Dover Hall', details: 'Lights' };
 
 // A copy of the built quote page with or without the widget, as a build with a site key makes it.

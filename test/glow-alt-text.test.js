@@ -7,7 +7,7 @@ import path from 'node:path';
 import http from 'node:http';
 import { collect, prepare, draft, proposals, apply, approved, parseReply, check, promptFor, readDescriptions, readDecisions, applyDecisions } from '../tools/glow-alt-text.js';
 
-const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const REPO = path.resolve(import.meta.dirname, '..');
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'wlc-alt-'));
 const jobsAll = collect(REPO);
 
