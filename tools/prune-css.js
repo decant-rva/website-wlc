@@ -28,7 +28,8 @@ for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css'))) {
     keyframes: true,
     defaultExtractor: (content) => content.match(/[A-Za-z0-9_-]+/g) || [],
     // Classes the server adds to the quote form when it sends it back with problems marked.
-    safelist: ['bad', 'qerr'],
+    // and the drape swatchbook's classes, which appear only after a tap (src/lib/drape-view.js).
+    safelist: ['bad', 'qerr', /^dsw-/],
   });
   if (!out) throw new Error(`PurgeCSS returned nothing for ${file}`);
   const hash = crypto.createHash('sha256').update(out.css).digest('base64url').slice(0, 8);
