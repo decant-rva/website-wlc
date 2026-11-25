@@ -32,7 +32,7 @@ function line(M, data, st) {
   const note = f
     ? `<strong>${esc(f.name)}</strong> <span class="dsw-k">${esc(f.feel)}</span> · ${esc(f.blurb)} ${f.sheer ? 'Lets light through.' : 'Opaque.'}`
     : `<strong>All fabrics</strong> <span class="dsw-k">${data.fabrics.length} textures</span> · Every drape we stock, from airy sheer to heavy velour. Pull one off the line to narrow the fan.`;
-  return `<div class="dsw-line"><div class="dsw-hd"><h2 class="dsw-k">feel the fabric</h2><p>Tap a sample to pull it off the line</p></div><div class="dsw-scroll"><div class="dsw-rope"><svg viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 14 Q500 62 1000 14"/></svg><ul class="dsw-ss">${lis}</ul></div></div><p class="dsw-fn">${note}</p></div>`;
+  return `<div class="dsw-line"><div class="dsw-hd"><h2 class="dsw-k">then feel the fabric</h2><p>Tap a sample to pull it off the line</p></div><div class="dsw-scroll"><div class="dsw-rope"><svg viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 14 Q500 62 1000 14"/></svg><ul class="dsw-ss">${lis}</ul></div></div><p class="dsw-fn">${note}</p></div>`;
 }
 
 function families(M, data, st) {
@@ -42,7 +42,7 @@ function families(M, data, st) {
     const grad = `linear-gradient(90deg,${all.map((p) => p.hex).join(',')})`;
     return `<li><button type="button" class="dsw-fam${on ? ' dsw-on' : ''}" data-act="fam" data-v="${i}"${pressed(on)}><span class="dsw-gr" style="--g:${grad}"></span><span class="dsw-fl">${esc(g.name)} <b>${M.fabricCount(data, i, st.fab)}</b></span></button></li>`;
   }).join('');
-  return `<div class="dsw-fams"><h2 class="dsw-k">then pick a color family</h2><ul>${lis}</ul></div>`;
+  return `<div class="dsw-fams"><h2 class="dsw-k">pick a color family</h2><ul>${lis}</ul></div>`;
 }
 
 /** The pair the fan and detail card show: the one picked, if it is in this fan, else the first. */
@@ -93,7 +93,7 @@ function looks(M, data, st) {
 
 /** Everything inside the swatchbook's root element; the page script swaps this on each tap. */
 export function swatchbookInner(M, data, st) {
-  return `${line(M, data, st)}${families(M, data, st)}${stage(M, data, st)}${mixPanel(M, data, st)}${looks(M, data, st)}`;
+  return `${families(M, data, st)}${line(M, data, st)}${stage(M, data, st)}${mixPanel(M, data, st)}${looks(M, data, st)}`;
 }
 
 export const START = { fab: 'all', fam: 0, sel: null, mix: [], light: 1 };
